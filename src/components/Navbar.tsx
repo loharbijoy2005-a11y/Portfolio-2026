@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { ShieldCheck, Calendar, Menu, X, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { MagneticButton } from './MagneticButton';
 
@@ -34,15 +35,36 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Clean Solid Brand Logo */}
-          <a href="#" className="flex flex-col group">
-            <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-950 leading-none group-hover:text-blue-600 transition-colors font-mono">
-              SHADOW<span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">ARROW</span>
-            </span>
-            <span className="text-[10px] font-extrabold text-slate-600 tracking-[0.2em] uppercase mt-1 font-mono">
-              WEB ENGINEERING
-            </span>
-          </a>
+          {/* Animated High-Tech Brand Logo */}
+          <motion.a 
+            href="#" 
+            className="flex flex-col group relative select-none"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 22 }}
+          >
+            {/* SHADOWARROW Title with Animated Shimmer Gradient & Pulsing Dot */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-950 font-mono leading-none group-hover:text-blue-600 transition-colors">
+                SHADOW<span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500 bg-clip-text text-transparent group-hover:from-blue-500 group-hover:to-indigo-500">ARROW</span>
+              </span>
+              {/* Glowing Animated Spark Dot */}
+              <motion.span 
+                animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }}
+                transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+                className="w-2 h-2 rounded-full bg-blue-600 shadow-sm shadow-blue-500/80 inline-block mb-1"
+              />
+            </div>
+
+            {/* WEB ENGINEERING Subtitle with Animated Beam */}
+            <div className="relative overflow-hidden pt-0.5">
+              <span className="text-[10px] font-extrabold text-slate-600 tracking-[0.2em] uppercase font-mono block group-hover:text-slate-900 group-hover:tracking-[0.26em] transition-all duration-300">
+                WEB ENGINEERING
+              </span>
+              {/* Animated Sliding Glow Beam */}
+              <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-blue-600 via-indigo-500 to-emerald-400 group-hover:w-full transition-all duration-500 ease-out" />
+            </div>
+          </motion.a>
 
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-1 bg-white/80 border border-slate-200/80 rounded-full px-4 py-1.5 shadow-sm backdrop-blur-md">
