@@ -75,12 +75,14 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
   }, []);
 
   const techBadges = [
-    { name: 'Next.js 14', desc: 'App Router & SSR', bg: 'bg-slate-900 text-white' },
-    { name: 'TypeScript', desc: 'Strict Type Safety', bg: 'bg-blue-600 text-white' },
-    { name: 'Tailwind CSS', desc: 'Airy SaaS Tokens', bg: 'bg-sky-500 text-white' },
-    { name: 'Node.js', desc: 'Async Microservices', bg: 'bg-emerald-600 text-white' },
-    { name: 'Razorpay / Stripe', desc: 'Auto GST Invoicing', bg: 'bg-indigo-600 text-white' },
-    { name: 'PostgreSQL', desc: 'ACID Database', bg: 'bg-blue-800 text-white' },
+    { name: 'Next.js 14', desc: 'App Router & SSR', badgeStyle: 'bg-slate-900 text-white border-slate-700 hover:bg-black', dotColor: 'bg-slate-300' },
+    { name: 'React 19', desc: 'Server Components', badgeStyle: 'bg-cyan-950 text-cyan-300 border-cyan-800 hover:bg-cyan-900', dotColor: 'bg-cyan-400' },
+    { name: 'TypeScript', desc: 'Strict Type Safety', badgeStyle: 'bg-blue-950 text-blue-300 border-blue-800 hover:bg-blue-900', dotColor: 'bg-blue-400' },
+    { name: 'Tailwind CSS', desc: 'Airy SaaS Tokens', badgeStyle: 'bg-sky-950 text-sky-300 border-sky-800 hover:bg-sky-900', dotColor: 'bg-sky-400' },
+    { name: 'Node.js', desc: 'Async Microservices', badgeStyle: 'bg-emerald-950 text-emerald-300 border-emerald-800 hover:bg-emerald-900', dotColor: 'bg-emerald-400' },
+    { name: 'Razorpay / Stripe', desc: 'Auto GST Invoicing', badgeStyle: 'bg-indigo-950 text-indigo-300 border-indigo-800 hover:bg-indigo-900', dotColor: 'bg-indigo-400' },
+    { name: 'PostgreSQL & Redis', desc: 'ACID & Edge Cache', badgeStyle: 'bg-purple-950 text-purple-300 border-purple-800 hover:bg-purple-900', dotColor: 'bg-purple-400' },
+    { name: 'WhatsApp Cloud API', desc: 'Instant Webhooks', badgeStyle: 'bg-teal-950 text-teal-300 border-teal-800 hover:bg-teal-900', dotColor: 'bg-teal-400' },
   ];
 
   return (
@@ -416,9 +418,9 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ duration: 0.2, delay: idx * 0.04 }}
-                            className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-blue-50 border border-slate-200/90 hover:border-blue-300 text-slate-800 hover:text-blue-900 text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-xs ${t.badgeStyle}`}
                           >
-                            <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                            <span className={`w-1.5 h-1.5 rounded-full ${t.dotColor}`} />
                             <span>{t.name}</span>
                           </motion.div>
                         ))}

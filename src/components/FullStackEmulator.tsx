@@ -22,6 +22,8 @@ interface ProjectArchitecture {
   repoName: string;
   commitHash: string;
   language: string;
+  badgeClass: string;
+  iconColor: string;
   codeSnippet: string;
   buildStatus: string;
 }
@@ -34,6 +36,8 @@ const PROJECTS: ProjectArchitecture[] = [
     repoName: 'shadow-arrow/ecommerce-core',
     commitHash: '#ea89f21',
     language: 'TypeScript • 96%',
+    badgeClass: 'bg-blue-100 text-blue-800 border-blue-200',
+    iconColor: 'text-blue-600',
     codeSnippet: `// Next.js 14 Server Action & Razorpay Order Checkout
 export async function createCheckoutSession(cart: CartItem[], gstin: string) {
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -57,6 +61,8 @@ export async function createCheckoutSession(cart: CartItem[], gstin: string) {
     repoName: 'shadow-arrow/microservice-api',
     commitHash: '#b77c32e',
     language: 'Go / Python • 92%',
+    badgeClass: 'bg-amber-100 text-amber-900 border-amber-200',
+    iconColor: 'text-amber-500',
     codeSnippet: `// Asynchronous Redis Rate-Limiter & Supabase Query
 func HandleSessionQuery(w http.ResponseWriter, r *http.Request) {
     token := r.Header.Get("Authorization")
@@ -83,6 +89,8 @@ func HandleSessionQuery(w http.ResponseWriter, r *http.Request) {
     repoName: 'shadow-arrow/whatsapp-cloud-api',
     commitHash: '#c990a12',
     language: 'Node.js • 98%',
+    badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    iconColor: 'text-emerald-600',
     codeSnippet: `// WhatsApp Cloud API Order Dispatch Webhook Event
 app.post('/webhooks/order-dispatched', async (req, res) => {
   const { customerPhone, orderId, trackingUrl } = req.body;
@@ -108,6 +116,8 @@ app.post('/webhooks/order-dispatched', async (req, res) => {
     repoName: 'shadow-arrow/high-converting-saas',
     commitHash: '#d44e55f',
     language: 'TypeScript & Tailwind • 99%',
+    badgeClass: 'bg-purple-100 text-purple-900 border-purple-200',
+    iconColor: 'text-purple-600',
     codeSnippet: `// High-Speed Next.js 14 Server Component Layout
 export default async function SaaSPage() {
   const metrics = await fetchLighthouseMetrics();
@@ -250,7 +260,9 @@ export const FullStackEmulator: React.FC = () => {
           <span className="text-slate-300">|</span>
           <span className="text-slate-500 font-bold">{activeProject.commitHash}</span>
           <span className="text-slate-300 hidden sm:inline">|</span>
-          <span className="text-emerald-700 font-semibold hidden sm:inline">{activeProject.language}</span>
+          <span className={`px-2.5 py-0.5 rounded-full font-bold border hidden sm:inline ${activeProject.badgeClass}`}>
+            {activeProject.language}
+          </span>
         </div>
 
         <div className="flex items-center gap-3">
