@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ARCHITECTURE_LAYERS } from '../data/portfolioData';
-import { LiveCodeSimulator } from './LiveCodeSimulator';
+import { FullStackEmulator } from './FullStackEmulator';
 import { 
   Zap, 
   CheckCircle2, 
@@ -21,7 +21,7 @@ export const TechArchitecture: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-semibold uppercase tracking-wider">
             <Layers className="w-3.5 h-3.5 text-blue-600" />
-            <span>Clean Architecture Blueprint</span>
+            <span>System Blueprint & Live Full-Stack Emulator</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
@@ -29,7 +29,7 @@ export const TechArchitecture: React.FC = () => {
           </h2>
 
           <p className="text-base sm:text-lg text-slate-600">
-            We write strict TypeScript, modular microservices, and edge-cached server components to ensure maintainable software with 0.4s response times.
+            We write strict TypeScript, modular microservices, and edge-cached server components to ensure maintainable software with sub-second response times.
           </p>
         </div>
 
@@ -102,18 +102,18 @@ export const TechArchitecture: React.FC = () => {
           </div>
         </div>
 
-        {/* Interactive Live Code Simulator with Instant Output Preview */}
+        {/* Full-Scale Animated Live Full-Stack Project Emulator */}
         <div className="space-y-4">
           <div className="flex items-center justify-between px-2">
             <span className="text-xs font-bold font-mono text-slate-400 uppercase tracking-widest">
-              // Live Interactive Code Sandbox & Production Simulator
+              // Live Full-Stack Project Emulator & Auto-Rotating Showcase
             </span>
             <span className="text-xs font-bold text-blue-600 font-mono">
-              Auto-Typing & Instant Execution
+              7-Second Auto-Rotate • Hover to Pause
             </span>
           </div>
 
-          <LiveCodeSimulator />
+          <FullStackEmulator />
         </div>
 
       </div>
