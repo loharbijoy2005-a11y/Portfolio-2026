@@ -65,7 +65,15 @@ export const App: React.FC = () => {
     handleStartProject();
   };
 
-  const handleSelectPricingTier = (_tierId: string, tierName: string, basePrice: number) => {
+  const handleSelectPricingTier = (tierId: string, tierName: string, basePrice: number) => {
+    const serviceMap: Record<string, string> = {
+      'perf-seo': 'perf-seo',
+      'fullstack-web': 'fullstack-web',
+      'growth-ecommerce': 'ecommerce-engine',
+      'enterprise-saas': 'saas-dashboard'
+    };
+    const targetServiceId = serviceMap[tierId] || 'fullstack-web';
+    setSelectedServiceId(targetServiceId);
     setSelectedCaseStudyTitle(`Selected Pricing Package: ${tierName} (₹${basePrice.toLocaleString('en-IN')})`);
     handleStartProject();
   };

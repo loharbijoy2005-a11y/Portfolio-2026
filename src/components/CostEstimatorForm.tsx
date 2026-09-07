@@ -38,7 +38,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
 
   useEffect(() => {
     if (preselectedServiceId) {
-      setSelectedService(preselectedServiceId);
+      handleServiceSelect(preselectedServiceId);
     }
   }, [preselectedServiceId]);
 
