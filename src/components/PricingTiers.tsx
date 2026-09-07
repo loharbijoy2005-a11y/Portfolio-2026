@@ -22,6 +22,7 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
     numericBasePrice: 12000,
     idealFor: 'Startups, local businesses, portfolios & personal branding.',
     features: [
+      '⚡ 2 to 3 Weeks Delivery (Architecture, Responsive Build, Revisions, Deployment)',
       '1 – 5 High-Speed Custom Responsive Pages',
       'Lighthouse 95+ Core Web Vitals Optimization',
       'SEO Structured Data & Meta Tag Setup',
@@ -40,6 +41,7 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
     isPopular: true,
     idealFor: 'D2C brands, retail stores & online product catalogs.',
     features: [
+      '⚡ 3 to 4 Weeks Delivery (Payment Gateway Integration, Order Pipelines, Security Audits)',
       'Full Razorpay / Stripe Payment Gateway Integration',
       'Automated WhatsApp Order Alerts & Notifications',
       'Custom Admin Inventory & Order Management Portal',
@@ -57,6 +59,7 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
     numericBasePrice: 49999,
     idealFor: 'Custom web apps, SaaS platforms, client portals & complex APIs.',
     features: [
+      '⚡ 4 to 6 Weeks Delivery (API Design, Database Architecture, Staging & Production Deployment)',
       'Next.js 14 + TypeScript Full-Stack Application',
       'Custom Database Architecture (MongoDB / PostgreSQL / Supabase)',
       'Role-Based Authentication (RBAC) & Session Shield',
@@ -246,13 +249,13 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
           })}
         </div>
 
-        {/* B2B Input Tax Credit Notice Banner */}
+        {/* Quality Over Shortcuts & B2B Tax Credit Notice Banner */}
         <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-sky-50 border border-blue-200/90 rounded-2xl p-4 sm:p-5 text-center flex flex-col sm:flex-row items-center justify-center gap-3 shadow-xs">
           <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
             <Zap className="w-4 h-4" />
           </div>
           <p className="text-xs sm:text-sm text-slate-800 font-medium">
-            ⚡ <strong className="font-extrabold text-blue-900">B2B Tax Input Advantage:</strong> All plans support <strong className="font-bold text-blue-900 underline">18% GST Input Tax Credit (ITC)</strong> with valid GSTIN invoices for corporate tax deductions.
+            ⚡ <strong className="font-extrabold text-blue-900">Quality Over Shortcuts:</strong> We maintain a disciplined 3–4 week milestone engineering cycle ensuring zero tech debt, strict type-safety, and seamless 18% GST invoicing.
           </p>
         </div>
 

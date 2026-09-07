@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { CinematicSplash } from './components/CinematicSplash';
 import { CustomCursor } from './components/CustomCursor';
 import { ScrollProgress } from './components/ScrollProgress';
 import { InteractiveCanvasGrid } from './components/InteractiveCanvasGrid';
@@ -13,6 +14,7 @@ import { Services } from './components/Services';
 import { CaseStudies } from './components/CaseStudies';
 import { GitHubShowcase } from './components/GitHubShowcase';
 import { TechArchitecture } from './components/TechArchitecture';
+import { MilestoneTimeline } from './components/MilestoneTimeline';
 import { B2BTrustGST } from './components/B2BTrustGST';
 import { PricingTiers } from './components/PricingTiers';
 import { CostEstimatorForm } from './components/CostEstimatorForm';
@@ -21,12 +23,12 @@ import { WhatsAppFloating } from './components/WhatsAppFloating';
 import { DiscoveryModal } from './components/DiscoveryModal';
 
 const sectionVariants = {
-  hidden: { opacity: 0, y: 30, filter: 'blur(8px)' },
+  hidden: { opacity: 0, y: 35, filter: 'blur(8px)' },
   visible: { 
     opacity: 1, 
     y: 0, 
     filter: 'blur(0px)',
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }
+    transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] as const }
   }
 };
 
@@ -34,6 +36,7 @@ export const App: React.FC = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<string | undefined>(undefined);
   const [selectedCaseStudyTitle, setSelectedCaseStudyTitle] = useState<string | undefined>(undefined);
+  const [isSplashActive, setIsSplashActive] = useState<boolean>(true);
 
   const handleStartProject = () => {
     const el = document.getElementById('contact');
@@ -65,8 +68,11 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] selection:bg-blue-100 selection:text-blue-900 font-sans relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#FAF8F5] text-[#1A1714] selection:bg-blue-100 selection:text-blue-900 font-sans relative overflow-x-hidden">
       
+      {/* Cinematic Splash Intro Preloader */}
+      <CinematicSplash onComplete={() => setIsSplashActive(false)} />
+
       {/* Top Scroll Progress Indicator Bar */}
       <ScrollProgress />
 
@@ -82,8 +88,8 @@ export const App: React.FC = () => {
       {/* Sticky Blurred Navigation Header */}
       <Navbar onOpenBooking={() => setBookingModalOpen(true)} />
 
-      {/* Main Content Area */}
-      <main className="relative z-10 space-y-4">
+      {/* Main Content Area (Staggered reveal when splash finishes) */}
+      <main className={`relative z-10 space-y-4 transition-opacity duration-500 ${isSplashActive ? 'opacity-0' : 'opacity-100'}`}>
         
         {/* Hero Section */}
         <motion.div
@@ -166,6 +172,16 @@ export const App: React.FC = () => {
           variants={sectionVariants}
         >
           <TechArchitecture />
+        </motion.div>
+
+        {/* The 3-4 Week Production Journey Milestone Roadmap */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <MilestoneTimeline />
         </motion.div>
 
         {/* B2B Trust, 18% GST Tax Credit & Milestone Process */}

@@ -13,6 +13,7 @@ import {
   Cpu,
   Terminal
 } from 'lucide-react';
+import { MagneticButton } from './MagneticButton';
 
 interface HeroProps {
   onStartProject: () => void;
@@ -127,24 +128,28 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
               
               {/* Primary Button with Shimmer */}
-              <button
-                onClick={onStartProject}
-                className="relative overflow-hidden group inline-flex items-center justify-center gap-2.5 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-sm shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/35 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
-              >
-                <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-out pointer-events-none" />
-                <span>Start Your Project</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
+              <MagneticButton>
+                <button
+                  onClick={onStartProject}
+                  className="relative overflow-hidden group inline-flex items-center justify-center gap-2.5 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-sm shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/35 active:scale-95 transition-all duration-200 cursor-pointer w-full sm:w-auto"
+                >
+                  <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-out pointer-events-none" />
+                  <span>Start Your Project</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </MagneticButton>
 
               {/* Secondary Button */}
-              <button
-                onClick={onExploreWork}
-                className="group inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200/90 px-7 py-4 rounded-xl font-semibold text-sm shadow-xs hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 cursor-pointer"
-              >
-                <Code2 className="w-4 h-4 text-blue-600" />
-                <span>Explore Live Demos</span>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 group-hover:text-blue-600 transition-all" />
-              </button>
+              <MagneticButton>
+                <button
+                  onClick={onExploreWork}
+                  className="group inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200/90 px-7 py-4 rounded-xl font-semibold text-sm shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer w-full sm:w-auto"
+                >
+                  <Code2 className="w-4 h-4 text-blue-600" />
+                  <span>Explore Live Demos</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 group-hover:text-blue-600 transition-all" />
+                </button>
+              </MagneticButton>
 
             </div>
 

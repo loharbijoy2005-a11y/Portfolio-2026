@@ -189,8 +189,8 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                       : 'bg-slate-50 border-slate-200 text-slate-700'
                   }`}
                 >
-                  <div className="font-bold text-slate-900">Standard Pace (3-5 Weeks)</div>
-                  <div className="text-[11px] text-slate-500 mt-1">Normal iterative sprints</div>
+                  <div className="font-bold text-slate-900">Standard Pace (3-4 Weeks)</div>
+                  <div className="text-[11px] text-slate-500 mt-1">Disciplined milestone engineering cycle</div>
                 </button>
 
                 <button
@@ -203,9 +203,9 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                   }`}
                 >
                   <div className="font-bold text-slate-900 flex items-center gap-1">
-                    ⚡ Fast Track (2 Weeks) <span className="text-[10px] text-blue-600 font-normal">(+25%)</span>
+                    ⚡ Fast Track (2-3 Weeks) <span className="text-[10px] text-blue-600 font-normal">(+25%)</span>
                   </div>
-                  <div className="text-[11px] text-slate-500 mt-1">Priority dedicated engineering</div>
+                  <div className="text-[11px] text-slate-500 mt-1">Priority dedicated engineering sprint</div>
                 </button>
               </div>
             </div>

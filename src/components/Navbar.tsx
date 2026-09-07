@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Calendar, Menu, X, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { MagneticButton } from './MagneticButton';
 
 interface NavbarProps {
   onOpenBooking: () => void;
@@ -66,13 +67,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             </div>
 
             {/* CTA Button */}
-            <button
-              onClick={onOpenBooking}
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-xs font-bold tracking-wide shadow-md shadow-blue-600/20 hover:shadow-lg hover:shadow-blue-600/30 transition-all duration-200 active:scale-95"
-            >
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Book a Discovery Call</span>
-            </button>
+            <MagneticButton>
+              <button
+                onClick={onOpenBooking}
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-xs font-bold tracking-wide shadow-md shadow-blue-600/20 hover:shadow-lg hover:shadow-blue-600/30 transition-all duration-200 active:scale-95 cursor-pointer"
+              >
+                <Calendar className="w-3.5 h-3.5" />
+                <span>Book a Discovery Call</span>
+              </button>
+            </MagneticButton>
           </div>
 
           {/* Mobile Menu Toggle */}
