@@ -22,7 +22,7 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
     numericBasePrice: 4999,
     idealFor: 'Startups, local businesses, portfolios & personal branding.',
     features: [
-      '⚡ 2 to 3 Weeks Delivery (Architecture, Responsive Build, Revisions, Deployment)',
+      '⚡ 1 to 2 Weeks Delivery (Architecture, Responsive Build, Revisions, Deployment)',
       '1 – 5 High-Speed Custom Responsive Pages',
       'Lighthouse 95+ Core Web Vitals Optimization',
       'SEO Structured Data & Meta Tag Setup',

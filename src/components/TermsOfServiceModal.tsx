@@ -67,7 +67,7 @@ export const TermsOfServiceModal: React.FC<TermsOfServiceModalProps> = ({ isOpen
                 Every project commences with a documented System Architecture Blueprint defining deliverables, technical specifications, and delivery target timelines:
               </p>
               <ul className="list-disc pl-5 space-y-1.5 text-slate-600">
-                <li><strong className="text-slate-800">Business Starter Builds (2–3 Weeks):</strong> Custom responsive multi-page web applications, SEO optimization, contact forms, and WhatsApp integrations.</li>
+                <li><strong className="text-slate-800">Business Starter Builds (1–2 Weeks):</strong> Custom responsive multi-page web applications, SEO optimization, contact forms, and WhatsApp integrations.</li>
                 <li><strong className="text-slate-800">E-Commerce & Growth Engines (3–4 Weeks):</strong> Next.js store frontends, Razorpay/Stripe payment gateway integration, order webhook triggers, admin inventory dashboards, and automated 18% GST tax invoice generation.</li>
                 <li><strong className="text-slate-800">Custom Full-Stack & SaaS (4–6 Weeks):</strong> Bespoke full-stack web platforms, database schema architecture (MongoDB/PostgreSQL/Supabase), RBAC authentication, and automated cloud deployments.</li>
               </ul>
