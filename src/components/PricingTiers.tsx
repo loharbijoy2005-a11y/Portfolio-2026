@@ -22,7 +22,7 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
     numericBasePrice: 4999,
     idealFor: 'Startups, local businesses, portfolios & personal branding.',
     features: [
-      '⚡ 1 to 2 Weeks Delivery (Architecture, Responsive Build, Revisions, Deployment)',
+      '1 to 2 Weeks Delivery (Architecture, Responsive Build, Revisions, Deployment)',
       '1 – 5 High-Speed Custom Responsive Pages',
       'Lighthouse 95+ Core Web Vitals Optimization',
       'SEO Structured Data & Meta Tag Setup',
@@ -41,7 +41,7 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
     isPopular: true,
     idealFor: 'D2C brands, retail stores & online product catalogs.',
     features: [
-      '⚡ 3 to 4 Weeks Delivery (Payment Gateway Integration, Order Pipelines, Security Audits)',
+      '3 to 4 Weeks Delivery (Payment Gateway Integration, Order Pipelines, Security Audits)',
       'Full Razorpay / Stripe Payment Gateway Integration',
       'Automated WhatsApp Order Alerts & Notifications',
       'Custom Admin Inventory & Order Management Portal',
@@ -59,7 +59,7 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
     numericBasePrice: 24999,
     idealFor: 'Custom web apps, SaaS platforms, client portals & complex APIs.',
     features: [
-      '⚡ 4 to 6 Weeks Delivery (API Design, Database Architecture, Staging & Production Deployment)',
+      '4 to 6 Weeks Delivery (API Design, Database Architecture, Staging & Production Deployment)',
       'Next.js 14 + TypeScript Full-Stack Application',
       'Custom Database Architecture (MongoDB / PostgreSQL / Supabase)',
       'Role-Based Authentication (RBAC) & Session Shield',
@@ -261,7 +261,7 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
             <Zap className="w-4 h-4" />
           </div>
           <p className="text-xs sm:text-sm text-slate-800 font-medium">
-            ⚡ <strong className="font-extrabold text-blue-900">Quality Over Shortcuts:</strong> We maintain a disciplined 3–4 week milestone engineering cycle ensuring zero tech debt, strict type-safety, and seamless GST invoicing.
+            <strong className="font-extrabold text-blue-900">Quality Over Shortcuts:</strong> We maintain a disciplined 3–4 week milestone engineering cycle ensuring zero tech debt, strict type-safety, and seamless GST invoicing.
           </p>
         </div>
 

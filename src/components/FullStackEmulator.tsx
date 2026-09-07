@@ -48,7 +48,7 @@ export async function createCheckoutSession(cart: CartItem[], gstin: string) {
   await db.invoices.create({ orderId: razorpayOrder.id, gstin, subtotal, gstAmount });
   return { orderId: razorpayOrder.id, amount: razorpayOrder.amount };
 }`,
-    buildStatus: '⚡ Vite Compiled in 184ms | Tests: 14/14 Passed | 0 Errors'
+    buildStatus: 'Vite Compiled in 184ms | Tests: 14/14 Passed | 0 Errors'
   },
   {
     id: 'cloud-apis',
@@ -74,7 +74,7 @@ func HandleSessionQuery(w http.ResponseWriter, r *http.Request) {
         "status": "200 OK", "latency": "8ms", "session": session,
     })
 }`,
-    buildStatus: '⚡ Go Microservice Live | Latency: 8ms | Uptime: 99.99%'
+    buildStatus: 'Go Microservice Live | Latency: 8ms | Uptime: 99.99%'
   },
   {
     id: 'whatsapp-automation',
@@ -99,7 +99,7 @@ app.post('/webhooks/order-dispatched', async (req, res) => {
   });
   return res.json({ status: 'NOTIFICATION_SENT' });
 });`,
-    buildStatus: '⚡ Webhook Verified | Meta API Status: Active | 100% Sent'
+    buildStatus: 'Webhook Verified | Meta API Status: Active | 100% Sent'
   },
   {
     id: 'web-landing',
@@ -121,7 +121,7 @@ export default async function SaaSPage() {
     </main>
   );
 }`,
-    buildStatus: '⚡ Next.js ISR Rendered | Lighthouse: 99/100 | CLS: 0.00'
+    buildStatus: 'Next.js ISR Rendered | Lighthouse: 99/100 | CLS: 0.00'
   }
 ];
 
@@ -505,14 +505,14 @@ export const FullStackEmulator: React.FC = () => {
                         <span className="text-[10px] text-slate-400">Just Now</span>
                       </div>
                       <p className="text-slate-700 text-xs leading-relaxed">
-                        🎉 Hi Rajiv! Your order <strong>#SA-9082</strong> has been dispatched. Track your delivery live or download your official GST B2B invoice.
+                        Hi Rajiv! Your order <strong>#SA-9082</strong> has been dispatched. Track your delivery live or download your official GST B2B invoice.
                       </p>
                       <div className="pt-2 flex gap-2">
                         <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-md font-bold text-[10px]">
-                          🚚 Track Package
+                          Track Package
                         </span>
                         <span className="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-md font-bold text-[10px]">
-                          📄 GST Invoice PDF
+                          GST Invoice PDF
                         </span>
                       </div>
                     </div>

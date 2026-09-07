@@ -210,7 +210,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                   }`}
                 >
                   <div className="font-bold text-slate-900 flex items-center gap-1">
-                    ⚡ Fast Track (1-2 Weeks) <span className="text-[10px] text-blue-600 font-normal">(+25%)</span>
+                    Fast Track (1-2 Weeks) <span className="text-[10px] text-blue-600 font-normal">(+25%)</span>
                   </div>
                   <div className="text-[11px] text-slate-500 mt-1">Priority dedicated engineering sprint</div>
                 </button>

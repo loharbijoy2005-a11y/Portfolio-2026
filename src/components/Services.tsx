@@ -121,7 +121,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
 
                   <div className="flex items-center justify-between pt-2">
                     <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200/70">
-                      ⚡ {service.highlightText}
+                      {service.highlightText}
                     </span>
 
                     <button

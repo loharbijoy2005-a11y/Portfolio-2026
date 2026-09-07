@@ -95,7 +95,7 @@ export const MilestoneTimeline: React.FC = () => {
           </div>
           <div>
             <h3 className="text-base font-extrabold text-white mb-1">
-              ⚡ Quality Over Shortcuts
+              Quality Over Shortcuts
             </h3>
             <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
               We maintain a disciplined 3–4 week milestone engineering cycle ensuring zero tech debt, strict type-safety, and seamless GST invoicing.

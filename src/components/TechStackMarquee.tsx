@@ -8,7 +8,10 @@ import {
   Zap,
   Cloud,
   ShieldCheck,
-  Code2
+  Code2,
+  Flame,
+  Layers,
+  Rocket
 } from 'lucide-react';
 
 interface TechSkill {
@@ -18,7 +21,7 @@ interface TechSkill {
   useCase: string;
   brandColor: string;
   level: string;
-  badgeType: 'essential' | 'production' | 'cloud' | 'enterprise' | 'speed';
+  iconName: 'Flame' | 'Zap' | 'Cloud' | 'ShieldCheck' | 'Layers' | 'Cpu' | 'Rocket';
   iconUrl: string;
 }
 
@@ -53,8 +56,8 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'Strict compile-time type safety for high-throughput Next.js & Node.js production platforms', 
     brandColor: '#2563eb', 
-    level: '🔥 Essential Core Stack',
-    badgeType: 'essential',
+    level: 'Core Stack',
+    iconName: 'Flame',
     iconUrl: 'https://cdn.simpleicons.org/typescript/3178C6' 
   },
   { 
@@ -63,8 +66,8 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'Async event loops, real-time WebSockets, DOM manipulation, and dynamic web APIs', 
     brandColor: '#d97706', 
-    level: '🔥 Essential Core Stack',
-    badgeType: 'essential',
+    level: 'Core Stack',
+    iconName: 'Flame',
     iconUrl: 'https://cdn.simpleicons.org/javascript/F7DF1E' 
   },
   { 
@@ -73,18 +76,18 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'FastAPI automation microservices, AI embeddings, data pipelines, and async backends', 
     brandColor: '#0284c7', 
-    level: '⚡ Production High-Speed',
-    badgeType: 'production',
+    level: 'Production',
+    iconName: 'Zap',
     iconUrl: 'https://cdn.simpleicons.org/python/3776AB' 
   },
   { 
     name: 'Java', 
     category: 'Languages', 
     experience: '1–2 Yrs Active Builds', 
-    useCase: 'Object-oriented architecture, concurrent thread queues, and robust enterprise services', 
+    useCase: 'Object-oriented architecture, concurrent thread queues, and enterprise services', 
     brandColor: '#475569', 
-    level: '⚡ Production High-Speed',
-    badgeType: 'production',
+    level: 'Production',
+    iconName: 'Zap',
     iconUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' 
   },
   { 
@@ -93,18 +96,18 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'Sub-millisecond data structure optimization, memory management, and algorithmic kernels', 
     brandColor: '#1d4ed8', 
-    level: '🚀 High-Throughput Tech',
-    badgeType: 'speed',
+    level: 'High-Speed',
+    iconName: 'Cpu',
     iconUrl: 'https://cdn.simpleicons.org/cplusplus/00599C' 
   },
   { 
     name: 'Go (Golang)', 
     category: 'Languages', 
     experience: '1–2 Yrs Active Builds', 
-    useCase: 'Ultra-fast goroutine microservices, high-concurrency workers, and gRPC backend routing', 
+    useCase: 'Goroutine microservices, high-concurrency workers, and gRPC backend routing', 
     brandColor: '#0891b2', 
-    level: '🚀 High-Throughput Tech',
-    badgeType: 'speed',
+    level: 'High-Speed',
+    iconName: 'Cpu',
     iconUrl: 'https://cdn.simpleicons.org/go/00ADD8' 
   },
 
@@ -114,8 +117,8 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'App Router, Server Components, sub-second TTFB, SSR static generation, and edge caching', 
     brandColor: '#1c1917', 
-    level: '🔥 Essential Core Stack',
-    badgeType: 'essential',
+    level: 'Core Stack',
+    iconName: 'Flame',
     iconUrl: 'https://cdn.simpleicons.org/nextdotjs/000000' 
   },
   { 
@@ -124,8 +127,8 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'Custom state hooks, Framer Motion UI animations, concurrent rendering, and dynamic components', 
     brandColor: '#0284c7', 
-    level: '🔥 Essential Core Stack',
-    badgeType: 'essential',
+    level: 'Core Stack',
+    iconName: 'Flame',
     iconUrl: 'https://cdn.simpleicons.org/react/61DAFB' 
   },
   { 
@@ -134,8 +137,8 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'Scalable async REST APIs, Razorpay webhook orchestration, and JWT authentication', 
     brandColor: '#16a34a', 
-    level: '⚡ Production High-Speed',
-    badgeType: 'production',
+    level: 'Production',
+    iconName: 'Zap',
     iconUrl: 'https://cdn.simpleicons.org/nodedotjs/339933' 
   },
   { 
@@ -144,18 +147,18 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'Production microservice middleware, CORS protection, rate limiting, and route handles', 
     brandColor: '#334155', 
-    level: '⚡ Production High-Speed',
-    badgeType: 'production',
+    level: 'Production',
+    iconName: 'Zap',
     iconUrl: 'https://cdn.simpleicons.org/express/000000' 
   },
   { 
     name: 'Tailwind CSS', 
     category: 'Frameworks', 
     experience: '1–2 Yrs Active Builds', 
-    useCase: 'Airy luxury design tokens, responsive fluid layouts, glassmorphic UI, and zero bundle bloat', 
+    useCase: 'Luxury design tokens, responsive fluid layouts, glassmorphic UI, and zero bundle bloat', 
     brandColor: '#0891b2', 
-    level: '🎨 Sleek UI Engine',
-    badgeType: 'essential',
+    level: 'Frontend UI',
+    iconName: 'Layers',
     iconUrl: 'https://cdn.simpleicons.org/tailwindcss/06B6D4' 
   },
 
@@ -165,8 +168,8 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'NoSQL document schemas, aggregation pipelines, replica indexing, and cluster scaling', 
     brandColor: '#059669', 
-    level: '☁️ Cloud-Ready & Scalable',
-    badgeType: 'cloud',
+    level: 'Cloud Ready',
+    iconName: 'Cloud',
     iconUrl: 'https://cdn.simpleicons.org/mongodb/47A248' 
   },
   { 
@@ -175,8 +178,8 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'PostgreSQL relational schemas, row-level security (RLS), and real-time database sync', 
     brandColor: '#10b981', 
-    level: '☁️ Cloud-Ready & Scalable',
-    badgeType: 'cloud',
+    level: 'Cloud Ready',
+    iconName: 'Cloud',
     iconUrl: 'https://cdn.simpleicons.org/supabase/3ECF8E' 
   },
   { 
@@ -185,8 +188,8 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'Global CDN edge workers, SSL/TLS encryption, and instant DDoS mitigation', 
     brandColor: '#ea580c', 
-    level: '☁️ Cloud-Ready & Scalable',
-    badgeType: 'cloud',
+    level: 'Cloud Ready',
+    iconName: 'Cloud',
     iconUrl: 'https://cdn.simpleicons.org/cloudflare/F38020' 
   },
   { 
@@ -195,8 +198,8 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'Automated CI/CD deployment pipelines for Node services, Edge Functions and Databases', 
     brandColor: '#4f46e5', 
-    level: '☁️ Cloud-Ready & Scalable',
-    badgeType: 'cloud',
+    level: 'Cloud Ready',
+    iconName: 'Cloud',
     iconUrl: 'https://cdn.simpleicons.org/vercel/000000' 
   },
 
@@ -206,8 +209,8 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'Git flow, pull requests, CI/CD automated deployment actions, and repository security', 
     brandColor: '#1e293b', 
-    level: '🛡️ Enterprise Essential',
-    badgeType: 'enterprise',
+    level: 'Enterprise',
+    iconName: 'ShieldCheck',
     iconUrl: 'https://cdn.simpleicons.org/github/181717' 
   },
   { 
@@ -216,8 +219,8 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'Checkout webhooks, automated GST tax invoice generation, and instant settlement sync', 
     brandColor: '#1d4ed8', 
-    level: '🛡️ Enterprise Essential',
-    badgeType: 'enterprise',
+    level: 'Enterprise',
+    iconName: 'ShieldCheck',
     iconUrl: 'https://cdn.simpleicons.org/razorpay/0C2340' 
   },
   { 
@@ -226,11 +229,24 @@ const TECH_SKILLS: TechSkill[] = [
     experience: '1–2 Yrs Active Builds', 
     useCase: 'Automated customer order alerts, cart recovery, and interactive notification bots', 
     brandColor: '#15803d', 
-    level: '🛡️ Enterprise Essential',
-    badgeType: 'enterprise',
+    level: 'Enterprise',
+    iconName: 'ShieldCheck',
     iconUrl: 'https://cdn.simpleicons.org/whatsapp/25D366' 
   },
 ];
+
+const renderIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'Flame': return <Flame className="w-3 h-3 text-white" />;
+    case 'Zap': return <Zap className="w-3 h-3 text-white" />;
+    case 'Cloud': return <Cloud className="w-3 h-3 text-white" />;
+    case 'ShieldCheck': return <ShieldCheck className="w-3 h-3 text-white" />;
+    case 'Layers': return <Layers className="w-3 h-3 text-white" />;
+    case 'Cpu': return <Cpu className="w-3 h-3 text-white" />;
+    case 'Rocket': return <Rocket className="w-3 h-3 text-white" />;
+    default: return <Sparkles className="w-3 h-3 text-white" />;
+  }
+};
 
 export const TechStackMarquee: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
@@ -387,13 +403,13 @@ export const TechStackMarquee: React.FC = () => {
                   spotlightColor="rgba(59, 130, 246, 0.14)"
                 >
                   <div>
-                    {/* Header Level Animated Pill */}
+                    {/* Header Level Clean Pill with Lucide Icon */}
                     <div className="flex items-center justify-between mb-4">
                       <span 
                         className="inline-flex items-center gap-1.5 text-[11px] font-bold font-mono px-3 py-1 rounded-full text-white shadow-xs"
                         style={{ backgroundColor: skill.brandColor }}
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                        {renderIcon(skill.iconName)}
                         <span>{skill.level}</span>
                       </span>
 
