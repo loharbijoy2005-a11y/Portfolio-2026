@@ -2,7 +2,7 @@ import React from 'react';
 import { MessageSquare } from 'lucide-react';
 
 export const WhatsAppFloating: React.FC = () => {
-  const whatsappUrl = "https://wa.me/919876543210?text=Hi%20Bijoy%20Lohar!%20I'd%20like%20to%20discuss%20a%20web%20engineering%20project%20with%20Shadow%20Arrow.";
+  const whatsappUrl = "https://wa.me/919242725326?text=Hi%20Bijoy%20Lohar!%20I'd%20like%20to%20discuss%20a%20web%20engineering%20project%20with%20Shadow%20Arrow.";
 
   return (
     <a

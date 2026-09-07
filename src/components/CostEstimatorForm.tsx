@@ -376,7 +376,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                 {/* WhatsApp Quick Connect Alternative */}
                 <div className="pt-2 text-center">
                   <a
-                    href={`https://wa.me/919876543210?text=${whatsappMessage}`}
+                    href={`https://wa.me/919242725326?text=${whatsappMessage}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline"
