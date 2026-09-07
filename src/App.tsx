@@ -12,7 +12,6 @@ import { FounderBio } from './components/FounderBio';
 import { TechStackMarquee } from './components/TechStackMarquee';
 import { Services } from './components/Services';
 import { CaseStudies } from './components/CaseStudies';
-import { GitHubShowcase } from './components/GitHubShowcase';
 import { TechArchitecture } from './components/TechArchitecture';
 import { MilestoneTimeline } from './components/MilestoneTimeline';
 import { B2BTrustGST } from './components/B2BTrustGST';
@@ -156,16 +155,6 @@ export const App: React.FC = () => {
           variants={sectionVariants}
         >
           <CaseStudies onSelectForQuote={handleSelectForQuote} />
-        </motion.div>
-
-        {/* Live GitHub Repositories Showcase */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          variants={sectionVariants}
-        >
-          <GitHubShowcase />
         </motion.div>
 
         {/* Clean System Architecture & Code Specs */}
