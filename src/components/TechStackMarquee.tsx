@@ -331,51 +331,58 @@ export const TechStackMarquee: React.FC = () => {
 
         {/* Interactive Badges Grid with Official Tech Logos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {filteredSkills.map((skill) => (
-            <SpotlightCard
+          {filteredSkills.map((skill, idx) => (
+            <motion.div
               key={skill.name}
-              className="p-5 flex flex-col justify-between group hover:border-blue-300 transition-all"
-              spotlightColor="rgba(59, 130, 246, 0.12)"
+              initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: (idx % 4) * 0.08, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div>
-                {/* Header Badge & Level */}
-                <div className="flex items-center justify-between mb-4">
-                  <span 
-                    className="text-[10px] font-bold font-mono px-2.5 py-0.5 rounded-full text-white"
-                    style={{ backgroundColor: skill.brandColor }}
-                  >
-                    {skill.level}
-                  </span>
-                  <span className="text-[11px] font-semibold text-slate-400 font-mono">
-                    {skill.experience}
-                  </span>
-                </div>
-
-                {/* Tech Title with Official SVG Logo Container */}
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-110 transition-transform">
-                    <img src={skill.iconUrl} alt={skill.name} className="w-6 h-6 object-contain" />
+              <SpotlightCard
+                className="p-5 flex flex-col justify-between group hover:border-blue-300 transition-all h-full"
+                spotlightColor="rgba(59, 130, 246, 0.12)"
+              >
+                <div>
+                  {/* Header Badge & Level */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span 
+                      className="text-[10px] font-bold font-mono px-2.5 py-0.5 rounded-full text-white"
+                      style={{ backgroundColor: skill.brandColor }}
+                    >
+                      {skill.level}
+                    </span>
+                    <span className="text-[11px] font-semibold text-slate-400 font-mono">
+                      {skill.experience}
+                    </span>
                   </div>
-                  <h3 className="text-base font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
-                    {skill.name}
-                  </h3>
+
+                  {/* Tech Title with Official SVG Logo Container */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 p-2 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-110 transition-transform">
+                      <img src={skill.iconUrl} alt={skill.name} className="w-6 h-6 object-contain" />
+                    </div>
+                    <h3 className="text-base font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
+                      {skill.name}
+                    </h3>
+                  </div>
+
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {skill.useCase}
+                  </p>
                 </div>
 
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {skill.useCase}
-                </p>
-              </div>
-
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-blue-600 font-semibold">
-                <span className="flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Production Ready</span>
-                </span>
-                <span className="font-mono text-slate-400">
-                  {skill.category.split(' ')[0]}
-                </span>
-              </div>
-            </SpotlightCard>
+                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-blue-600 font-semibold">
+                  <span className="flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Production Ready</span>
+                  </span>
+                  <span className="font-mono text-slate-400">
+                    {skill.category.split(' ')[0]}
+                  </span>
+                </div>
+              </SpotlightCard>
+            </motion.div>
           ))}
         </div>
 

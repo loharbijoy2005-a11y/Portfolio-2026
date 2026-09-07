@@ -125,10 +125,10 @@ export const MilestoneTimeline: React.FC = () => {
               return (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.5, delay: idx * 0.12 }}
+                  transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
                   whileHover={{ y: -6 }}
                   className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-blue-400 transition-all flex flex-col justify-between space-y-6 group"
                 >

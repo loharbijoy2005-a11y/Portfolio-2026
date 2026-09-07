@@ -166,7 +166,13 @@ export const FullStackEmulator: React.FC = () => {
   }, [activeProjectIndex]);
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200/90 shadow-2xl overflow-hidden relative">
+    <motion.div 
+      initial={{ opacity: 0, x: 50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="bg-white rounded-3xl border border-slate-200/90 shadow-2xl overflow-hidden relative"
+    >
       
       {/* Top Timeline Navigation Bar */}
       <div className="bg-slate-100/90 px-4 pt-4 pb-2 border-b border-slate-200">
@@ -553,7 +559,7 @@ export const FullStackEmulator: React.FC = () => {
 
       </div>
 
-    </div>
+    </motion.div>
   );
 };
 

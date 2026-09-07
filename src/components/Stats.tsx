@@ -39,8 +39,11 @@ export const Stats: React.FC = () => {
             return (
               <motion.div 
                 key={idx} 
+                initial={{ opacity: 0, x: idx < 2 ? -40 : 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-20px' }}
+                transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={{ scale: 1.03, y: -2 }}
-                transition={{ duration: 0.2 }}
                 className="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50/80 transition-colors border border-transparent hover:border-slate-200/80 cursor-pointer group"
               >
                 <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300 shrink-0 mt-0.5 shadow-2xs">

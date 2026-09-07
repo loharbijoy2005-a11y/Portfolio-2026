@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { ESTIMATOR_MODULES, SERVICES_DATA } from '../data/portfolioData';
 import { 
@@ -114,7 +115,13 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Left: Interactive Estimator Controls */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-8">
+          <motion.div 
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-8"
+          >
             
             {/* Step 1: Select Service */}
             <div>
@@ -241,10 +248,16 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
               </div>
             </div>
 
-          </div>
+          </motion.div>
 
           {/* Right: Contact Form */}
-          <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-lg space-y-6">
+          <motion.div 
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-lg space-y-6"
+          >
             
             <div className="border-b border-slate-100 pb-4">
               <h3 className="text-xl font-bold text-slate-900">
@@ -389,7 +402,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
               </form>
             )}
 
-          </div>
+          </motion.div>
 
         </div>
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { ARCHITECTURE_LAYERS } from '../data/portfolioData';
 import { FullStackEmulator } from './FullStackEmulator';
 import { 
@@ -35,11 +36,15 @@ export const TechArchitecture: React.FC = () => {
 
         {/* Interactive Layer Selector Tabs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {ARCHITECTURE_LAYERS.map((layer) => {
+          {ARCHITECTURE_LAYERS.map((layer, idx) => {
             const isSelected = layer.id === selectedLayerId;
             return (
-              <button
+              <motion.button
                 key={layer.id}
+                initial={{ opacity: 0, x: idx === 0 ? -60 : idx === 2 ? 60 : 0, y: idx === 1 ? 30 : 0 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 onClick={() => setSelectedLayerId(layer.id)}
                 className={`p-6 rounded-2xl text-left border transition-all duration-200 cursor-pointer ${
                   isSelected
@@ -62,13 +67,19 @@ export const TechArchitecture: React.FC = () => {
                 <p className="text-xs text-slate-500 font-medium">
                   {layer.subtitle}
                 </p>
-              </button>
+              </motion.button>
             );
           })}
         </div>
 
         {/* Selected Layer Overview Specs */}
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6"
+        >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
             <div>
               <span className="text-xs font-mono font-bold text-blue-600 uppercase tracking-widest block mb-1">
@@ -89,7 +100,14 @@ export const TechArchitecture: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {currentLayer.techs.map((tech, idx) => (
-              <div key={idx} className="bg-slate-50 p-4 rounded-xl border border-slate-200/80 flex items-start gap-3">
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.08 }}
+                className="bg-slate-50 p-4 rounded-xl border border-slate-200/80 flex items-start gap-3"
+              >
                 <div className="w-8 h-8 rounded-lg bg-blue-100/80 text-blue-700 flex items-center justify-center shrink-0 mt-0.5">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
@@ -97,10 +115,10 @@ export const TechArchitecture: React.FC = () => {
                   <h4 className="text-xs font-bold text-slate-900">{tech.name}</h4>
                   <p className="text-[11px] text-slate-500 mt-0.5">{tech.desc}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Full-Scale Animated Live Full-Stack Project Emulator */}
         <div className="space-y-4">
