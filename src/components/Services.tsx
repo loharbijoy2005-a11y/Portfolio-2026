@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { SERVICES_DATA } from '../data/portfolioData';
 import { SpotlightCard } from './SpotlightCard';
 import { 
@@ -24,12 +25,18 @@ const iconMap: Record<string, React.ElementType> = {
 
 export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
   return (
-    <section id="services" className="py-24 bg-[#F8FAFC] relative z-10">
+    <section id="services" className="py-24 bg-[#F8FAFC] relative z-10 overflow-hidden">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-3xl mx-auto space-y-4 mb-16"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-semibold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5 text-blue-600" />
             <span>Core Engineering Services</span>
@@ -42,19 +49,27 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
           <p className="text-base sm:text-lg text-slate-600 font-normal">
             Every project is built with clean architecture, strict TypeScript types, sub-second response times, and 100% contract-backed IP handoff.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Services Grid wrapped in SpotlightCard */}
+        {/* Services Grid wrapped in SpotlightCard with Side Slide Animations */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {SERVICES_DATA.map((service) => {
+          {SERVICES_DATA.map((service, index) => {
             const Icon = iconMap[service.iconName] || Code2;
+            const isEven = index % 2 === 0;
             
             return (
-              <SpotlightCard
+              <motion.div
                 key={service.id}
-                className="flex flex-col justify-between"
-                spotlightColor="rgba(59, 130, 246, 0.12)"
+                initial={{ opacity: 0, x: isEven ? -60 : 60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }}
+                className="h-full"
               >
+                <SpotlightCard
+                  className="flex flex-col justify-between h-full"
+                  spotlightColor="rgba(59, 130, 246, 0.12)"
+                >
                 <div>
                   
                   {/* Top Bar inside Card */}
@@ -120,8 +135,9 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
                 </div>
 
               </SpotlightCard>
-            );
-          })}
+            </motion.div>
+          );
+        })}
         </div>
 
       </div>

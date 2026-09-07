@@ -141,7 +141,7 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
 
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-          {PRICING_TIERS_DATA.map((tier) => {
+          {PRICING_TIERS_DATA.map((tier, idx) => {
             const isHighlighted = tier.isPopular;
 
             const displayPrice = billingCycle === 'retainer'
@@ -152,11 +152,17 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
                 : 'Custom Retainer'
               : tier.priceRange;
 
+            const xOffset = idx === 0 ? -60 : idx === 2 ? 60 : 0;
+            const yOffset = idx === 1 ? 40 : 0;
+
             return (
               <motion.div
                 key={tier.id}
+                initial={{ opacity: 0, x: xOffset, y: yOffset }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
                 whileHover={{ y: -6, scale: 1.01 }}
-                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: idx * 0.12 }}
                 className={`rounded-3xl p-8 flex flex-col justify-between relative transition-all duration-300 ${
                   isHighlighted
                     ? 'bg-gradient-to-b from-blue-50/90 via-white to-indigo-50/50 border-2 border-blue-500 shadow-xl shadow-blue-500/15 ring-4 ring-blue-500/10'

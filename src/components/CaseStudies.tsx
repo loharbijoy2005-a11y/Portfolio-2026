@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { CASE_STUDIES_DATA } from '../data/portfolioData';
 import type { CaseStudy } from '../types';
 import { CaseStudyModal } from './CaseStudyModal';
@@ -23,11 +24,17 @@ export const CaseStudies: React.FC<CaseStudiesProps> = ({ onSelectForQuote }) =>
     : CASE_STUDIES_DATA.filter((cs) => cs.category === filter);
 
   return (
-    <section id="work" className="py-24 bg-white border-t border-slate-200/80">
+    <section id="work" className="py-24 bg-white border-t border-slate-200/80 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header & Filter Tabs */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
+        >
           <div className="space-y-3 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-semibold uppercase tracking-wider">
               <Briefcase className="w-3.5 h-3.5 text-blue-600" />
@@ -59,15 +66,21 @@ export const CaseStudies: React.FC<CaseStudiesProps> = ({ onSelectForQuote }) =>
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Case Studies Grid */}
+        {/* Case Studies Grid with Side Slide Animations */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredStudies.map((study) => (
-            <div
-              key={study.id}
-              className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-xl hover:border-blue-300 card-hover-glow transition-all duration-300 flex flex-col justify-between group"
-            >
+          {filteredStudies.map((study, idx) => {
+            const isEven = idx % 2 === 0;
+            return (
+              <motion.div
+                key={study.id}
+                initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: idx * 0.12 }}
+                className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-xl hover:border-blue-300 card-hover-glow transition-all duration-300 flex flex-col justify-between group"
+              >
               {/* Image Preview Container */}
               <div className="relative h-48 overflow-hidden bg-slate-100">
                 <img
@@ -138,8 +151,9 @@ export const CaseStudies: React.FC<CaseStudiesProps> = ({ onSelectForQuote }) =>
                 </div>
               </div>
 
-            </div>
-          ))}
+            </motion.div>
+          );
+        })}
         </div>
 
       </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { 
   ShieldCheck, 
   CheckCircle2, 
@@ -155,29 +156,36 @@ export const B2BTrustGST: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {milestones.map((m, idx) => (
-              <div 
-                key={idx}
-                className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-blue-300 transition-all space-y-3 relative group"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-black font-mono text-blue-600/30 group-hover:text-blue-600 transition-colors">
-                    {m.phase}
-                  </span>
-                  <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold border border-blue-100 font-mono">
-                    {m.payment}
-                  </span>
-                </div>
+            {milestones.map((m, idx) => {
+              const isEven = idx % 2 === 0;
+              return (
+                <motion.div 
+                  key={idx}
+                  initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: idx * 0.1 }}
+                  className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-blue-300 transition-all space-y-3 relative group"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl font-black font-mono text-blue-600/30 group-hover:text-blue-600 transition-colors">
+                      {m.phase}
+                    </span>
+                    <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold border border-blue-100 font-mono">
+                      {m.payment}
+                    </span>
+                  </div>
 
-                <h4 className="text-base font-bold text-slate-900">
-                  {m.title}
-                </h4>
+                  <h4 className="text-base font-bold text-slate-900">
+                    {m.title}
+                  </h4>
 
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {m.desc}
-                </p>
-              </div>
-            ))}
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {m.desc}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 

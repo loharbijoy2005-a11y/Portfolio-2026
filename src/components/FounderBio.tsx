@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { SpotlightCard } from './SpotlightCard';
 import { 
   CheckCircle2, 
@@ -8,15 +9,21 @@ import {
 
 export const FounderBio: React.FC = () => {
   return (
-    <section className="py-20 bg-white border-t border-slate-200/80 relative z-10">
+    <section className="py-20 bg-white border-t border-slate-200/80 relative z-10 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <SpotlightCard className="p-8 sm:p-12 bg-gradient-to-br from-white via-slate-50/50 to-blue-50/30 border border-slate-200/90 shadow-xl" spotlightColor="rgba(59, 130, 246, 0.12)">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
-            {/* Left: Bio Info */}
-            <div className="lg:col-span-8 space-y-5">
+            {/* Left: Bio Info (Slides in from Left) */}
+            <motion.div 
+              initial={{ opacity: 0, x: -60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-8 space-y-5"
+            >
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-semibold uppercase tracking-wider">
                 <Rocket className="w-3.5 h-3.5 text-blue-600" />
                 <span>Founder & Lead Engineering Philosophy</span>
@@ -50,10 +57,16 @@ export const FounderBio: React.FC = () => {
                   <span>Official GST 18% Input Tax Credit Invoicing</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Right: Founder Profile Card */}
-            <div className="lg:col-span-4 bg-white rounded-2xl p-6 border border-slate-200/90 shadow-md text-center space-y-4 relative">
+            {/* Right: Founder Profile Card (Slides in from Right) */}
+            <motion.div 
+              initial={{ opacity: 0, x: 60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+              className="lg:col-span-4 bg-white rounded-2xl p-6 border border-slate-200/90 shadow-md text-center space-y-4 relative"
+            >
               <img
                 src="https://github.com/loharbijoy2005-a11y.png"
                 alt="Bijoy Lohar - Founder & Lead Engineer"
@@ -80,7 +93,7 @@ export const FounderBio: React.FC = () => {
                 <span>Direct Founder Consultation</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </a>
-            </div>
+            </motion.div>
 
           </div>
 
