@@ -403,14 +403,14 @@ export const TechStackMarquee: React.FC = () => {
                   spotlightColor="rgba(59, 130, 246, 0.14)"
                 >
                   <div>
-                    {/* Header Level Clean Pill with Lucide Icon */}
+                    {/* Header Icon-Only Badge */}
                     <div className="flex items-center justify-between mb-4">
                       <span 
-                        className="inline-flex items-center gap-1.5 text-[11px] font-bold font-mono px-3 py-1 rounded-full text-white shadow-xs"
+                        className="inline-flex items-center justify-center w-7 h-7 rounded-xl text-white shadow-2xs group-hover:scale-110 transition-transform"
                         style={{ backgroundColor: skill.brandColor }}
+                        title={skill.level}
                       >
                         {renderIcon(skill.iconName)}
-                        <span>{skill.level}</span>
                       </span>
 
                       <span className="text-[11px] font-semibold text-slate-400 font-mono">
