@@ -8,8 +8,6 @@ import {
   Star, 
   GitBranch, 
   ExternalLink, 
-  Pause, 
-  Play, 
   ShieldCheck, 
   Activity, 
   Smartphone
@@ -137,7 +135,6 @@ export default async function SaaSPage() {
 
 export const FullStackEmulator: React.FC = () => {
   const [activeProjectIndex, setActiveProjectIndex] = useState<number>(0);
-  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [typedCode, setTypedCode] = useState<string>('');
   const [mobileTab, setMobileTab] = useState<'code' | 'browser'>('browser');
   const [cartCount, setCartCount] = useState<number>(1);
@@ -149,14 +146,12 @@ export const FullStackEmulator: React.FC = () => {
 
   // Auto-rotating countdown timer (7 seconds per project)
   useEffect(() => {
-    if (isPaused) return;
-
     const timer = setTimeout(() => {
       setActiveProjectIndex((prev) => (prev + 1) % PROJECTS.length);
     }, 7000);
 
     return () => clearTimeout(timer);
-  }, [activeProjectIndex, isPaused]);
+  }, [activeProjectIndex]);
 
   // Code typing effect on project switch
   useEffect(() => {
@@ -198,7 +193,6 @@ export const FullStackEmulator: React.FC = () => {
                   key={proj.id}
                   onClick={() => {
                     setActiveProjectIndex(idx);
-                    setIsPaused(true);
                   }}
                   className={`relative px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     isSelected ? 'text-blue-700 font-bold' : 'text-slate-600 hover:text-slate-900'
@@ -223,30 +217,17 @@ export const FullStackEmulator: React.FC = () => {
             })}
           </div>
 
-          {/* Controls: Play/Pause Indicator */}
-          <div className="flex items-center gap-3 self-end sm:self-center text-xs font-medium text-slate-500">
-            <button
-              onClick={() => setIsPaused(!isPaused)}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 transition-colors text-slate-700 font-semibold cursor-pointer"
-            >
-              {isPaused ? <Play className="w-3.5 h-3.5 text-blue-600 fill-current" /> : <Pause className="w-3.5 h-3.5 text-amber-500 fill-current" />}
-              <span>{isPaused ? 'Resume Auto-Rotate' : 'Pause Auto-Rotate'}</span>
-            </button>
-          </div>
-
         </div>
 
         {/* 7-Second Progress Bar */}
         <div className="w-full h-1 bg-slate-200/80 rounded-full overflow-hidden">
-          {!isPaused && (
-            <motion.div
-              key={activeProjectIndex}
-              initial={{ width: '0%' }}
-              animate={{ width: '100%' }}
-              transition={{ duration: 7, ease: 'linear' }}
-              className="h-full bg-blue-600"
-            />
-          )}
+          <motion.div
+            key={activeProjectIndex}
+            initial={{ width: '0%' }}
+            animate={{ width: '100%' }}
+            transition={{ duration: 7, ease: 'linear' }}
+            className="h-full bg-blue-600"
+          />
         </div>
       </div>
 
@@ -303,10 +284,7 @@ export const FullStackEmulator: React.FC = () => {
       </div>
 
       {/* Main Dual-Pane Section */}
-      <div 
-        onMouseEnter={() => setIsPaused(true)}
-        className="grid grid-cols-1 lg:grid-cols-12 min-h-[480px]"
-      >
+      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[480px]">
         
         {/* Left Pane: Code Engine Console */}
         <div className={`lg:col-span-6 bg-slate-950 text-slate-100 p-6 flex flex-col justify-between border-r border-slate-800 font-mono ${
@@ -617,7 +595,7 @@ export const FullStackEmulator: React.FC = () => {
           </div>
 
           <div className="pt-3 border-t border-slate-200 text-xs text-slate-500 flex items-center justify-between">
-            <span>Hover pane to pause auto-rotate</span>
+            <span className="font-semibold text-slate-600">Automated Live Showcase</span>
             <span className="text-blue-600 font-bold">100% Production Verified</span>
           </div>
 
