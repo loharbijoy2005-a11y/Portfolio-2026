@@ -9,8 +9,8 @@
 
   body {
     font-family: var(--font-body);
-    background-color: #F8FAFC;
-    color: #0F172A;
+    background-color: #FAF7F2;
+    color: #1C1917;
     overflow-x: hidden;
   }
 
@@ -23,73 +23,73 @@
   }
 }
 
-/* Custom background patterns for bright SaaS aesthetic */
+/* Custom background patterns for luxury cream aesthetic */
 .bg-grid-pattern {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(226, 232, 240, 0.4) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(226, 232, 240, 0.4) 1px, transparent 1px);
+    linear-gradient(to right, rgba(225, 213, 196, 0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(225, 213, 196, 0.45) 1px, transparent 1px);
 }
 
 .bg-dot-pattern {
   background-size: 20px 20px;
-  background-image: radial-gradient(circle, rgba(203, 213, 225, 0.45) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(215, 199, 177, 0.5) 1px, transparent 1px);
 }
 
-/* Radiant glow effects for bright SaaS theme */
+/* Radiant glow effects for luxury warm cream theme */
 .hero-glow {
-  background: radial-gradient(circle 600px at 50% -100px, rgba(37, 99, 235, 0.12), rgba(99, 102, 241, 0.05), transparent);
+  background: radial-gradient(circle 650px at 50% -100px, rgba(245, 228, 202, 0.7), rgba(37, 99, 235, 0.06), transparent);
 }
 
 .card-hover-glow {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .card-hover-glow:hover {
-  box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.08), 0 0 15px 0 rgba(37, 99, 235, 0.03);
-  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 20px 40px -15px rgba(217, 119, 6, 0.1), 0 0 15px 0 rgba(37, 99, 235, 0.04);
+  border-color: rgba(217, 119, 6, 0.3);
   transform: translateY(-2px);
 }
 
-/* Glassmorphism light */
+/* Glassmorphism cream light */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 253, 249, 0.90);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid rgba(229, 218, 202, 0.85);
 }
 
 .glass-nav {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(250, 247, 242, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  border-bottom: 1px solid rgba(229, 218, 202, 0.85);
 }
 
-/* Smooth custom scrollbars */
+/* Smooth custom scrollbars in cream theme */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #F4EFE6;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #D7CCA8;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #B5A788;
 }
 
 /* Animated gradient text */
 .text-gradient {
-  background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #2563EB 100%);
+  background: linear-gradient(135deg, #1C1917 0%, #451A03 50%, #B45309 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-accent {
-  background: linear-gradient(135deg, #1D4ED8 0%, #4F46E5 100%);
+  background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 50%, #D97706 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

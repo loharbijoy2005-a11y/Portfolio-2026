@@ -71,7 +71,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#1A1714] selection:bg-blue-100 selection:text-blue-900 font-sans relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#FAF7F2] text-[#1C1917] selection:bg-amber-100 selection:text-amber-900 font-sans relative overflow-x-hidden">
       
       {/* Cinematic Splash Intro Preloader */}
       <CinematicSplash onComplete={() => setIsSplashActive(false)} />

@@ -54,7 +54,7 @@ export const CinematicSplash: React.FC<CinematicSplashProps> = ({ onComplete }) 
           initial={{ y: '0%' }}
           exit={{ y: '-100%' }}
           transition={{ duration: 0.65, ease: [0.76, 0, 0.24, 1] }}
-          className="fixed inset-0 z-50 bg-[#FAF8F5] text-slate-900 flex flex-col justify-between p-8 sm:p-16 select-none font-sans overflow-hidden border-b border-slate-200"
+          className="fixed inset-0 z-50 bg-[#FAF7F2] text-slate-900 flex flex-col justify-between p-8 sm:p-16 select-none font-sans overflow-hidden border-b border-[#E5DDD0]"
         >
           {/* Top Brand Header */}
           <div className="flex items-center justify-between text-xs font-mono text-slate-500 uppercase tracking-widest">
