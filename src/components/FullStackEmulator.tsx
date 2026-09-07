@@ -134,6 +134,8 @@ export const FullStackEmulator: React.FC = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState<boolean>(false);
 
   const activeProject = PROJECTS[activeProjectIndex];
+  const fullText = activeProject.codeSnippet;
+  const progressRatio = fullText.length > 0 ? Math.min(1, typedCode.length / fullText.length) : 1;
 
   // Auto-rotating countdown timer (7 seconds per project)
   useEffect(() => {
@@ -150,20 +152,19 @@ export const FullStackEmulator: React.FC = () => {
   useEffect(() => {
     setTypedCode('');
     let charIdx = 0;
-    const fullText = activeProject.codeSnippet;
 
     const typingInterval = setInterval(() => {
-      charIdx += 3;
+      charIdx += 4;
       if (charIdx >= fullText.length) {
         setTypedCode(fullText);
         clearInterval(typingInterval);
       } else {
         setTypedCode(fullText.substring(0, charIdx));
       }
-    }, 12);
+    }, 15);
 
     return () => clearInterval(typingInterval);
-  }, [activeProjectIndex]);
+  }, [activeProjectIndex, fullText]);
 
   return (
     <motion.div 
@@ -354,7 +355,9 @@ export const FullStackEmulator: React.FC = () => {
 
               <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="hidden sm:inline">LIVE INTERACTIVE</span>
+                <span className="text-blue-600 font-bold hidden sm:inline">
+                  {progressRatio < 0.3 ? 'Parsing Syntax...' : progressRatio < 0.8 ? 'Executing Code Logic...' : 'LIVE COMPLETED'}
+                </span>
               </div>
             </div>
 
@@ -381,41 +384,58 @@ export const FullStackEmulator: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                      <div className="w-full h-24 rounded-lg bg-blue-100/60 mb-2 flex items-center justify-center text-blue-600 font-bold text-xs">
-                        Product #01
+                  {/* Step 1: Products (Visible at 20% progress) */}
+                  {progressRatio >= 0.2 && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-2 gap-3">
+                      <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <div className="w-full h-20 rounded-lg bg-blue-100/60 mb-2 flex items-center justify-center text-blue-600 font-bold text-xs">
+                          Product #01
+                        </div>
+                        <h4 className="text-xs font-bold text-slate-900">Custom Next.js App</h4>
+                        <p className="text-[11px] font-mono text-blue-600 font-bold mt-0.5">₹4,999</p>
                       </div>
-                      <h4 className="text-xs font-bold text-slate-900">Custom Next.js App</h4>
-                      <p className="text-[11px] font-mono text-blue-600 font-bold mt-0.5">₹4,999</p>
-                    </div>
 
-                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                      <div className="w-full h-24 rounded-lg bg-indigo-100/60 mb-2 flex items-center justify-center text-indigo-600 font-bold text-xs">
-                        Product #02
+                      <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <div className="w-full h-24 rounded-lg bg-indigo-100/60 mb-2 flex items-center justify-center text-indigo-600 font-bold text-xs">
+                          Product #02
+                        </div>
+                        <h4 className="text-xs font-bold text-slate-900">E-Commerce Engine</h4>
+                        <p className="text-[11px] font-mono text-blue-600 font-bold mt-0.5">₹12,999</p>
                       </div>
-                      <h4 className="text-xs font-bold text-slate-900">E-Commerce Engine</h4>
-                      <p className="text-[11px] font-mono text-blue-600 font-bold mt-0.5">₹12,999</p>
-                    </div>
-                  </div>
+                    </motion.div>
+                  )}
 
-                  <div className="pt-2 flex items-center justify-between">
-                    <div className="text-xs">
-                      <span className="text-slate-500 block text-[10px]">Instant Checkout</span>
-                      <span className="font-bold text-slate-900">Verified GST B2B Invoice</span>
-                    </div>
+                  {/* Step 2: GST Computation & Razorpay Session (Visible at 40% progress) */}
+                  {progressRatio >= 0.4 && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="p-3 bg-blue-50/70 rounded-xl border border-blue-200/80 text-xs flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] text-blue-700 font-semibold block">GST B2B Tax Computation</span>
+                        <span className="font-bold text-slate-900">Subtotal ₹4,999 + 18% GST (₹899.82)</span>
+                      </div>
+                      <span className="font-mono text-blue-700 font-extrabold text-xs">₹5,898.82</span>
+                    </motion.div>
+                  )}
 
-                    <button
-                      onClick={() => {
-                        setCartCount((c) => c + 1);
-                        setIsPaymentModalOpen(true);
-                      }}
-                      className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
-                    >
-                      <span>Simulate Razorpay Buy Now</span>
-                      <ArrowRightIcon className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                  {/* Step 3: Checkout Action (Visible at 70% progress) */}
+                  {progressRatio >= 0.7 && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="pt-2 flex items-center justify-between">
+                      <div className="text-xs">
+                        <span className="text-slate-500 block text-[10px]">Razorpay Checkout</span>
+                        <span className="font-bold text-slate-900">100% Verified GST Invoice</span>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setCartCount((c) => c + 1);
+                          setIsPaymentModalOpen(true);
+                        }}
+                        className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
+                      >
+                        <span>Simulate Razorpay Buy Now</span>
+                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                      </button>
+                    </motion.div>
+                  )}
 
                   {/* Payment Modal Simulation */}
                   {isPaymentModalOpen && (
@@ -452,29 +472,35 @@ export const FullStackEmulator: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-3 text-center">
-                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                      <div className="text-xl font-extrabold font-mono text-slate-900">8ms</div>
-                      <div className="text-[10px] text-slate-500 font-medium">DB Latency</div>
-                    </div>
-                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                      <div className="text-xl font-extrabold font-mono text-blue-600">50K/m</div>
-                      <div className="text-[10px] text-slate-500 font-medium">API Requests</div>
-                    </div>
-                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                      <div className="text-xl font-extrabold font-mono text-emerald-600">0%</div>
-                      <div className="text-[10px] text-slate-500 font-medium">Error Rate</div>
-                    </div>
-                  </div>
+                  {/* Step 1: Rate Limiter Status (Visible at 25% progress) */}
+                  {progressRatio >= 0.25 && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-3 gap-3 text-center">
+                      <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <div className="text-xl font-extrabold font-mono text-slate-900">8ms</div>
+                        <div className="text-[10px] text-slate-500 font-medium">DB Latency</div>
+                      </div>
+                      <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <div className="text-xl font-extrabold font-mono text-blue-600">50K/m</div>
+                        <div className="text-[10px] text-slate-500 font-medium">API Requests</div>
+                      </div>
+                      <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <div className="text-xl font-extrabold font-mono text-emerald-600">0%</div>
+                        <div className="text-[10px] text-slate-500 font-medium">Error Rate</div>
+                      </div>
+                    </motion.div>
+                  )}
 
-                  <div className="bg-slate-900 text-slate-200 p-3.5 rounded-xl font-mono text-xs space-y-1">
-                    <div className="flex justify-between text-[11px] text-slate-400">
-                      <span>Live Traffic Stream</span>
-                      <span className="text-emerald-400">Redis Edge Hit</span>
-                    </div>
-                    <div className="text-emerald-300 text-[11px]">GET /api/v1/session - 200 OK (7ms)</div>
-                    <div className="text-blue-300 text-[11px]">POST /api/v1/auth/verify - 200 OK (9ms)</div>
-                  </div>
+                  {/* Step 2: Supabase & Redis Response (Visible at 65% progress) */}
+                  {progressRatio >= 0.65 && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="bg-slate-900 text-slate-200 p-3.5 rounded-xl font-mono text-xs space-y-1">
+                      <div className="flex justify-between text-[11px] text-slate-400">
+                        <span>Live Traffic Stream</span>
+                        <span className="text-emerald-400">Redis Edge Hit</span>
+                      </div>
+                      <div className="text-emerald-300 text-[11px]">GET /api/v1/session - 200 OK (7ms)</div>
+                      <div className="text-blue-300 text-[11px]">POST /api/v1/auth/verify - 200 OK (9ms)</div>
+                    </motion.div>
+                  )}
                 </motion.div>
               )}
 
@@ -498,25 +524,38 @@ export const FullStackEmulator: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="bg-emerald-50/90 p-4 rounded-xl border border-emerald-200 space-y-3 max-w-sm mx-auto shadow-sm">
-                    <div className="bg-white p-3 rounded-xl border border-emerald-100 shadow-2xs space-y-1 text-xs">
-                      <div className="flex items-center justify-between text-emerald-900 font-bold text-[11px]">
-                        <span>Shadow Arrow Automated Bot</span>
-                        <span className="text-[10px] text-slate-400">Just Now</span>
+                  {/* Step 1: Endpoint & Payload Extraction (Visible at 20% progress) */}
+                  {progressRatio >= 0.2 && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="bg-white p-3 rounded-xl border border-emerald-200 text-xs font-mono space-y-1">
+                      <div className="text-emerald-800 font-bold text-[11px]">POST /webhooks/order-dispatched</div>
+                      <div className="text-slate-500 text-[10px]">
+                        Extracted Payload: <span className="text-slate-800 font-bold">customerPhone, orderId, trackingUrl</span>
                       </div>
-                      <p className="text-slate-700 text-xs leading-relaxed">
-                        Hi Rajiv! Your order <strong>#SA-9082</strong> has been dispatched. Track your delivery live or download your official GST B2B invoice.
-                      </p>
-                      <div className="pt-2 flex gap-2">
-                        <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-md font-bold text-[10px]">
-                          Track Package
-                        </span>
-                        <span className="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-md font-bold text-[10px]">
-                          GST Invoice PDF
-                        </span>
+                    </motion.div>
+                  )}
+
+                  {/* Step 2: WhatsApp Phone Message Bubble (Visible at 60% progress) */}
+                  {progressRatio >= 0.6 && (
+                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-emerald-50/90 p-4 rounded-xl border border-emerald-200 space-y-3 max-w-sm mx-auto shadow-sm">
+                      <div className="bg-white p-3 rounded-xl border border-emerald-100 shadow-2xs space-y-1 text-xs">
+                        <div className="flex items-center justify-between text-emerald-900 font-bold text-[11px]">
+                          <span>Shadow Arrow Automated Bot</span>
+                          <span className="text-[10px] text-slate-400">Just Now</span>
+                        </div>
+                        <p className="text-slate-700 text-xs leading-relaxed">
+                          Hi Rajiv! Your order <strong>#SA-9082</strong> has been dispatched. Track your delivery live or download your official GST B2B invoice.
+                        </p>
+                        <div className="pt-2 flex gap-2">
+                          <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-md font-bold text-[10px]">
+                            Track Package
+                          </span>
+                          <span className="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-md font-bold text-[10px]">
+                            GST Invoice PDF
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    </motion.div>
+                  )}
                 </motion.div>
               )}
 
@@ -537,13 +576,28 @@ export const FullStackEmulator: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-xl space-y-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded">
-                      Sub-Second Speeds
-                    </span>
-                    <h4 className="text-sm font-extrabold">Engineered for Maximum Conversions</h4>
-                    <p className="text-[11px] text-blue-100">Clean architecture built with Next.js 14 and Tailwind CSS.</p>
-                  </div>
+                  {/* Step 1: Hero Banner Component (Visible at 30% progress) */}
+                  {progressRatio >= 0.3 && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-xl space-y-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded">
+                        Sub-Second Speeds
+                      </span>
+                      <h4 className="text-sm font-extrabold">Engineered for Maximum Conversions</h4>
+                      <p className="text-[11px] text-blue-100">Clean architecture built with Next.js 14 and Tailwind CSS.</p>
+                    </motion.div>
+                  )}
+
+                  {/* Step 2: Feature Grid & Pricing (Visible at 70% progress) */}
+                  {progressRatio >= 0.7 && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200 text-slate-800 font-bold">
+                        &lt;FeatureGrid layout="bento" /&gt;
+                      </div>
+                      <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200 text-slate-800 font-bold">
+                        &lt;PricingCalculator /&gt;
+                      </div>
+                    </motion.div>
+                  )}
                 </motion.div>
               )}
 
