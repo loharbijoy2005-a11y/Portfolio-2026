@@ -381,7 +381,7 @@ export const FullStackEmulator: React.FC = () => {
                         Product #01
                       </div>
                       <h4 className="text-xs font-bold text-slate-900">Custom Next.js App</h4>
-                      <p className="text-[11px] font-mono text-blue-600 font-bold mt-0.5">₹24,999</p>
+                      <p className="text-[11px] font-mono text-blue-600 font-bold mt-0.5">₹4,999</p>
                     </div>
 
                     <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
@@ -389,7 +389,7 @@ export const FullStackEmulator: React.FC = () => {
                         Product #02
                       </div>
                       <h4 className="text-xs font-bold text-slate-900">E-Commerce Engine</h4>
-                      <p className="text-[11px] font-mono text-blue-600 font-bold mt-0.5">₹39,999</p>
+                      <p className="text-[11px] font-mono text-blue-600 font-bold mt-0.5">₹12,999</p>
                     </div>
                   </div>
 
@@ -419,7 +419,7 @@ export const FullStackEmulator: React.FC = () => {
                         <button onClick={() => setIsPaymentModalOpen(false)} className="text-emerald-700 font-bold text-xs">✕</button>
                       </div>
                       <p className="text-[11px] text-emerald-800">
-                        Order #SA-9082 confirmed. GST Tax Invoice ₹24,999 (+ ₹4,499 GST) dispatched to WhatsApp.
+                        Order #SA-9082 confirmed. GST Tax Invoice ₹4,999 (+ ₹900 GST) dispatched to WhatsApp.
                       </p>
                     </div>
                   )}

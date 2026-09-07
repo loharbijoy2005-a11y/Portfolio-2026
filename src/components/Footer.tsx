@@ -1,7 +1,12 @@
 import React from 'react';
 import { ShieldCheck, Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onOpenPrivacy?: () => void;
+  onOpenTerms?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) => {
   return (
     <footer className="bg-slate-900 text-slate-300 pt-16 pb-12 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -87,11 +92,17 @@ export const Footer: React.FC = () => {
             © {new Date().getFullYear()} Shadow Arrow • Engineered by Bijoy Lohar. All rights reserved.
           </div>
           <div className="flex items-center gap-4 text-[11px]">
-            <a href="#" className="hover:text-slate-400">Privacy Policy</a>
+            <button onClick={onOpenPrivacy} className="hover:text-slate-200 transition-colors cursor-pointer">
+              Privacy Policy
+            </button>
             <span>•</span>
-            <a href="#" className="hover:text-slate-400">Terms of Service</a>
+            <button onClick={onOpenTerms} className="hover:text-slate-200 transition-colors cursor-pointer">
+              Terms of Service
+            </button>
             <span>•</span>
-            <a href="#" className="hover:text-slate-400">GST Tax Compliance</a>
+            <button onClick={onOpenTerms} className="hover:text-slate-200 transition-colors cursor-pointer">
+              GST Tax Compliance
+            </button>
           </div>
         </div>
 

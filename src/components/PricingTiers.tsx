@@ -18,8 +18,8 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
   {
     id: 'starter',
     name: 'Business Starter',
-    priceRange: '₹9,999 - ₹14,999',
-    numericBasePrice: 12000,
+    priceRange: '₹4,999 - ₹7,999',
+    numericBasePrice: 4999,
     idealFor: 'Startups, local businesses, portfolios & personal branding.',
     features: [
       '⚡ 2 to 3 Weeks Delivery (Architecture, Responsive Build, Revisions, Deployment)',
@@ -35,8 +35,8 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
   {
     id: 'growth-ecommerce',
     name: 'E-Commerce & Growth Engine',
-    priceRange: '₹24,999 - ₹39,999',
-    numericBasePrice: 29999,
+    priceRange: '₹12,999 - ₹19,999',
+    numericBasePrice: 14999,
     badge: 'Most Popular for Businesses',
     isPopular: true,
     idealFor: 'D2C brands, retail stores & online product catalogs.',
@@ -55,8 +55,8 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
   {
     id: 'enterprise-saas',
     name: 'Custom Enterprise & SaaS',
-    priceRange: 'Starting ₹49,999+',
-    numericBasePrice: 49999,
+    priceRange: 'Starting ₹24,999+',
+    numericBasePrice: 24999,
     idealFor: 'Custom web apps, SaaS platforms, client portals & complex APIs.',
     features: [
       '⚡ 4 to 6 Weeks Delivery (API Design, Database Architecture, Staging & Production Deployment)',
@@ -146,9 +146,9 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
 
             const displayPrice = billingCycle === 'retainer'
               ? tier.id === 'starter'
-                ? '₹6,999 / mo'
+                ? '₹3,499 / mo'
                 : tier.id === 'growth-ecommerce'
-                ? '₹14,999 / mo'
+                ? '₹7,999 / mo'
                 : 'Custom Retainer'
               : tier.priceRange;
 

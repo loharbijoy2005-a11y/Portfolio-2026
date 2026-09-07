@@ -15,7 +15,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     techStack: ['React', 'Next.js', 'TypeScript', 'Node.js', 'PostgreSQL', 'Tailwind CSS'],
     iconName: 'Code2',
     highlightText: 'Sub-1s Page Load Benchmark',
-    baseEstimate: 120000
+    baseEstimate: 14999
   },
   {
     id: 'ecommerce-engine',
@@ -31,7 +31,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     techStack: ['Next.js', 'Node.js', 'Razorpay API', 'Stripe', 'Redis', 'Tailwind CSS'],
     iconName: 'ShoppingBag',
     highlightText: '3.2x Average Checkout Conversion',
-    baseEstimate: 150000
+    baseEstimate: 19999
   },
   {
     id: 'saas-dashboard',
@@ -47,7 +47,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     techStack: ['React', 'TypeScript', 'Tailwind CSS', 'Chart.js / Recharts', 'Express API'],
     iconName: 'LayoutDashboard',
     highlightText: 'Automated Operations & Workflows',
-    baseEstimate: 180000
+    baseEstimate: 24999
   },
   {
     id: 'perf-seo',
@@ -63,7 +63,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     techStack: ['Lighthouse', 'Next.js SSR/ISR', 'Cloudflare CDN', 'Web Vitals', 'Edge Workers'],
     iconName: 'Zap',
     highlightText: '99+ Core Web Vitals Score',
-    baseEstimate: 75000
+    baseEstimate: 7999
   }
 ];
 
@@ -211,10 +211,10 @@ interface GSTInvoice {
 ];
 
 export const ESTIMATOR_MODULES = [
-  { id: 'auth', name: 'Secure User Auth & RBAC', cost: 18000, time: '+3 Days' },
-  { id: 'payment', name: 'Razorpay / Stripe Payment Engine', cost: 25000, time: '+4 Days' },
-  { id: 'gst-invoicing', name: 'Automated GST B2B Invoicing', cost: 20000, time: '+3 Days' },
-  { id: 'admin-dash', name: 'Custom Admin Dashboard', cost: 35000, time: '+5 Days' },
-  { id: 'seo-vitals', name: 'Lighthouse 95+ SEO Tuning', cost: 15000, time: '+2 Days' },
-  { id: 'whatsapp-bot', name: 'WhatsApp Quick Connect & Notifications', cost: 12000, time: '+2 Days' }
+  { id: 'auth', name: 'Secure User Auth & RBAC', cost: 2500, time: '+3 Days' },
+  { id: 'payment', name: 'Razorpay / Stripe Payment Engine', cost: 3500, time: '+4 Days' },
+  { id: 'gst-invoicing', name: 'Automated GST B2B Invoicing', cost: 2999, time: '+3 Days' },
+  { id: 'admin-dash', name: 'Custom Admin Dashboard', cost: 4999, time: '+5 Days' },
+  { id: 'seo-vitals', name: 'Lighthouse 95+ SEO Tuning', cost: 1999, time: '+2 Days' },
+  { id: 'whatsapp-bot', name: 'WhatsApp Quick Connect & Notifications', cost: 1499, time: '+2 Days' }
 ];

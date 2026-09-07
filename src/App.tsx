@@ -21,6 +21,8 @@ import { CostEstimatorForm } from './components/CostEstimatorForm';
 import { Footer } from './components/Footer';
 import { WhatsAppFloating } from './components/WhatsAppFloating';
 import { DiscoveryModal } from './components/DiscoveryModal';
+import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
+import { TermsOfServiceModal } from './components/TermsOfServiceModal';
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 35, filter: 'blur(8px)' },
@@ -34,6 +36,8 @@ const sectionVariants = {
 
 export const App: React.FC = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
+  const [termsModalOpen, setTermsModalOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<string | undefined>(undefined);
   const [selectedCaseStudyTitle, setSelectedCaseStudyTitle] = useState<string | undefined>(undefined);
   const [isSplashActive, setIsSplashActive] = useState<boolean>(true);
@@ -88,7 +92,7 @@ export const App: React.FC = () => {
       {/* Sticky Blurred Navigation Header */}
       <Navbar onOpenBooking={() => setBookingModalOpen(true)} />
 
-      {/* Main Content Area (Staggered reveal when splash finishes) */}
+      {/* Main Content Area */}
       <main className={`relative z-10 space-y-4 transition-opacity duration-500 ${isSplashActive ? 'opacity-0' : 'opacity-100'}`}>
         
         {/* Hero Section */}
@@ -194,7 +198,7 @@ export const App: React.FC = () => {
           <B2BTrustGST />
         </motion.div>
 
-        {/* Revamped 3-Tier Transparent Pricing (INR + GST) */}
+        {/* Revamped Transparent Affordable Pricing (INR + GST) */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -220,7 +224,10 @@ export const App: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <Footer />
+      <Footer
+        onOpenPrivacy={() => setPrivacyModalOpen(true)}
+        onOpenTerms={() => setTermsModalOpen(true)}
+      />
 
       {/* Floating WhatsApp Quick Connect */}
       <WhatsAppFloating />
@@ -229,6 +236,18 @@ export const App: React.FC = () => {
       <DiscoveryModal
         isOpen={bookingModalOpen}
         onClose={() => setBookingModalOpen(false)}
+      />
+
+      {/* Detailed Legal Privacy Policy Modal (~1200 Words) */}
+      <PrivacyPolicyModal
+        isOpen={privacyModalOpen}
+        onClose={() => setPrivacyModalOpen(false)}
+      />
+
+      {/* Detailed Legal Terms of Service Modal (~1200 Words) */}
+      <TermsOfServiceModal
+        isOpen={termsModalOpen}
+        onClose={() => setTermsModalOpen(false)}
       />
 
     </div>
