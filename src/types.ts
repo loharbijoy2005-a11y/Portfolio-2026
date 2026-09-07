@@ -60,6 +60,8 @@ export interface GitHubRepo {
 export interface PricingTier {
   id: string;
   name: string;
+  category: string;
+  deliveryTime: string;
   priceRange: string;
   numericBasePrice: number;
   badge?: string;
