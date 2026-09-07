@@ -7,6 +7,7 @@ import { BackgroundBlobs } from './components/BackgroundBlobs';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Stats } from './components/Stats';
+import { FounderBio } from './components/FounderBio';
 import { TechStackMarquee } from './components/TechStackMarquee';
 import { Services } from './components/Services';
 import { CaseStudies } from './components/CaseStudies';
@@ -105,6 +106,16 @@ export const App: React.FC = () => {
           variants={sectionVariants}
         >
           <Stats />
+        </motion.div>
+
+        {/* Founder positioning & Bio Snippet */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <FounderBio />
         </motion.div>
 
         {/* Tech Stack Dual Opposing Marquee & Interactive Skill Matrix */}

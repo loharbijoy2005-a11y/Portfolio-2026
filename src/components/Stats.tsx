@@ -1,32 +1,32 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Activity, Gauge, ShieldCheck, UserCheck } from 'lucide-react';
+import { CheckCircle2, Gauge, ShieldCheck, Zap } from 'lucide-react';
 
 export const Stats: React.FC = () => {
   const stats = [
     {
-      icon: Activity,
-      value: '99.9%',
-      label: 'Uptime Deployments',
-      subtext: 'Hosted on enterprise CDN edge networks'
+      icon: CheckCircle2,
+      value: '100%',
+      label: 'On-Time Milestone Delivery',
+      subtext: 'Agile sprints with live staging URLs'
     },
     {
       icon: Gauge,
       value: '< 1.0s',
-      label: 'Average Page Speeds',
-      subtext: 'Optimized Core Web Vitals performance'
+      label: 'Average Page Load Time',
+      subtext: 'Sub-second Lighthouse 95+ performance'
     },
     {
       icon: ShieldCheck,
       value: '100%',
-      label: 'Tax Compliant (GST)',
-      subtext: 'Official B2B Input Tax Credit invoices'
+      label: 'Legal GST Tax Compliant',
+      subtext: '18% B2B Input Tax Credit invoicing'
     },
     {
-      icon: UserCheck,
-      value: 'Direct',
-      label: 'Founder Engineering',
-      subtext: 'Direct communication with Bijoy Lohar'
+      icon: Zap,
+      value: 'Production Ready',
+      label: 'Modern TypeScript Stack',
+      subtext: '1–2 Yrs intensive full-stack builds'
     }
   ];
 
@@ -47,13 +47,13 @@ export const Stats: React.FC = () => {
                   <Icon className="w-5.5 h-5.5 stroke-[2.2]" />
                 </div>
                 <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-mono group-hover:text-blue-600 transition-colors">
+                  <div className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight font-mono group-hover:text-blue-600 transition-colors leading-tight">
                     {stat.value}
                   </div>
-                  <div className="text-sm font-bold text-slate-800 mt-0.5">
+                  <div className="text-xs sm:text-sm font-bold text-slate-800 mt-1">
                     {stat.label}
                   </div>
-                  <div className="text-xs text-slate-500 mt-0.5 font-normal">
+                  <div className="text-[11px] text-slate-500 mt-0.5 font-normal">
                     {stat.subtext}
                   </div>
                 </div>

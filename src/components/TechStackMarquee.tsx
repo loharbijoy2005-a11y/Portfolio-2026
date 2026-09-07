@@ -40,27 +40,27 @@ const ROW_2_TECH = [
 ];
 
 const TECH_SKILLS: TechSkill[] = [
-  { name: 'TypeScript', category: 'Languages', experience: '4+ Years', useCase: 'Strict compile-time type safety for full-stack Next.js & Node.js apps', brandColor: '#3178c6', level: 'Expert' },
-  { name: 'JavaScript (ES6+)', category: 'Languages', experience: '5+ Years', useCase: 'Asynchronous event loops, WebSockets, DOM, and web worker pipelines', brandColor: '#f7df1e', level: 'Expert' },
-  { name: 'Python', category: 'Languages', experience: '3+ Years', useCase: 'FastAPI automation microservices, AI embeddings, and data processing', brandColor: '#3776ab', level: 'Advanced' },
-  { name: 'Java', category: 'Languages', experience: '3+ Years', useCase: 'Object-oriented backend design, multithreaded queues, and enterprise logic', brandColor: '#5382a1', level: 'Advanced' },
-  { name: 'C++', category: 'Languages', experience: '3+ Years', useCase: 'Low-latency algorithms, memory optimization, and data structure kernels', brandColor: '#00599c', level: 'Advanced' },
-  { name: 'Go (Golang)', category: 'Languages', experience: '2+ Years', useCase: 'Concurrent microservices, high-throughput workers, and gRPC endpoints', brandColor: '#00add8', level: 'Proficient' },
+  { name: 'TypeScript', category: 'Languages', experience: '1–2 Yrs Active Builds', useCase: 'Strict compile-time type safety for full-stack Next.js & Node.js production apps', brandColor: '#3178c6', level: 'Core Stack' },
+  { name: 'JavaScript (ES6+)', category: 'Languages', experience: '1–2 Yrs Active Builds', useCase: 'Async event loops, WebSockets, DOM manipulation, and dynamic web APIs', brandColor: '#f7df1e', level: 'Core Stack' },
+  { name: 'Python', category: 'Languages', experience: '1–2 Yrs Active Builds', useCase: 'FastAPI automation microservices, AI embeddings, and script pipelines', brandColor: '#3776ab', level: 'Core Stack' },
+  { name: 'Java', category: 'Languages', experience: '1–2 Yrs Active Builds', useCase: 'Object-oriented backend design, multithreaded queues, and data structures', brandColor: '#5382a1', level: 'Core Stack' },
+  { name: 'C++', category: 'Languages', experience: '1–2 Yrs Active Builds', useCase: 'Low-latency algorithms, memory optimization, and data structure kernels', brandColor: '#00599c', level: 'Hands-on' },
+  { name: 'Go (Golang)', category: 'Languages', experience: '1–2 Yrs Active Builds', useCase: 'Concurrent microservices, high-throughput workers, and gRPC endpoints', brandColor: '#00add8', level: 'Hands-on' },
 
-  { name: 'Next.js 14', category: 'Frameworks', experience: '3+ Years', useCase: 'App Router, Server Components, SSR/ISR static generation, and edge caching', brandColor: '#2563eb', level: 'Expert' },
-  { name: 'React 18', category: 'Frameworks', experience: '4+ Years', useCase: 'Custom state hooks, Framer Motion UI animations, and modular component trees', brandColor: '#00d8ff', level: 'Expert' },
-  { name: 'Node.js', category: 'Frameworks', experience: '4+ Years', useCase: 'Scalable REST & GraphQL APIs, JWT authorization, and cluster workers', brandColor: '#22c55e', level: 'Expert' },
-  { name: 'Express.js', category: 'Frameworks', experience: '4+ Years', useCase: 'Production microservice middleware, CORS protection, and rate limiting', brandColor: '#64748b', level: 'Expert' },
-  { name: 'Tailwind CSS', category: 'Frameworks', experience: '4+ Years', useCase: 'Airy SaaS design tokens, responsive layouts, and zero CSS bundle bloat', brandColor: '#06b6d4', level: 'Expert' },
+  { name: 'Next.js 14', category: 'Frameworks', experience: '1–2 Yrs Active Builds', useCase: 'App Router, Server Components, SSR static generation, and edge caching', brandColor: '#2563eb', level: 'Production' },
+  { name: 'React 18', category: 'Frameworks', experience: '1–2 Yrs Active Builds', useCase: 'Custom state hooks, Framer Motion UI animations, and component trees', brandColor: '#00d8ff', level: 'Production' },
+  { name: 'Node.js', category: 'Frameworks', experience: '1–2 Yrs Active Builds', useCase: 'Scalable REST APIs, Razorpay webhooks, and JWT session authorization', brandColor: '#22c55e', level: 'Production' },
+  { name: 'Express.js', category: 'Frameworks', experience: '1–2 Yrs Active Builds', useCase: 'Production microservice middleware, CORS protection, and rate limiting', brandColor: '#64748b', level: 'Production' },
+  { name: 'Tailwind CSS', category: 'Frameworks', experience: '1–2 Yrs Active Builds', useCase: 'Airy SaaS design tokens, responsive layouts, and zero CSS bundle bloat', brandColor: '#06b6d4', level: 'Production' },
 
-  { name: 'MongoDB Atlas', category: 'Databases & Cloud', experience: '3+ Years', useCase: 'NoSQL document schemas, aggregation pipelines, and atlas indexing', brandColor: '#10b981', level: 'Advanced' },
-  { name: 'Supabase', category: 'Databases & Cloud', experience: '3+ Years', useCase: 'PostgreSQL relational schemas, row-level security (RLS), and realtime sync', brandColor: '#059669', level: 'Expert' },
-  { name: 'Cloudflare', category: 'Databases & Cloud', experience: '3+ Years', useCase: 'Global CDN edge workers, SSL/TLS, and DDoS mitigation', brandColor: '#f97316', level: 'Advanced' },
-  { name: 'Render', category: 'Databases & Cloud', experience: '2+ Years', useCase: 'Automated CI/CD deployment of Node services and PostgreSQL databases', brandColor: '#6366f1', level: 'Advanced' },
+  { name: 'MongoDB Atlas', category: 'Databases & Cloud', experience: '1–2 Yrs Active Builds', useCase: 'NoSQL document schemas, aggregation pipelines, and atlas indexing', brandColor: '#10b981', level: 'Cloud Ready' },
+  { name: 'Supabase', category: 'Databases & Cloud', experience: '1–2 Yrs Active Builds', useCase: 'PostgreSQL relational schemas, row-level security (RLS), and realtime sync', brandColor: '#059669', level: 'Cloud Ready' },
+  { name: 'Cloudflare', category: 'Databases & Cloud', experience: '1–2 Yrs Active Builds', useCase: 'Global CDN edge workers, SSL/TLS, and DDoS mitigation', brandColor: '#f97316', level: 'Cloud Ready' },
+  { name: 'Render', category: 'Databases & Cloud', experience: '1–2 Yrs Active Builds', useCase: 'Automated CI/CD deployment of Node services and PostgreSQL databases', brandColor: '#6366f1', level: 'Cloud Ready' },
 
-  { name: 'Git & GitHub', category: 'Tools & APIs', experience: '5+ Years', useCase: 'Git flow, pull requests, CI/CD actions, and strict version control', brandColor: '#0f172a', level: 'Expert' },
-  { name: 'Razorpay API', category: 'Tools & APIs', experience: '3+ Years', useCase: 'Checkout webhooks, 18% GST tax invoice generation, and settlement verification', brandColor: '#1d4ed8', level: 'Expert' },
-  { name: 'WhatsApp Cloud API', category: 'Tools & APIs', experience: '2+ Years', useCase: 'Automated customer order alerts, cart recovery, and interactive message bots', brandColor: '#16a34a', level: 'Advanced' },
+  { name: 'Git & GitHub', category: 'Tools & APIs', experience: '1–2 Yrs Active Builds', useCase: 'Git flow, pull requests, CI/CD actions, and version control', brandColor: '#0f172a', level: 'Essential' },
+  { name: 'Razorpay API', category: 'Tools & APIs', experience: '1–2 Yrs Active Builds', useCase: 'Checkout webhooks, 18% GST tax invoice generation, and settlement sync', brandColor: '#1d4ed8', level: 'Essential' },
+  { name: 'WhatsApp Cloud API', category: 'Tools & APIs', experience: '1–2 Yrs Active Builds', useCase: 'Automated customer order alerts, cart recovery, and notification bots', brandColor: '#16a34a', level: 'Essential' },
 ];
 
 export const TechStackMarquee: React.FC = () => {

@@ -96,7 +96,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
           {/* Left Hero Content */}
           <div className="lg:col-span-7 space-y-6 text-left">
             
-            {/* Sub-badge with Pulsing Status */}
+            {/* Sub-badge with Modern Trust Badge */}
             <div className="inline-flex flex-wrap items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-slate-200/90 text-slate-800 text-xs font-semibold shadow-xs backdrop-blur-md">
               <span className="flex h-2.5 w-2.5 relative">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -104,9 +104,11 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
               </span>
               <span className="font-extrabold text-slate-900">Shadow Arrow</span>
               <span className="text-slate-300">•</span>
-              <span className="text-slate-600">Lead Web Engineering by Bijoy Lohar</span>
+              <span className="text-blue-700 font-bold">⚡ 100% Modern Stack</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-slate-700 font-medium">Direct Founder-Led Engineering by Bijoy Lohar</span>
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200">
-                🟢 Available for Q3/Q4 Projects
+                GST Registered
               </span>
             </div>
 
@@ -116,9 +118,9 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
               Built for <span className="underline decoration-blue-500/30 underline-offset-8">Business Growth</span>.
             </h1>
 
-            {/* Sub-headline */}
+            {/* Sub-headline / Founder positioning */}
             <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-2xl">
-              We design and deploy high-speed, custom web applications and e-commerce platforms with verified enterprise security, clean architecture, and official <strong className="text-slate-800 font-semibold">GST-compliant B2B billing</strong>.
+              Led by <strong className="text-slate-900 font-semibold">Bijoy Lohar</strong>, Shadow Arrow delivers production-ready web platforms using modern Next.js & TypeScript architectures. Backed by <strong className="text-blue-700 font-semibold">1–2 years of intensive, project-driven engineering</strong> across TypeScript, JavaScript, Python, and Java, we build lightning-fast web solutions with verified GST billing and direct founder-level accountability.
             </p>
 
             {/* CTAs */}
