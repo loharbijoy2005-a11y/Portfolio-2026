@@ -12,7 +12,8 @@ import {
   Play, 
   ShieldCheck, 
   Activity, 
-  Smartphone
+  Smartphone,
+  Code2
 } from 'lucide-react';
 
 interface ProjectArchitecture {
@@ -27,6 +28,33 @@ interface ProjectArchitecture {
 }
 
 const PROJECTS: ProjectArchitecture[] = [
+  {
+    id: 'shadow-arrow-core',
+    tabLabel: 'Shadow Arrow Core',
+    url: 'https://shadowarrow.in',
+    repoName: 'shadow-arrow/core-studio',
+    commitHash: '#a9f4e21',
+    language: 'React 19 & TypeScript • 100%',
+    codeSnippet: `// Shadow Arrow Web Engineering Studio - Production Architecture
+import React from 'react';
+import { Hero } from './components/Hero';
+import { PricingTiers } from './components/PricingTiers';
+import { CostEstimatorForm } from './components/CostEstimatorForm';
+
+export default function ShadowArrowApp() {
+  const isProd = process.env.NODE_ENV === 'production';
+  const apiEndpoint = process.env.VITE_API_URL || 'https://shadowarrow.in/api';
+
+  return (
+    <main className="min-h-screen bg-slate-950 text-white font-sans selection:bg-blue-600">
+      <Hero apiEndpoint={apiEndpoint} isLive={isProd} />
+      <PricingTiers defaultCategory="all" />
+      <CostEstimatorForm directFounderRoute={true} />
+    </main>
+  );
+}`,
+    buildStatus: 'Vite 6 + React 19 Live | 0 Vulnerabilities | 100% Secure'
+  },
   {
     id: 'ecommerce',
     tabLabel: 'E-Commerce Engine',
@@ -202,10 +230,11 @@ export const FullStackEmulator: React.FC = () => {
                     />
                   )}
                   <span className="relative z-10 flex items-center gap-1.5">
-                    {idx === 0 && <ShoppingBag className="w-3.5 h-3.5 text-blue-600" />}
-                    {idx === 1 && <Zap className="w-3.5 h-3.5 text-amber-500" />}
-                    {idx === 2 && <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />}
-                    {idx === 3 && <Layout className="w-3.5 h-3.5 text-indigo-600" />}
+                    {proj.id === 'shadow-arrow-core' && <Code2 className="w-3.5 h-3.5 text-blue-600" />}
+                    {proj.id === 'ecommerce' && <ShoppingBag className="w-3.5 h-3.5 text-indigo-600" />}
+                    {proj.id === 'cloud-apis' && <Zap className="w-3.5 h-3.5 text-amber-500" />}
+                    {proj.id === 'whatsapp-automation' && <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />}
+                    {proj.id === 'web-landing' && <Layout className="w-3.5 h-3.5 text-purple-600" />}
                     <span>{proj.tabLabel}</span>
                   </span>
                 </button>
@@ -364,6 +393,52 @@ export const FullStackEmulator: React.FC = () => {
             {/* Dynamic Interactive Rendered Application UI */}
             <AnimatePresence mode="wait">
               
+              {/* 0. Shadow Arrow Core Render */}
+              {activeProject.id === 'shadow-arrow-core' && (
+                <motion.div
+                  key="core-render"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xl space-y-4"
+                >
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <div className="flex items-center gap-2">
+                      <Code2 className="w-5 h-5 text-blue-600" />
+                      <span className="font-extrabold text-slate-900 text-sm">Shadow Arrow Core Studio</span>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold font-mono border border-blue-200">
+                      React 19 + Vite 6
+                    </span>
+                  </div>
+
+                  {/* Step 1: Hero Banner Component (Visible at 20% progress) */}
+                  {progressRatio >= 0.2 && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="bg-slate-900 text-white p-4 rounded-xl space-y-2 border border-slate-800">
+                      <div className="flex items-center justify-between text-[10px] text-blue-400 font-mono">
+                        <span>&lt;Hero apiEndpoint=process.env.VITE_API_URL /&gt;</span>
+                        <span className="text-emerald-400 font-bold">100% Production</span>
+                      </div>
+                      <h4 className="text-sm font-extrabold text-white">Full-Stack Web Engineering & Cloud Architecture</h4>
+                      <p className="text-[11px] text-slate-300">Sub-second Next.js / React 19 web apps engineered for high conversion.</p>
+                    </motion.div>
+                  )}
+
+                  {/* Step 2: Pricing & Estimator Sync (Visible at 60% progress) */}
+                  {progressRatio >= 0.6 && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-2 gap-2 text-xs font-mono">
+                      <div className="p-2.5 bg-blue-50/80 rounded-lg border border-blue-200 text-blue-900 font-bold">
+                        &lt;PricingTiers /&gt;
+                      </div>
+                      <div className="p-2.5 bg-emerald-50/80 rounded-lg border border-emerald-200 text-emerald-900 font-bold">
+                        &lt;CostEstimatorForm /&gt;
+                      </div>
+                    </motion.div>
+                  )}
+                </motion.div>
+              )}
+
               {/* 1. E-Commerce Storefront Render */}
               {activeProject.id === 'ecommerce' && (
                 <motion.div
