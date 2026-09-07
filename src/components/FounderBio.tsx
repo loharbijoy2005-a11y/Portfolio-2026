@@ -31,31 +31,31 @@ export const FounderBio: React.FC = () => {
 
               {/* Headline */}
               <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                Engineered for Performance.<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Built for Business Growth.</span>
+                Direct Founder Engineering.<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Zero Layers, Uncompromising Speed.</span>
               </h2>
 
               {/* Founder Positioning Copy */}
               <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
-                Led by <strong className="text-slate-900 font-bold">Bijoy Lohar</strong>, Shadow Arrow delivers production-ready web platforms using modern Next.js & TypeScript architectures. Backed by <strong className="text-blue-700 font-bold">1–2 years of intensive, project-driven engineering</strong> across TypeScript, JavaScript, Python, and Java, we build lightning-fast web solutions with verified GST billing and direct founder-level accountability.
+                Led by <strong className="text-slate-900 font-bold">Bijoy Lohar</strong>, every system at Shadow Arrow is architected, code-reviewed, and optimized directly by the founder. Backed by <strong className="text-blue-700 font-bold">1–2 years of intensive, project-driven engineering</strong> across TypeScript, JavaScript, Python, and Java, we eliminate agency bloat to deliver robust, enterprise-grade applications built to scale.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs font-medium text-slate-700">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Next.js 14 App Router & Strict TypeScript</span>
+                  <span>100% Founder-Led Codebase Architecture</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Sub-Second Server Response Times (TTFB &lt; 200ms)</span>
+                  <span>Sub-Second Response Times (TTFB &lt; 200ms)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Direct Communication with Bijoy Lohar</span>
+                  <span>Direct 1-on-1 Access to Bijoy Lohar</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Official Verified GST Invoicing</span>
+                  <span>Official Verified GST Billing & Compliance</span>
                 </div>
               </div>
             </motion.div>

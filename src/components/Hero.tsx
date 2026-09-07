@@ -120,9 +120,9 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
               Built for <span className="underline decoration-blue-500/30 underline-offset-8">Business Growth</span>.
             </h1>
 
-            {/* Sub-headline / Founder positioning */}
+            {/* Sub-headline / Core Positioning */}
             <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-2xl">
-              Led by <strong className="text-slate-900 font-semibold">Bijoy Lohar</strong>, Shadow Arrow delivers production-ready web platforms using modern Next.js & TypeScript architectures. Backed by <strong className="text-blue-700 font-semibold">1–2 years of intensive, project-driven engineering</strong> across TypeScript, JavaScript, Python, and Java, we build lightning-fast web solutions with verified GST billing and direct founder-level accountability.
+              Shadow Arrow delivers production-ready web platforms engineered with modern <strong className="text-slate-900 font-semibold">Next.js & TypeScript</strong> architectures. We build sub-second, high-converting digital products backed by <strong className="text-blue-700 font-semibold">direct founder accountability</strong> and GST-verified invoicing.
             </p>
 
             {/* CTAs */}
