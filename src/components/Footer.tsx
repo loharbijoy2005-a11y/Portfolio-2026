@@ -10,23 +10,13 @@ export const Footer: React.FC = () => {
           
           {/* Brand Column */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-[1.5px] shadow-lg shadow-blue-600/30">
-                <div className="w-full h-full bg-slate-950 rounded-[10.5px] flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M5 19L19 5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M9 5H19V15" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-black text-white tracking-tight font-mono leading-none">
-                  SHADOW<span className="text-blue-400">ARROW</span>
-                </span>
-                <span className="px-1.5 py-0.5 rounded bg-blue-900/60 text-blue-300 font-mono text-[9px] font-extrabold uppercase tracking-[0.2em] mt-1 border border-blue-700/50 inline-block w-max">
-                  WEB ENGINEERING
-                </span>
-              </div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-black text-white tracking-tight font-mono leading-none">
+                SHADOW<span className="text-blue-400">ARROW</span>
+              </span>
+              <span className="text-[10px] font-extrabold text-slate-400 tracking-[0.2em] uppercase mt-1 font-mono">
+                WEB ENGINEERING
+              </span>
             </div>
 
             <p className="text-xs text-slate-400 leading-relaxed max-w-md">
@@ -62,8 +52,8 @@ export const Footer: React.FC = () => {
             <div className="space-y-2.5 text-xs text-slate-300">
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-blue-400 shrink-0" />
-                <a href="mailto:bijoy@shadowarrow.in" className="hover:text-white transition-colors">
-                  bijoy@shadowarrow.in
+                <a href="mailto:support@shadowarrow.in" className="hover:text-white transition-colors">
+                  support@shadowarrow.in
                 </a>
               </div>
               <div className="flex items-center gap-2">

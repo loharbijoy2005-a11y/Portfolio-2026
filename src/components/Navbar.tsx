@@ -34,39 +34,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Solid High-Tech Brand Logo */}
-          <a href="#" className="flex items-center gap-3 group">
-            {/* Solid Geometric Arrow Badge Icon */}
-            <div className="relative flex items-center justify-center">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-slate-900 via-blue-900 to-blue-600 p-[1.5px] shadow-md shadow-blue-600/20 group-hover:shadow-blue-600/40 transition-all duration-300 group-hover:scale-105">
-                <div className="w-full h-full bg-slate-950 rounded-[10.5px] flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-indigo-600/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <svg className="w-5 h-5 text-white stroke-[2.5] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M5 19L19 5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M9 5H19V15" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-              </div>
-              {/* Live Status Beacon */}
-              <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white animate-pulse" />
-            </div>
-
-            {/* Solid Typography */}
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xl font-black tracking-tight text-slate-950 font-mono leading-none group-hover:text-blue-600 transition-colors">
-                  SHADOW<span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">ARROW</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 mt-1">
-                <span className="px-1.5 py-0.5 rounded bg-slate-900 text-white font-mono text-[9px] font-extrabold uppercase tracking-[0.2em] shadow-2xs">
-                  WEB ENGINEERING
-                </span>
-                <span className="text-[9px] font-bold font-mono text-emerald-700 bg-emerald-50 border border-emerald-200 px-1 rounded hidden sm:inline-block">
-                  PRO V3
-                </span>
-              </div>
-            </div>
+          {/* Clean Solid Brand Logo */}
+          <a href="#" className="flex flex-col group">
+            <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-950 leading-none group-hover:text-blue-600 transition-colors font-mono">
+              SHADOW<span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">ARROW</span>
+            </span>
+            <span className="text-[10px] font-extrabold text-slate-600 tracking-[0.2em] uppercase mt-1 font-mono">
+              WEB ENGINEERING
+            </span>
           </a>
 
           {/* Desktop Nav Links */}
