@@ -79,3 +79,12 @@ export interface EstimateOptions {
   company: string;
   message: string;
 }
+
+export interface EstimatorModule {
+  id: string;
+  name: string;
+  cost: number;
+  time: string;
+  serviceIds: string[];
+  description?: string;
+}

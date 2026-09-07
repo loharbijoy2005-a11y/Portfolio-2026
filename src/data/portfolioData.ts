@@ -1,4 +1,4 @@
-import type { ServiceItem, CaseStudy, ArchitectureLayer } from '../types';
+import type { ServiceItem, CaseStudy, ArchitectureLayer, EstimatorModule } from '../types';
 
 export const SERVICES_DATA: ServiceItem[] = [
   {
@@ -210,11 +210,36 @@ interface GSTInvoice {
   }
 ];
 
-export const ESTIMATOR_MODULES = [
-  { id: 'auth', name: 'Secure User Auth & RBAC', cost: 2500, time: '+3 Days' },
-  { id: 'payment', name: 'Razorpay / Stripe Payment Engine', cost: 3500, time: '+4 Days' },
-  { id: 'gst-invoicing', name: 'Automated GST B2B Invoicing', cost: 2999, time: '+3 Days' },
-  { id: 'admin-dash', name: 'Custom Admin Dashboard', cost: 4999, time: '+5 Days' },
-  { id: 'seo-vitals', name: 'Lighthouse 95+ SEO Tuning', cost: 1999, time: '+2 Days' },
-  { id: 'whatsapp-bot', name: 'WhatsApp Quick Connect & Notifications', cost: 1499, time: '+2 Days' }
+export const ESTIMATOR_MODULES: EstimatorModule[] = [
+  // Full-Stack Web Modules
+  { id: 'auth', name: 'Secure User Auth & RBAC', cost: 2500, time: '+3 Days', serviceIds: ['fullstack-web'], description: 'OAuth 2.0, JWT, and granular role permissions' },
+  { id: 'api-microservices', name: 'REST & GraphQL Microservices', cost: 3500, time: '+4 Days', serviceIds: ['fullstack-web'], description: 'High-throughput async endpoint services' },
+  { id: 'admin-dash-web', name: 'Custom Admin Control Panel', cost: 4999, time: '+5 Days', serviceIds: ['fullstack-web'], description: 'Operational metrics and content management' },
+  { id: 'cloud-cicd', name: 'Automated Cloud CI/CD Pipeline', cost: 2000, time: '+2 Days', serviceIds: ['fullstack-web'], description: 'GitHub Actions with Vercel/AWS auto-builds' },
+  { id: 'gst-invoicing-web', name: 'Automated GST B2B Invoicing', cost: 2999, time: '+3 Days', serviceIds: ['fullstack-web'], description: 'Verified 18% GST tax invoices & PDF generation' },
+  { id: 'whatsapp-bot-web', name: 'WhatsApp Quick Connect & Alerts', cost: 1499, time: '+1 Day', serviceIds: ['fullstack-web'], description: 'Instant client messaging & status webhooks' },
+
+  // E-Commerce Modules
+  { id: 'payment', name: 'Razorpay / Stripe Payment Engine', cost: 3500, time: '+4 Days', serviceIds: ['ecommerce-engine'], description: 'Instant UPI, Cards & NetBanking integration' },
+  { id: 'gst-invoicing-ecom', name: 'Automated GST B2B Invoicing', cost: 2999, time: '+3 Days', serviceIds: ['ecommerce-engine'], description: 'Compliant B2B tax receipts with HSN codes' },
+  { id: 'inventory-sync', name: 'Inventory Sync & Stock Alerts', cost: 3999, time: '+4 Days', serviceIds: ['ecommerce-engine'], description: 'Real-time multi-warehouse stock management' },
+  { id: 'cart-recovery', name: 'Cart Abandonment & Order Recovery', cost: 2500, time: '+3 Days', serviceIds: ['ecommerce-engine'], description: 'Automated email & SMS cart retrieval flows' },
+  { id: 'whatsapp-order', name: '1-Click WhatsApp Order Receipts', cost: 1499, time: '+2 Days', serviceIds: ['ecommerce-engine'], description: 'Direct WhatsApp order receipt & tracking link' },
+  { id: 'reviews-engine', name: 'Customer Review & Rating System', cost: 1999, time: '+2 Days', serviceIds: ['ecommerce-engine'], description: 'Verified buyer feedback & photo submission' },
+
+  // SaaS & Dashboard Modules
+  { id: 'auth-audit', name: 'Secure Auth & Granular Audit Logging', cost: 2500, time: '+3 Days', serviceIds: ['saas-dashboard'], description: 'Enterprise session tracking & activity logs' },
+  { id: 'analytics-charts', name: 'Real-Time Analytics & Charting Suite', cost: 3500, time: '+4 Days', serviceIds: ['saas-dashboard'], description: 'Interactive visual data widgets & exports' },
+  { id: 'admin-dash-saas', name: 'Enterprise Admin Control Hub', cost: 4999, time: '+5 Days', serviceIds: ['saas-dashboard'], description: 'Full system management & user role matrix' },
+  { id: 'pdf-generator', name: 'Automated PDF Report & Tax Generator', cost: 2999, time: '+3 Days', serviceIds: ['saas-dashboard'], description: 'Dynamic PDF export engine for business logs' },
+  { id: 'webhook-erp', name: 'Webhook Hub & ERP Integration', cost: 3999, time: '+4 Days', serviceIds: ['saas-dashboard'], description: 'Bi-directional webhooks for external tools' },
+  { id: 'inapp-notifications', name: 'In-App & Email Notification Hub', cost: 1999, time: '+2 Days', serviceIds: ['saas-dashboard'], description: 'Real-time alert popups & SMTP email triggers' },
+
+  // Performance & SEO Modules
+  { id: 'lighthouse-guarantee', name: 'Lighthouse 95+ Vitals Guarantee', cost: 1999, time: '+2 Days', serviceIds: ['perf-seo'], description: 'Passes all Google Core Web Vitals metrics' },
+  { id: 'cdn-edge', name: 'Cloudflare CDN & Edge Worker Setup', cost: 2500, time: '+2 Days', serviceIds: ['perf-seo'], description: 'Global edge caching for sub-100ms response' },
+  { id: 'webp-pipeline', name: 'Image & Asset WebP Conversion', cost: 1499, time: '+1 Day', serviceIds: ['perf-seo'], description: 'Next.js image optimization & WebP formats' },
+  { id: 'schema-markup', name: 'Rich Snippets & JSON-LD Schema', cost: 1299, time: '+1 Day', serviceIds: ['perf-seo'], description: 'Structured Google search indexing markup' },
+  { id: 'owasp-shield', name: 'OWASP Security & CSRF Hardening', cost: 2499, time: '+2 Days', serviceIds: ['perf-seo'], description: 'XSS, CSRF, and HTTP security header shields' },
+  { id: 'mobile-critical-css', name: 'Mobile Speed & Critical CSS Tuning', cost: 1999, time: '+2 Days', serviceIds: ['perf-seo'], description: 'Eliminating render-blocking resources for mobile' }
 ];

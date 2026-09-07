@@ -52,6 +52,22 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
   const baseObj = SERVICES_DATA.find((s) => s.id === selectedService) || SERVICES_DATA[0];
   const baseCost = baseObj.baseEstimate;
 
+  const availableModules = ESTIMATOR_MODULES.filter(
+    (m) => m.serviceIds.includes(selectedService) || m.serviceIds.includes('all')
+  );
+
+  const handleServiceSelect = (serviceId: string) => {
+    setSelectedService(serviceId);
+    const newAvailable = ESTIMATOR_MODULES.filter(
+      (m) => m.serviceIds.includes(serviceId) || m.serviceIds.includes('all')
+    );
+    if (newAvailable.length >= 2) {
+      setSelectedModules([newAvailable[0].id, newAvailable[1].id]);
+    } else {
+      setSelectedModules(newAvailable.map((m) => m.id));
+    }
+  };
+
   const modulesCost = selectedModules.reduce((acc, modId) => {
     const mod = ESTIMATOR_MODULES.find((m) => m.id === modId);
     return acc + (mod ? mod.cost : 0);
@@ -133,7 +149,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                   <button
                     key={s.id}
                     type="button"
-                    onClick={() => setSelectedService(s.id)}
+                    onClick={() => handleServiceSelect(s.id)}
                     className={`p-4 rounded-xl text-left border transition-all text-xs ${
                       selectedService === s.id
                         ? 'bg-blue-50/80 border-blue-600 text-blue-900 font-bold shadow-xs ring-1 ring-blue-500'
@@ -149,11 +165,17 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
 
             {/* Step 2: Add-on Modules */}
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-3">
-                2. Optional Architectural Modules
-              </label>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+                  2. Optional Architectural Modules
+                </label>
+                <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200/70 self-start sm:self-auto">
+                  Tailored for {baseObj.title}
+                </span>
+              </div>
+              
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {ESTIMATOR_MODULES.map((mod) => {
+                {availableModules.map((mod) => {
                   const isChecked = selectedModules.includes(mod.id);
                   return (
                     <button
@@ -166,15 +188,20 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                           : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
                       }`}
                     >
-                      <div className="flex items-center gap-2">
-                        <div className={`w-4 h-4 rounded flex items-center justify-center border ${
+                      <div className="flex items-center gap-2.5 pr-2 min-w-0">
+                        <div className={`w-4 h-4 rounded flex items-center justify-center border shrink-0 ${
                           isChecked ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300'
                         }`}>
                           {isChecked && <CheckCircle2 className="w-3.5 h-3.5" />}
                         </div>
-                        <span>{mod.name}</span>
+                        <div className="flex flex-col min-w-0">
+                          <span className="leading-tight font-medium truncate text-slate-900">{mod.name}</span>
+                          {mod.description && (
+                            <span className="text-[10px] text-slate-500 font-normal truncate mt-0.5">{mod.description}</span>
+                          )}
+                        </div>
                       </div>
-                      <span className="font-mono text-[10px] text-slate-400">+{mod.time}</span>
+                      <span className="font-mono text-[10px] text-slate-400 shrink-0 pl-1">+{mod.time}</span>
                     </button>
                   );
                 })}
