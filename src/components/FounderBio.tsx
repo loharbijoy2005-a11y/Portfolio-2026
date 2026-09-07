@@ -54,9 +54,11 @@ export const FounderBio: React.FC = () => {
 
             {/* Right: Founder Profile Card */}
             <div className="lg:col-span-4 bg-white rounded-2xl p-6 border border-slate-200/90 shadow-md text-center space-y-4 relative">
-              <div className="w-16 h-16 rounded-full bg-blue-600 text-white font-extrabold text-xl flex items-center justify-center mx-auto shadow-md shadow-blue-500/20">
-                BL
-              </div>
+              <img
+                src="https://github.com/loharbijoy2005-a11y.png"
+                alt="Bijoy Lohar - Founder & Lead Engineer"
+                className="w-20 h-20 rounded-full object-cover border-2 border-blue-500 mx-auto shadow-lg shadow-blue-500/20 ring-4 ring-blue-50"
+              />
 
               <div>
                 <h3 className="text-lg font-bold text-slate-900">Bijoy Lohar</h3>

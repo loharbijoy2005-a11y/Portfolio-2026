@@ -436,9 +436,11 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
               {/* Bottom Card Footer */}
               <div className="bg-slate-50 px-5 py-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-[10px] shadow-sm">
-                    BL
-                  </div>
+                  <img
+                    src="https://github.com/loharbijoy2005-a11y.png"
+                    alt="Bijoy Lohar"
+                    className="w-8 h-8 rounded-full object-cover border border-blue-500 shadow-xs"
+                  />
                   <div>
                     <div className="flex items-center gap-1.5">
                       <span className="font-bold text-slate-900 leading-none">Bijoy Lohar</span>
