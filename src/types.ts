@@ -42,6 +42,33 @@ export interface ArchitectureLayer {
   keyBenefits: string[];
 }
 
+export interface GitHubRepo {
+  id: number | string;
+  name: string;
+  full_name: string;
+  description: string;
+  html_url: string;
+  homepage?: string;
+  stargazers_count: number;
+  forks_count: number;
+  language: string;
+  category: 'Web Apps' | 'Backend & APIs' | 'Algorithms' | 'Tools';
+  topics?: string[];
+  updated_at?: string;
+}
+
+export interface PricingTier {
+  id: string;
+  name: string;
+  priceRange: string;
+  numericBasePrice: number;
+  badge?: string;
+  isPopular?: boolean;
+  idealFor: string;
+  features: string[];
+  ctaText: string;
+}
+
 export interface EstimateOptions {
   projectType: string;
   selectedModules: string[];

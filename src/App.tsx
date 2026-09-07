@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { BackgroundBlobs } from './components/BackgroundBlobs';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Stats } from './components/Stats';
+import { TechStackMarquee } from './components/TechStackMarquee';
 import { Services } from './components/Services';
 import { CaseStudies } from './components/CaseStudies';
+import { GitHubShowcase } from './components/GitHubShowcase';
 import { TechArchitecture } from './components/TechArchitecture';
 import { B2BTrustGST } from './components/B2BTrustGST';
+import { PricingTiers } from './components/PricingTiers';
 import { CostEstimatorForm } from './components/CostEstimatorForm';
 import { Footer } from './components/Footer';
 import { WhatsAppFloating } from './components/WhatsAppFloating';
@@ -40,38 +44,60 @@ export const App: React.FC = () => {
     handleStartProject();
   };
 
+  const handleSelectPricingTier = (_tierId: string, tierName: string, basePrice: number) => {
+    setSelectedCaseStudyTitle(`Selected Pricing Package: ${tierName} (₹${basePrice.toLocaleString('en-IN')})`);
+    handleStartProject();
+  };
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] selection:bg-blue-100 selection:text-blue-900 font-sans">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] selection:bg-blue-100 selection:text-blue-900 font-sans relative overflow-x-hidden">
       
-      {/* Sticky Navigation */}
+      {/* Drifting Ambient Background Blobs */}
+      <BackgroundBlobs />
+
+      {/* Sticky Blurred Navigation Header */}
       <Navbar onOpenBooking={() => setBookingModalOpen(true)} />
 
-      {/* Hero Section */}
-      <Hero
-        onStartProject={handleStartProject}
-        onExploreWork={handleExploreWork}
-      />
+      {/* Main Content Area */}
+      <main className="relative z-10">
+        
+        {/* High-Converting Hero */}
+        <Hero
+          onStartProject={handleStartProject}
+          onExploreWork={handleExploreWork}
+        />
 
-      {/* Trust Stats Bar */}
-      <Stats />
+        {/* Key Metrics & Stats Counter */}
+        <Stats />
 
-      {/* Core Engineering Services */}
-      <Services onSelectService={handleSelectService} />
+        {/* Tech Stack Infinite Marquee & Interactive Skill Matrix */}
+        <TechStackMarquee />
 
-      {/* Work & Featured Case Studies */}
-      <CaseStudies onSelectForQuote={handleSelectForQuote} />
+        {/* Core Engineering Services Grid */}
+        <Services onSelectService={handleSelectService} />
 
-      {/* Clean Architecture & Tech Stack Showcase */}
-      <TechArchitecture />
+        {/* Featured Case Studies & Work */}
+        <CaseStudies onSelectForQuote={handleSelectForQuote} />
 
-      {/* B2B Trust, GST 18% Tax Credit & Milestone Process */}
-      <B2BTrustGST />
+        {/* Live GitHub Repositories Showcase */}
+        <GitHubShowcase />
 
-      {/* Interactive Project Estimator & Inquiry Form */}
-      <CostEstimatorForm
-        preselectedServiceId={selectedServiceId}
-        preselectedTitle={selectedCaseStudyTitle}
-      />
+        {/* Clean System Architecture & Code Specs */}
+        <TechArchitecture />
+
+        {/* B2B Trust, 18% GST Tax Credit & Milestone Process */}
+        <B2BTrustGST />
+
+        {/* Revamped 3-Tier Transparent Pricing (INR + GST) */}
+        <PricingTiers onSelectTier={handleSelectPricingTier} />
+
+        {/* Interactive Scope Estimator & Contact Form */}
+        <CostEstimatorForm
+          preselectedServiceId={selectedServiceId}
+          preselectedTitle={selectedCaseStudyTitle}
+        />
+
+      </main>
 
       {/* Footer */}
       <Footer />
@@ -79,7 +105,7 @@ export const App: React.FC = () => {
       {/* Floating WhatsApp Quick Connect */}
       <WhatsAppFloating />
 
-      {/* Discovery Call Booking Modal */}
+      {/* Direct Discovery Call Booking Modal */}
       <DiscoveryModal
         isOpen={bookingModalOpen}
         onClose={() => setBookingModalOpen(false)}

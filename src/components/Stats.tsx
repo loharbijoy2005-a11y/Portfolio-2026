@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Activity, Gauge, ShieldCheck, UserCheck } from 'lucide-react';
 
 export const Stats: React.FC = () => {
@@ -23,28 +24,30 @@ export const Stats: React.FC = () => {
     },
     {
       icon: UserCheck,
-      value: 'Founder',
-      label: 'Led Engineering',
+      value: 'Direct',
+      label: 'Founder Engineering',
       subtext: 'Direct communication with Bijoy Lohar'
     }
   ];
 
   return (
-    <section className="py-10 bg-white border-y border-slate-200/80 shadow-2xs">
+    <section className="py-10 bg-white border-y border-slate-200/80 shadow-2xs relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {stats.map((stat, idx) => {
             const Icon = stat.icon;
             return (
-              <div 
+              <motion.div 
                 key={idx} 
-                className="flex items-start gap-4 p-4 rounded-xl hover:bg-slate-50/80 transition-colors border border-transparent hover:border-slate-200/60"
+                whileHover={{ scale: 1.03, y: -2 }}
+                transition={{ duration: 0.2 }}
+                className="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50/80 transition-colors border border-transparent hover:border-slate-200/80 cursor-pointer group"
               >
-                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0 mt-0.5">
-                  <Icon className="w-5 h-5 stroke-[2.2]" />
+                <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300 shrink-0 mt-0.5 shadow-2xs">
+                  <Icon className="w-5.5 h-5.5 stroke-[2.2]" />
                 </div>
                 <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-mono">
+                  <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-mono group-hover:text-blue-600 transition-colors">
                     {stat.value}
                   </div>
                   <div className="text-sm font-bold text-slate-800 mt-0.5">
@@ -54,7 +57,7 @@ export const Stats: React.FC = () => {
                     {stat.subtext}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
