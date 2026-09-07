@@ -37,7 +37,7 @@ const PROJECTS: ProjectArchitecture[] = [
     codeSnippet: `// Next.js 14 Server Action & Razorpay Order Checkout
 export async function createCheckoutSession(cart: CartItem[], gstin: string) {
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const gstAmount = subtotal * 0.18; // B2B 18% GST Input Tax Credit
+  const gstAmount = subtotal * 0.18; // B2B GST Tax Invoice computation
   
   const razorpayOrder = await razorpay.orders.create({
     amount: (subtotal + gstAmount) * 100,
@@ -402,7 +402,7 @@ export const FullStackEmulator: React.FC = () => {
                   <div className="pt-2 flex items-center justify-between">
                     <div className="text-xs">
                       <span className="text-slate-500 block text-[10px]">Instant Checkout</span>
-                      <span className="font-bold text-slate-900">18% GST B2B Invoice</span>
+                      <span className="font-bold text-slate-900">Verified GST B2B Invoice</span>
                     </div>
 
                     <button
@@ -505,7 +505,7 @@ export const FullStackEmulator: React.FC = () => {
                         <span className="text-[10px] text-slate-400">Just Now</span>
                       </div>
                       <p className="text-slate-700 text-xs leading-relaxed">
-                        🎉 Hi Rajiv! Your order <strong>#SA-9082</strong> has been dispatched. Track your delivery live or download your 18% GST B2B invoice.
+                        🎉 Hi Rajiv! Your order <strong>#SA-9082</strong> has been dispatched. Track your delivery live or download your official GST B2B invoice.
                       </p>
                       <div className="pt-2 flex gap-2">
                         <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-md font-bold text-[10px]">

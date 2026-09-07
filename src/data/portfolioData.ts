@@ -190,7 +190,7 @@ app.post('/api/webhooks/razorpay', async (req, res) => {
     subtitle: 'GST Invoice Engine + Contract-Backed IP Ownership',
     icon: 'Lock',
     techs: [
-      { name: '18% B2B Input Tax Credit', desc: 'Official GST tax invoices issued for corporate tax offset', icon: 'FileText' },
+      { name: 'Official GST Invoicing', desc: 'Official GST tax invoices issued for legal tax compliance', icon: 'FileText' },
       { name: 'OWASP Security Hardening', desc: 'CSRF protection, strict CORS, rate limiting, and sanitized inputs', icon: 'Shield' },
       { name: '100% IP Transfer Contract', desc: 'Full GitHub repository handoff with zero proprietary lock-in', icon: 'CheckCircle2' }
     ],
@@ -206,7 +206,7 @@ interface GSTInvoice {
   grandTotal: number;
   inputTaxCreditAvailable: boolean;
 }`,
-    keyBenefits: ['Legally binding contract SLA', 'Full source code ownership', '18% B2B tax credit optimization']
+    keyBenefits: ['Legally binding contract SLA', 'Full source code ownership', 'Verified GST tax invoicing']
   }
 ];
 

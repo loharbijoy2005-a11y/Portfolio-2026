@@ -29,14 +29,15 @@ export const FounderBio: React.FC = () => {
                 <span>Founder & Lead Engineering Philosophy</span>
               </div>
 
-              {/* Exact Requested Headline */}
+              {/* Headline */}
               <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                Modern Tech. Rapid Execution. Zero Legacy Bloat.
+                Engineered for Performance.<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Built for Business Growth.</span>
               </h2>
 
-              {/* Exact Requested Sub-copy */}
-              <p className="text-base text-slate-600 leading-relaxed">
-                Led by <strong className="text-slate-900 font-bold">Bijoy Lohar</strong>, ShadowArrow delivers production-ready web platforms using modern architectures. Backed by <strong className="text-blue-700 font-bold">1–2 years of intensive, project-driven engineering</strong> across TypeScript, JavaScript, Python, and Java, we build lightning-fast web solutions with verified GST billing and direct founder-level accountability.
+              {/* Founder Positioning Copy */}
+              <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+                Led by <strong className="text-slate-900 font-bold">Bijoy Lohar</strong>, Shadow Arrow delivers production-ready web platforms using modern Next.js & TypeScript architectures. Backed by <strong className="text-blue-700 font-bold">1–2 years of intensive, project-driven engineering</strong> across TypeScript, JavaScript, Python, and Java, we build lightning-fast web solutions with verified GST billing and direct founder-level accountability.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs font-medium text-slate-700">
@@ -54,7 +55,7 @@ export const FounderBio: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Official GST 18% Input Tax Credit Invoicing</span>
+                  <span>Official Verified GST Invoicing</span>
                 </div>
               </div>
             </motion.div>

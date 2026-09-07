@@ -46,7 +46,7 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
       'Automated WhatsApp Order Alerts & Notifications',
       'Custom Admin Inventory & Order Management Portal',
       'High-Converting Sub-Second Checkout Engine',
-      'Automated 18% GST-Compliant B2B Tax Invoice Generation',
+      'Automated GST-Compliant B2B Invoice Generation',
       '3-Months Priority Engineering & Server Support',
       '100% IP Code Ownership & Repository Handover'
     ],
@@ -208,7 +208,7 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
                     </AnimatePresence>
                     <div className="text-[10px] text-emerald-700 font-bold mt-1 flex items-center gap-1">
                       <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                      <span>+ 18% GST B2B Input Tax Credit</span>
+                      <span>+ Official GST B2B Invoicing</span>
                     </div>
                   </div>
 
@@ -261,7 +261,7 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
             <Zap className="w-4 h-4" />
           </div>
           <p className="text-xs sm:text-sm text-slate-800 font-medium">
-            ⚡ <strong className="font-extrabold text-blue-900">Quality Over Shortcuts:</strong> We maintain a disciplined 3–4 week milestone engineering cycle ensuring zero tech debt, strict type-safety, and seamless 18% GST invoicing.
+            ⚡ <strong className="font-extrabold text-blue-900">Quality Over Shortcuts:</strong> We maintain a disciplined 3–4 week milestone engineering cycle ensuring zero tech debt, strict type-safety, and seamless GST invoicing.
           </p>
         </div>
 

@@ -68,7 +68,7 @@ export const TermsOfServiceModal: React.FC<TermsOfServiceModalProps> = ({ isOpen
               </p>
               <ul className="list-disc pl-5 space-y-1.5 text-slate-600">
                 <li><strong className="text-slate-800">Business Starter Builds (1–2 Weeks):</strong> Custom responsive multi-page web applications, SEO optimization, contact forms, and WhatsApp integrations.</li>
-                <li><strong className="text-slate-800">E-Commerce & Growth Engines (3–4 Weeks):</strong> Next.js store frontends, Razorpay/Stripe payment gateway integration, order webhook triggers, admin inventory dashboards, and automated 18% GST tax invoice generation.</li>
+                <li><strong className="text-slate-800">E-Commerce & Growth Engines (3–4 Weeks):</strong> Next.js store frontends, Razorpay/Stripe payment gateway integration, order webhook triggers, admin inventory dashboards, and automated GST tax invoice generation.</li>
                 <li><strong className="text-slate-800">Custom Full-Stack & SaaS (4–6 Weeks):</strong> Bespoke full-stack web platforms, database schema architecture (MongoDB/PostgreSQL/Supabase), RBAC authentication, and automated cloud deployments.</li>
               </ul>
             </section>
@@ -97,11 +97,11 @@ export const TermsOfServiceModal: React.FC<TermsOfServiceModalProps> = ({ isOpen
                 </div>
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                   <div className="font-bold text-slate-900 text-xs mb-1">10% Milestone 4 (Production & Handover)</div>
-                  <div className="text-xs text-slate-600">Final payment upon live domain deployment, GitHub repo transfer, and 18% GST B2B Tax Credit Invoice issuance.</div>
+                  <div className="text-xs text-slate-600">Final payment upon live domain deployment, GitHub repo transfer, and GST B2B Tax Invoice issuance.</div>
                 </div>
               </div>
               <p className="text-slate-600 pt-1">
-                <strong className="text-slate-900">18% GST Input Tax Credit (ITC):</strong> As a registered corporate entity, ShadowArrow issues tax-compliant invoices allowing your business to deduct 100% of GST paid on corporate tax filings.
+                <strong className="text-slate-900">GST Compliance:</strong> As a registered corporate entity, ShadowArrow issues tax-compliant invoices allowing your business to easily manage tax filings.
               </p>
             </section>
 

@@ -44,7 +44,7 @@ export const MilestoneTimeline: React.FC = () => {
       deliverables: [
         'FastAPI / Node.js High-Concurrency Endpoint Build',
         'Razorpay Payment Gateway & Webhook Signature Validation',
-        'Automated 18% GST B2B Tax Invoice Generation',
+        'Automated GST B2B Invoice Generation',
         'Live Staging URL Deployment for Interactive Client Testing'
       ]
     },

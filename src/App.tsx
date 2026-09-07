@@ -177,7 +177,7 @@ export const App: React.FC = () => {
           <MilestoneTimeline />
         </motion.div>
 
-        {/* B2B Trust, 18% GST Tax Credit & Milestone Process */}
+        {/* B2B Trust, Official GST Invoicing & Milestone Process */}
         <motion.div
           initial="hidden"
           whileInView="visible"

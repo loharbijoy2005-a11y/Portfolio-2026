@@ -33,7 +33,7 @@ const FALLBACK_REPOS: GitHubRepo[] = [
     id: 2,
     name: 'razorpay-gst-billing-api',
     full_name: 'loharbijoy2005-a11y/razorpay-gst-billing-api',
-    description: 'Node.js Express microservice for automated 18% B2B Input Tax Credit invoice generation and Razorpay webhook validation.',
+    description: 'Node.js Express microservice for automated GST invoice generation and Razorpay webhook validation.',
     html_url: 'https://github.com/loharbijoy2005-a11y',
     homepage: 'https://api.shadowarrow.in',
     stargazers_count: 32,

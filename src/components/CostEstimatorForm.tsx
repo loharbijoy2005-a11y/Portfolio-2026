@@ -235,9 +235,9 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                 </div>
 
                 <div className="text-right">
-                  <div className="text-xs text-slate-400">18% B2B GST Tax Credit</div>
+                  <div className="text-xs text-slate-400">GST Component (18%)</div>
                   <div className="text-lg font-bold font-mono text-blue-400">
-                    -₹{gstAmount.toLocaleString('en-IN')}
+                    +₹{gstAmount.toLocaleString('en-IN')}
                   </div>
                 </div>
               </div>

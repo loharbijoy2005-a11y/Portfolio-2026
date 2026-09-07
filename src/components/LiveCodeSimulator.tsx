@@ -65,7 +65,7 @@ app.post('/api/checkout', async (req, res) => {
     tabLabel: 'Tax Compliance (GST Calculator)',
     filename: 'gstCalculator.ts',
     language: 'TypeScript',
-    code: `// Official B2B 18% GST & Input Tax Credit Computation
+    code: `// Official B2B GST Invoicing & Tax Computation
 export function computeGSTInvoice(subtotal: number, isInterstate: boolean) {
   const cgst = isInterstate ? 0 : subtotal * 0.09;
   const sgst = isInterstate ? 0 : subtotal * 0.09;

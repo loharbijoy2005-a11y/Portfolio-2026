@@ -161,7 +161,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>18% B2B Tax Credit</span>
+                <span>Verified GST Billing</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -388,8 +388,8 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                       <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-950 flex items-start gap-2.5 shadow-2xs">
                         <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                         <div>
-                          <span className="font-bold">18% B2B Input Tax Credit (ITC): </span>
-                          <span>Your business claims back <strong className="font-extrabold underline text-emerald-900">₹18,000</strong> as tax deduction on official GST portal.</span>
+                          <span className="font-bold">Compliant B2B GST Invoicing: </span>
+                          <span>Official tax invoice generated with full legal compliance for your finance & audit filings.</span>
                         </div>
                       </div>
                     </motion.div>

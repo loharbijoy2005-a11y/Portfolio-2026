@@ -58,17 +58,17 @@ export const B2BTrustGST: React.FC = () => {
               </div>
 
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-                Save 18% with Official GST Invoicing & Milestone Protection
+                Official GST Invoicing & Milestone Protection
               </h2>
 
               <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl">
-                Shadow Arrow is a registered corporate business. Every contract comes with verified GST tax invoices allowing your finance team to claim <strong className="text-white font-semibold">18% Input Tax Credit (ITC)</strong>, contract SLA guarantees, and milestone payment schedules.
+                Shadow Arrow is a registered corporate business. Every contract comes with verified GST tax invoices for your finance team, contract SLA guarantees, and milestone payment schedules.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs text-slate-200">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>GST Tax Credit (18% Deduction)</span>
+                  <span>GST Compliant Invoicing</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -91,10 +91,10 @@ export const B2BTrustGST: React.FC = () => {
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
                   <Calculator className="w-5 h-5 text-blue-600" />
-                  <h3 className="font-bold text-sm">B2B Tax Credit Simulator</h3>
+                  <h3 className="font-bold text-sm">B2B GST Invoice Simulator</h3>
                 </div>
                 <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
-                  18% GST ITC
+                  GST Verified
                 </span>
               </div>
 
@@ -122,7 +122,7 @@ export const B2BTrustGST: React.FC = () => {
 
               <div className="space-y-2 bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs font-mono">
                 <div className="flex justify-between text-slate-600">
-                  <span>GST Rate (18%):</span>
+                  <span>GST Component (18%):</span>
                   <span className="text-blue-600 font-bold">+₹{gstAmount.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="flex justify-between text-slate-900 font-bold pt-2 border-t border-slate-200">
@@ -130,13 +130,13 @@ export const B2BTrustGST: React.FC = () => {
                   <span className="text-slate-900 text-sm">₹{grandTotal.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="flex justify-between text-emerald-700 font-bold pt-1 text-[11px]">
-                  <span>Your Net ITC Tax Credit:</span>
-                  <span>-₹{gstAmount.toLocaleString('en-IN')}</span>
+                  <span>GST Tax Breakdown:</span>
+                  <span>₹{gstAmount.toLocaleString('en-IN')}</span>
                 </div>
               </div>
 
               <div className="text-[11px] text-slate-500 text-center leading-tight">
-                *Your business gets <strong className="text-slate-800">100% tax credit offset</strong> on GST filings.
+                *Official tax invoices issued with full GST compliance.
               </div>
 
             </div>

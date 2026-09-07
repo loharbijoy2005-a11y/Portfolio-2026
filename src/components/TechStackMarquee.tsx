@@ -192,7 +192,7 @@ const TECH_SKILLS: TechSkill[] = [
     name: 'Razorpay API', 
     category: 'Tools & APIs', 
     experience: '1–2 Yrs Active Builds', 
-    useCase: 'Checkout webhooks, 18% GST tax invoice generation, and settlement sync', 
+    useCase: 'Checkout webhooks, GST tax invoice generation, and settlement sync', 
     brandColor: '#1d4ed8', 
     level: 'Essential',
     iconUrl: 'https://cdn.simpleicons.org/razorpay/0C2340' 

@@ -102,7 +102,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             >
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <ShieldCheck className="w-3.5 h-3.5 text-blue-600 group-hover:rotate-12 transition-transform duration-300" />
-              <span className="font-semibold text-slate-800">GST Registered • 18% ITC</span>
+              <span className="font-semibold text-slate-800">GST Registered • Invoices Provided</span>
             </motion.div>
 
             {/* CTA Button with Shimmer Sweep */}
@@ -143,7 +143,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
         <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-4 shadow-xl">
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-50 border border-blue-100 text-blue-800 text-xs font-semibold">
             <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
-            <span>GST-Compliant Invoicing (18% B2B Tax Credit)</span>
+            <span>Verified GST-Compliant Invoicing</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2">

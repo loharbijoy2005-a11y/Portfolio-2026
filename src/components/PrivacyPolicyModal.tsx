@@ -64,7 +64,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, 
                 <span>Information We Collect</span>
               </h3>
               <p>
-                When you engage with ShadowArrow via our web platform (shadowarrow.in), discovery contact forms, project estimator tools, WhatsApp APIs, or direct founder communications, we collect specific information necessary for rendering engineering services and issuing legally valid 18% GST tax invoices:
+                When you engage with ShadowArrow via our web platform (shadowarrow.in), discovery contact forms, project estimator tools, WhatsApp APIs, or direct founder communications, we collect specific information necessary for rendering engineering services and issuing legally valid GST tax invoices:
               </p>
               <ul className="list-disc pl-5 space-y-1.5 text-slate-600">
                 <li><strong className="text-slate-800">Identity & Business Details:</strong> Full Name, Business/Company Name, Corporate Address, GSTIN (GST Identification Number), Official Email Address, and Phone/WhatsApp Number.</li>
@@ -89,8 +89,8 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, 
                   <div className="text-xs text-slate-600">Building, testing, and deploying Next.js, Node.js, and database architectures as requested in your project scope.</div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="font-bold text-slate-900 text-xs mb-1">18% GST B2B Invoicing</div>
-                  <div className="text-xs text-slate-600">Generating tax-compliant tax invoices enabling your business to claim 18% Input Tax Credit (ITC) with Indian GST authorities.</div>
+                  <div className="font-bold text-slate-900 text-xs mb-1">Official GST Invoicing</div>
+                  <div className="text-xs text-slate-600">Generating tax-compliant tax invoices for your business tax filings with Indian GST authorities.</div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                   <div className="font-bold text-slate-900 text-xs mb-1">Direct Founder Support</div>

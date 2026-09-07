@@ -20,7 +20,7 @@ export const Stats: React.FC = () => {
       icon: ShieldCheck,
       value: '100%',
       label: 'Legal GST Tax Compliant',
-      subtext: '18% B2B Input Tax Credit invoicing'
+      subtext: 'Verified GST tax invoicing'
     },
     {
       icon: Zap,

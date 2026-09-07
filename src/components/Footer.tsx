@@ -31,7 +31,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
             {/* GST Tax Verification Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 text-xs font-mono">
               <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>GST Registered • 18% B2B Tax Credit Compliant</span>
+              <span>GST Registered • Verified GST Invoices Provided</span>
             </div>
           </div>
 
