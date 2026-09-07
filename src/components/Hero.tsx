@@ -204,7 +204,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                 </div>
                 <div className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-md text-[11px] font-mono text-slate-500 border border-slate-200/80 shadow-2xs">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>https://shadowarrow.in/system-spec</span>
+                  <span>https://shadowarrow.in</span>
                 </div>
                 <Sparkles className="w-4 h-4 text-blue-500" />
               </div>
