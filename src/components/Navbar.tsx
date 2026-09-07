@@ -19,6 +19,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+
   const navLinks = [
     { label: 'Work', href: '#work' },
     { label: 'Services', href: '#services' },
@@ -66,35 +68,51 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             </div>
           </motion.a>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-1 bg-white/80 border border-slate-200/80 rounded-full px-4 py-1.5 shadow-sm backdrop-blur-md">
+          {/* Desktop Nav Links with Sliding Framer Motion Hover Pill */}
+          <nav className="hidden md:flex items-center gap-1 bg-white/80 border border-slate-200/80 rounded-full px-3 py-1.5 shadow-xs backdrop-blur-md relative">
             {navLinks.map((link) => (
-              <a
+              <motion.a
                 key={link.label}
                 href={link.href}
-                className="px-3.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 hover:bg-slate-100/70 rounded-full transition-all duration-150"
+                onMouseEnter={() => setHoveredNav(link.label)}
+                onMouseLeave={() => setHoveredNav(null)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-blue-600 rounded-full transition-colors duration-150"
               >
-                {link.label}
-              </a>
+                {hoveredNav === link.label && (
+                  <motion.div
+                    layoutId="hoverNavPill"
+                    className="absolute inset-0 bg-blue-50/90 rounded-full border border-blue-200/80 -z-10 shadow-2xs"
+                    transition={{ type: 'spring', stiffness: 450, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{link.label}</span>
+              </motion.a>
             ))}
           </nav>
 
           {/* Right Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            {/* Trust Pill */}
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium">
+            {/* Animated Trust Pill */}
+            <motion.div 
+              whileHover={{ scale: 1.04, borderColor: 'rgba(59, 130, 246, 0.4)' }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200 text-slate-700 text-xs font-medium shadow-2xs cursor-pointer group"
+            >
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
-              <span>GST Registered • 18% ITC</span>
-            </div>
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-600 group-hover:rotate-12 transition-transform duration-300" />
+              <span className="font-semibold text-slate-800">GST Registered • 18% ITC</span>
+            </motion.div>
 
-            {/* CTA Button */}
+            {/* CTA Button with Shimmer Sweep */}
             <MagneticButton>
               <button
                 onClick={onOpenBooking}
-                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-xs font-bold tracking-wide shadow-md shadow-blue-600/20 hover:shadow-lg hover:shadow-blue-600/30 transition-all duration-200 active:scale-95 cursor-pointer"
+                className="relative overflow-hidden group inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4.5 py-2 rounded-full text-xs font-bold tracking-wide shadow-md shadow-blue-600/20 hover:shadow-lg hover:shadow-blue-600/35 transition-all duration-200 active:scale-95 cursor-pointer"
               >
-                <Calendar className="w-3.5 h-3.5" />
+                <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-out pointer-events-none" />
+                <Calendar className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
                 <span>Book a Discovery Call</span>
               </button>
             </MagneticButton>
