@@ -36,19 +36,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (preselectedServiceId) {
-      handleServiceSelect(preselectedServiceId);
-    }
-  }, [preselectedServiceId]);
-
-  useEffect(() => {
-    if (preselectedTitle) {
-      setMessage(`Hi Bijoy, I am interested in building a solution similar to: ${preselectedTitle}.`);
-    }
-  }, [preselectedTitle]);
-
-  // Calculate Base Cost
+  // Calculate Base Cost & Scope Details
   const baseObj = SERVICES_DATA.find((s) => s.id === selectedService) || SERVICES_DATA[0];
   const baseCost = baseObj.baseEstimate;
 
@@ -76,6 +64,34 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
   const subtotal = (baseCost + modulesCost) * (timeline === 'fast' ? 1.25 : 1);
   const gstAmount = Math.round(subtotal * 0.18);
   const grandTotal = subtotal + gstAmount;
+
+  useEffect(() => {
+    if (preselectedServiceId) {
+      handleServiceSelect(preselectedServiceId);
+    }
+  }, [preselectedServiceId]);
+
+  useEffect(() => {
+    const selectedModNames = selectedModules
+      .map((id) => ESTIMATOR_MODULES.find((m) => m.id === id)?.name)
+      .filter(Boolean)
+      .join(', ');
+
+    const defaultMsg = `Hi Bijoy, I am interested in commissioning: ${baseObj.title}.\n` +
+      `Estimated Subtotal: ₹${Math.round(subtotal).toLocaleString('en-IN')} (Excl. GST)\n` +
+      (selectedModNames ? `Architectural Add-ons: ${selectedModNames}\n` : '') +
+      `Timeline Preference: ${timeline === 'fast' ? 'Fast Track (1-2 Weeks)' : 'Standard Pace (3-4 Weeks)'}`;
+
+    if (!message || message.startsWith('Hi Bijoy')) {
+      setMessage(defaultMsg);
+    }
+  }, [selectedService, selectedModules, timeline, subtotal, baseObj.title]);
+
+  useEffect(() => {
+    if (preselectedTitle) {
+      setMessage(`Hi Bijoy, I am interested in building a solution similar to: ${preselectedTitle}.`);
+    }
+  }, [preselectedTitle]);
 
   const toggleModule = (id: string) => {
     if (selectedModules.includes(id)) {
@@ -286,13 +302,32 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
             className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-lg space-y-6"
           >
             
-            <div className="border-b border-slate-100 pb-4">
-              <h3 className="text-xl font-bold text-slate-900">
-                Direct Founder Contact Form
-              </h3>
-              <p className="text-xs text-slate-500 mt-1">
-                Expect a formal project proposal and call invitation within 4 business hours.
-              </p>
+            <div className="border-b border-slate-100 pb-4 space-y-3">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">
+                  Direct Founder Contact Form
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  Expect a formal project proposal and call invitation within 4 business hours.
+                </p>
+              </div>
+
+              {/* Connected Scope Badge Chip */}
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50/80 border border-blue-200/80 rounded-2xl p-3 text-xs text-blue-950 space-y-1.5 shadow-2xs">
+                <div className="flex items-center justify-between font-bold text-blue-900">
+                  <span className="flex items-center gap-1.5 truncate pr-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                    <span className="truncate">Connected: {baseObj.title}</span>
+                  </span>
+                  <span className="font-mono text-blue-700 font-extrabold bg-white px-2 py-0.5 rounded-full border border-blue-200 text-[11px] shrink-0">
+                    ₹{Math.round(subtotal).toLocaleString('en-IN')}
+                  </span>
+                </div>
+                <div className="text-[11px] text-slate-500 flex items-center justify-between font-medium">
+                  <span>{selectedModules.length} Architectural Modules Selected</span>
+                  <span className="font-mono text-blue-600 font-semibold">{timeline === 'fast' ? 'Fast Track (+25%)' : 'Standard Sprint'}</span>
+                </div>
+              </div>
             </div>
 
             {submitted ? (
