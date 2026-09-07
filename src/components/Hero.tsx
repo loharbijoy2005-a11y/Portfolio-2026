@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { 
   ArrowRight, 
   CheckCircle2, 
@@ -10,7 +10,8 @@ import {
   Sparkles,
   ExternalLink,
   Gauge,
-  Cpu
+  Cpu,
+  Terminal
 } from 'lucide-react';
 
 interface HeroProps {
@@ -21,31 +22,81 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => {
   const [activeTab, setActiveTab] = useState<'perf' | 'gst' | 'stack'>('perf');
 
+  // 3D Perspective Tilt Values
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-150, 150], [10, -10]);
+  const rotateY = useTransform(x, [-150, 150], [-10, 10]);
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    x.set(e.clientX - centerX);
+    y.set(e.clientY - centerY);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  // Animated Counter values
+  const [speedVal, setSpeedVal] = useState(0);
+  const [ttfbVal, setTtfbVal] = useState(0);
+
+  useEffect(() => {
+    let speedCount = 0;
+    const speedInterval = setInterval(() => {
+      speedCount += 3;
+      if (speedCount >= 99) {
+        setSpeedVal(99);
+        clearInterval(speedInterval);
+      } else {
+        setSpeedVal(speedCount);
+      }
+    }, 20);
+
+    let ttfbCount = 500;
+    const ttfbInterval = setInterval(() => {
+      ttfbCount -= 15;
+      if (ttfbCount <= 180) {
+        setTtfbVal(180);
+        clearInterval(ttfbInterval);
+      } else {
+        setTtfbVal(ttfbCount);
+      }
+    }, 25);
+
+    return () => {
+      clearInterval(speedInterval);
+      clearInterval(ttfbInterval);
+    };
+  }, []);
+
   const techBadges = [
-    { name: 'Next.js 14', desc: 'App Router & SSR', category: 'Frontend', bg: 'bg-slate-900 text-white' },
-    { name: 'TypeScript', desc: 'Strict Type Safety', category: 'Language', bg: 'bg-blue-600 text-white' },
-    { name: 'Tailwind CSS', desc: 'Airy SaaS Tokens', category: 'Styling', bg: 'bg-sky-500 text-white' },
-    { name: 'Node.js', desc: 'Async Microservices', category: 'Backend', bg: 'bg-emerald-600 text-white' },
-    { name: 'Razorpay / Stripe', desc: 'Auto GST Invoicing', category: 'Payments', bg: 'bg-indigo-600 text-white' },
-    { name: 'PostgreSQL', desc: 'ACID Database', category: 'Database', bg: 'bg-blue-800 text-white' },
-    { name: 'Redis', desc: 'Sub-10ms Edge Cache', category: 'Cache', bg: 'bg-rose-600 text-white' },
-    { name: 'Cloudflare', desc: 'Edge CDN Shield', category: 'Infra', bg: 'bg-amber-600 text-white' },
+    { name: 'Next.js 14', desc: 'App Router & SSR', bg: 'bg-slate-900 text-white' },
+    { name: 'TypeScript', desc: 'Strict Type Safety', bg: 'bg-blue-600 text-white' },
+    { name: 'Tailwind CSS', desc: 'Airy SaaS Tokens', bg: 'bg-sky-500 text-white' },
+    { name: 'Node.js', desc: 'Async Microservices', bg: 'bg-emerald-600 text-white' },
+    { name: 'Razorpay / Stripe', desc: 'Auto GST Invoicing', bg: 'bg-indigo-600 text-white' },
+    { name: 'PostgreSQL', desc: 'ACID Database', bg: 'bg-blue-800 text-white' },
   ];
 
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-grid-pattern hero-glow">
       
-      {/* Background Radial Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[380px] bg-gradient-to-tr from-blue-400/20 via-indigo-400/15 to-sky-300/10 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-1/3 right-10 w-80 h-80 bg-blue-300/15 rounded-full blur-3xl pointer-events-none -z-10" />
+      {/* Ambient background glow elements */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-tr from-blue-400/20 via-indigo-400/15 to-sky-300/10 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute top-1/3 right-10 w-96 h-96 bg-blue-300/15 rounded-full blur-3xl pointer-events-none -z-10" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
           {/* Left Hero Content */}
           <div className="lg:col-span-7 space-y-6 text-left">
             
-            {/* Sub-badge with Pulsing Green Status */}
+            {/* Sub-badge with Pulsing Status */}
             <div className="inline-flex flex-wrap items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-slate-200/90 text-slate-800 text-xs font-semibold shadow-xs backdrop-blur-md">
               <span className="flex h-2.5 w-2.5 relative">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -54,12 +105,12 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
               <span className="font-extrabold text-slate-900">Shadow Arrow</span>
               <span className="text-slate-300">•</span>
               <span className="text-slate-600">Lead Web Engineering by Bijoy Lohar</span>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200">
-                Available for Q3/Q4 Projects
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200">
+                🟢 Available for Q3/Q4 Projects
               </span>
             </div>
 
-            {/* Headline */}
+            {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
               Engineered for <span className="text-gradient-accent">Performance</span>.<br />
               Built for <span className="underline decoration-blue-500/30 underline-offset-8">Business Growth</span>.
@@ -73,21 +124,20 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
               
-              {/* Primary CTA with Shimmer & Scale-on-hover */}
+              {/* Primary Button with Shimmer */}
               <button
                 onClick={onStartProject}
-                className="relative overflow-hidden group inline-flex items-center justify-center gap-2.5 bg-blue-600 hover:bg-blue-700 text-white px-7 py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/35 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+                className="relative overflow-hidden group inline-flex items-center justify-center gap-2.5 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-sm shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/35 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
               >
-                {/* Shimmer Highlight */}
-                <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-out pointer-events-none" />
+                <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-out pointer-events-none" />
                 <span>Start Your Project</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
 
-              {/* Secondary CTA with Lift & Smooth Arrow Translation */}
+              {/* Secondary Button */}
               <button
                 onClick={onExploreWork}
-                className="group inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200/90 px-6 py-3.5 rounded-xl font-semibold text-sm shadow-xs hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 cursor-pointer"
+                className="group inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200/90 px-7 py-4 rounded-xl font-semibold text-sm shadow-xs hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 cursor-pointer"
               >
                 <Code2 className="w-4 h-4 text-blue-600" />
                 <span>Explore Live Demos</span>
@@ -96,7 +146,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
 
             </div>
 
-            {/* Trust highlights checklist */}
+            {/* Trust Checklist */}
             <div className="pt-3 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-medium text-slate-600">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -114,19 +164,29 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
 
           </div>
 
-          {/* Right Column: Animated & Interactive Tech Showcase */}
-          <div className="lg:col-span-5 relative">
+          {/* Right Column: 3D Tilt Card Interactive Window */}
+          <div className="lg:col-span-5 relative perspective-1000">
             
-            {/* Background Mesh Glow behind Card */}
+            {/* Background Glow */}
             <div 
               className="absolute -inset-4 rounded-3xl opacity-80 blur-2xl pointer-events-none -z-10"
               style={{
-                background: 'radial-gradient(ellipse at center, rgba(59, 130, 246, 0.18), rgba(99, 102, 241, 0.08), transparent 70%)'
+                background: 'radial-gradient(ellipse at center, rgba(59, 130, 246, 0.22), rgba(99, 102, 241, 0.1), transparent 70%)'
               }}
             />
 
-            <div className="bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-2xl shadow-slate-200/60 overflow-hidden transition-all duration-300">
+            <motion.div
+              style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              className="bg-white/95 backdrop-blur-xl rounded-3xl border border-slate-200/90 shadow-2xl shadow-slate-200/70 overflow-hidden transition-all duration-200 group relative"
+            >
               
+              {/* Glossy reflection sweep overlay */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl z-30">
+                <div className="w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-out" />
+              </div>
+
               {/* Browser Header Bar */}
               <div className="bg-slate-100/90 px-4 py-3 border-b border-slate-200 flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -136,7 +196,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                 </div>
                 <div className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-md text-[11px] font-mono text-slate-500 border border-slate-200/80 shadow-2xs">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>https://shadowarrow.com/engineering-spec</span>
+                  <span>https://shadowarrow.com/system-spec</span>
                 </div>
                 <Sparkles className="w-4 h-4 text-blue-500" />
               </div>
@@ -152,14 +212,14 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                 >
                   {activeTab === 'perf' && (
                     <motion.div
-                      layoutId="activeTabGlow"
+                      layoutId="activeTabGlowHero"
                       className="absolute inset-0 bg-white rounded-lg shadow-xs border border-slate-200"
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
                   <span className="relative z-10 flex items-center gap-1.5">
                     <Gauge className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Speed Metrics</span>
+                    <span>Live Metrics</span>
                   </span>
                 </button>
 
@@ -171,7 +231,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                 >
                   {activeTab === 'gst' && (
                     <motion.div
-                      layoutId="activeTabGlow"
+                      layoutId="activeTabGlowHero"
                       className="absolute inset-0 bg-white rounded-lg shadow-xs border border-slate-200"
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
@@ -190,7 +250,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                 >
                   {activeTab === 'stack' && (
                     <motion.div
-                      layoutId="activeTabGlow"
+                      layoutId="activeTabGlowHero"
                       className="absolute inset-0 bg-white rounded-lg shadow-xs border border-slate-200"
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
@@ -204,10 +264,10 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
               </div>
 
               {/* Dynamic Animated Tab Contents */}
-              <div className="p-6 min-h-[260px] flex flex-col justify-center">
+              <div className="p-6 min-h-[270px] flex flex-col justify-center">
                 <AnimatePresence mode="wait">
                   
-                  {/* TAB 1: Speed Metrics */}
+                  {/* TAB 1: Speed Metrics with Counter Animation */}
                   {activeTab === 'perf' && (
                     <motion.div
                       key="perf"
@@ -219,21 +279,21 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                     >
                       <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                         <div>
-                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Lighthouse Benchmark</h4>
-                          <p className="text-sm font-bold text-slate-900">Google Core Web Vitals Standard</p>
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Lighthouse Performance</h4>
+                          <p className="text-sm font-bold text-slate-900">Google Core Web Vitals Benchmark</p>
                         </div>
                         <div className="flex items-center gap-1.5 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
                           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                          <span className="text-xs font-mono font-extrabold text-emerald-700">99 / 100</span>
+                          <span className="text-xs font-mono font-extrabold text-emerald-700">{speedVal} / 100</span>
                         </div>
                       </div>
 
-                      {/* Gauges & Bars */}
+                      {/* Gauges & Counter values */}
                       <div className="space-y-3">
                         <div>
                           <div className="flex justify-between text-xs font-medium text-slate-600 mb-1">
                             <span>Time to First Byte (TTFB)</span>
-                            <span className="font-mono text-emerald-600 font-bold">&lt; 200ms (Pass)</span>
+                            <span className="font-mono text-emerald-600 font-bold">&lt; {ttfbVal}ms (Pass)</span>
                           </div>
                           <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
                             <motion.div
@@ -350,18 +410,20 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ duration: 0.2, delay: idx * 0.04 }}
-                            className="group/badge relative px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-blue-50 border border-slate-200/90 hover:border-blue-300 text-slate-800 hover:text-blue-900 text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                            className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-blue-50 border border-slate-200/90 hover:border-blue-300 text-slate-800 hover:text-blue-900 text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-2xs"
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
                             <span>{t.name}</span>
-                            <span className="text-[10px] text-slate-400 font-normal group-hover/badge:text-blue-600">({t.category})</span>
                           </motion.div>
                         ))}
                       </div>
 
                       <div className="bg-slate-900 text-slate-200 p-3 rounded-xl text-[11px] font-mono flex items-center justify-between">
-                        <span>// Zero Technical Debt Guaranteed</span>
-                        <span className="text-emerald-400 font-bold">SSR & Edge Ready</span>
+                        <div className="flex items-center gap-1.5">
+                          <Terminal className="w-3.5 h-3.5 text-blue-400" />
+                          <span>// Clean Architecture</span>
+                        </div>
+                        <span className="text-emerald-400 font-bold">100% Type Checked</span>
                       </div>
                     </motion.div>
                   )}
@@ -392,7 +454,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                 </a>
               </div>
 
-            </div>
+            </motion.div>
           </div>
 
         </div>

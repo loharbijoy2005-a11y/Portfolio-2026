@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { GitHubRepo } from '../types';
+import { SpotlightCard } from './SpotlightCard';
 import { 
   Star, 
   GitFork, 
@@ -152,8 +153,12 @@ export const GitHubShowcase: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="space-y-3 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-semibold uppercase tracking-wider">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
               <FolderGit2 className="w-3.5 h-3.5 text-blue-600" />
-              <span>Live GitHub Showcase</span>
+              <span>Live Sync GitHub Showcase</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
@@ -190,21 +195,17 @@ export const GitHubShowcase: React.FC = () => {
           </div>
         </div>
 
-        {/* Repositories Grid */}
+        {/* Repositories Grid wrapped in SpotlightCard */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <AnimatePresence mode="popLayout">
             {filteredRepos.map((repo) => {
               const langColor = LANGUAGE_COLORS[repo.language] || '#2563EB';
 
               return (
-                <motion.div
+                <SpotlightCard
                   key={repo.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-blue-500 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group"
+                  className="p-6 flex flex-col justify-between"
+                  spotlightColor="rgba(59, 130, 246, 0.12)"
                 >
                   <div className="space-y-3">
                     
@@ -244,8 +245,8 @@ export const GitHubShowcase: React.FC = () => {
                     {/* Language Dot & Badge */}
                     <div className="flex items-center gap-1.5 font-medium text-slate-700">
                       <span 
-                        className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
-                        style={{ backgroundColor: langColor }}
+                        className="w-2.5 h-2.5 rounded-full inline-block shrink-0 shadow-2xs"
+                        style={{ backgroundColor: langColor, boxShadow: `0 0 6px ${langColor}` }}
                       />
                       <span className="font-mono text-[11px] font-semibold">{repo.language}</span>
                     </div>
@@ -266,8 +267,9 @@ export const GitHubShowcase: React.FC = () => {
 
                   {/* Direct Link Footer */}
                   <div className="pt-3 mt-3 border-t border-slate-100/60 flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-slate-400">
-                      Public Repository
+                    <span className="text-[10px] font-mono text-emerald-600 font-semibold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                      Live Verified
                     </span>
 
                     <a
@@ -281,7 +283,7 @@ export const GitHubShowcase: React.FC = () => {
                     </a>
                   </div>
 
-                </motion.div>
+                </SpotlightCard>
               );
             })}
           </AnimatePresence>
@@ -293,7 +295,7 @@ export const GitHubShowcase: React.FC = () => {
             href="https://github.com/loharbijoy2005-a11y"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md shadow-slate-900/20 hover:shadow-lg transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md shadow-slate-900/20 hover:shadow-lg transition-all hover:scale-102 active:scale-95"
           >
             <GithubIcon className="w-4 h-4 text-white" />
             <span>Follow Bijoy Lohar on GitHub (@loharbijoy2005-a11y)</span>

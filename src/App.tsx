@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { CustomCursor } from './components/CustomCursor';
+import { ScrollProgress } from './components/ScrollProgress';
+import { InteractiveCanvasGrid } from './components/InteractiveCanvasGrid';
 import { BackgroundBlobs } from './components/BackgroundBlobs';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -14,6 +18,16 @@ import { CostEstimatorForm } from './components/CostEstimatorForm';
 import { Footer } from './components/Footer';
 import { WhatsAppFloating } from './components/WhatsAppFloating';
 import { DiscoveryModal } from './components/DiscoveryModal';
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 30, filter: 'blur(8px)' },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    filter: 'blur(0px)',
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }
+  }
+};
 
 export const App: React.FC = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
@@ -52,6 +66,15 @@ export const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] selection:bg-blue-100 selection:text-blue-900 font-sans relative overflow-x-hidden">
       
+      {/* Top Scroll Progress Indicator Bar */}
+      <ScrollProgress />
+
+      {/* Desktop Custom Ring Cursor */}
+      <CustomCursor />
+
+      {/* Interactive Mouse Dot Grid Canvas */}
+      <InteractiveCanvasGrid />
+
       {/* Drifting Ambient Background Blobs */}
       <BackgroundBlobs />
 
@@ -59,43 +82,113 @@ export const App: React.FC = () => {
       <Navbar onOpenBooking={() => setBookingModalOpen(true)} />
 
       {/* Main Content Area */}
-      <main className="relative z-10">
+      <main className="relative z-10 space-y-4">
         
-        {/* High-Converting Hero */}
-        <Hero
-          onStartProject={handleStartProject}
-          onExploreWork={handleExploreWork}
-        />
+        {/* Hero Section */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+          variants={sectionVariants}
+        >
+          <Hero
+            onStartProject={handleStartProject}
+            onExploreWork={handleExploreWork}
+          />
+        </motion.div>
 
-        {/* Key Metrics & Stats Counter */}
-        <Stats />
+        {/* Stats Counter Bar */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <Stats />
+        </motion.div>
 
-        {/* Tech Stack Infinite Marquee & Interactive Skill Matrix */}
-        <TechStackMarquee />
+        {/* Tech Stack Dual Opposing Marquee & Interactive Skill Matrix */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <TechStackMarquee />
+        </motion.div>
 
         {/* Core Engineering Services Grid */}
-        <Services onSelectService={handleSelectService} />
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <Services onSelectService={handleSelectService} />
+        </motion.div>
 
         {/* Featured Case Studies & Work */}
-        <CaseStudies onSelectForQuote={handleSelectForQuote} />
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <CaseStudies onSelectForQuote={handleSelectForQuote} />
+        </motion.div>
 
         {/* Live GitHub Repositories Showcase */}
-        <GitHubShowcase />
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <GitHubShowcase />
+        </motion.div>
 
         {/* Clean System Architecture & Code Specs */}
-        <TechArchitecture />
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <TechArchitecture />
+        </motion.div>
 
         {/* B2B Trust, 18% GST Tax Credit & Milestone Process */}
-        <B2BTrustGST />
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <B2BTrustGST />
+        </motion.div>
 
         {/* Revamped 3-Tier Transparent Pricing (INR + GST) */}
-        <PricingTiers onSelectTier={handleSelectPricingTier} />
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <PricingTiers onSelectTier={handleSelectPricingTier} />
+        </motion.div>
 
         {/* Interactive Scope Estimator & Contact Form */}
-        <CostEstimatorForm
-          preselectedServiceId={selectedServiceId}
-          preselectedTitle={selectedCaseStudyTitle}
-        />
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <CostEstimatorForm
+            preselectedServiceId={selectedServiceId}
+            preselectedTitle={selectedCaseStudyTitle}
+          />
+        </motion.div>
 
       </main>
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { SERVICES_DATA } from '../data/portfolioData';
+import { SpotlightCard } from './SpotlightCard';
 import { 
   Code2, 
   ShoppingBag, 
@@ -23,7 +24,7 @@ const iconMap: Record<string, React.ElementType> = {
 
 export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
   return (
-    <section id="services" className="py-24 bg-[#F8FAFC] relative">
+    <section id="services" className="py-24 bg-[#F8FAFC] relative z-10">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -43,15 +44,16 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
           </p>
         </div>
 
-        {/* Services Grid */}
+        {/* Services Grid wrapped in SpotlightCard */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {SERVICES_DATA.map((service) => {
             const Icon = iconMap[service.iconName] || Code2;
             
             return (
-              <div
+              <SpotlightCard
                 key={service.id}
-                className="bg-white rounded-2xl p-8 border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-blue-300 card-hover-glow transition-all duration-300 flex flex-col justify-between group"
+                className="flex flex-col justify-between"
+                spotlightColor="rgba(59, 130, 246, 0.12)"
               >
                 <div>
                   
@@ -109,7 +111,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
 
                     <button
                       onClick={() => onSelectService(service.id)}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline group/btn"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline group/btn cursor-pointer"
                     >
                       <span>Configure Estimate</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
@@ -117,7 +119,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
                   </div>
                 </div>
 
-              </div>
+              </SpotlightCard>
             );
           })}
         </div>

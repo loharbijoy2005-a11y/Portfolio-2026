@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   CheckCircle2, 
   Sparkles, 
@@ -70,8 +70,10 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
 ];
 
 export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
+  const [billingCycle, setBillingCycle] = useState<'fixed' | 'retainer'>('fixed');
+
   return (
-    <section id="pricing" className="py-24 bg-white border-t border-slate-200/80 relative">
+    <section id="pricing" className="py-24 bg-white border-t border-slate-200/80 relative z-10">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         
@@ -89,6 +91,49 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
           <p className="text-base text-slate-600">
             No hidden costs. Every tier includes verified performance standards, contract transparency, and official GST tax billing.
           </p>
+
+          {/* Billing Cycle Toggle */}
+          <div className="pt-4 flex justify-center">
+            <div className="bg-slate-100 p-1.5 rounded-2xl border border-slate-200 flex items-center gap-1 text-xs font-bold shadow-2xs">
+              <button
+                onClick={() => setBillingCycle('fixed')}
+                className={`relative px-5 py-2.5 rounded-xl transition-colors cursor-pointer ${
+                  billingCycle === 'fixed' ? 'text-blue-700 font-bold' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                {billingCycle === 'fixed' && (
+                  <motion.div
+                    layoutId="pricingBillingToggle"
+                    className="absolute inset-0 bg-white rounded-xl shadow-xs border border-slate-200"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">Fixed Milestone Scope</span>
+              </button>
+
+              <button
+                onClick={() => setBillingCycle('retainer')}
+                className={`relative px-5 py-2.5 rounded-xl transition-colors cursor-pointer ${
+                  billingCycle === 'retainer' ? 'text-blue-700 font-bold' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                {billingCycle === 'retainer' && (
+                  <motion.div
+                    layoutId="pricingBillingToggle"
+                    className="absolute inset-0 bg-white rounded-xl shadow-xs border border-slate-200"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-1.5">
+                  <span>Monthly SLA Retainer</span>
+                  <span className="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full border border-emerald-200">
+                    Continuous Sprints
+                  </span>
+                </span>
+              </button>
+            </div>
+          </div>
+
         </div>
 
         {/* Pricing Cards Grid */}
@@ -96,21 +141,29 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
           {PRICING_TIERS_DATA.map((tier) => {
             const isHighlighted = tier.isPopular;
 
+            const displayPrice = billingCycle === 'retainer'
+              ? tier.id === 'starter'
+                ? '₹6,999 / mo'
+                : tier.id === 'growth-ecommerce'
+                ? '₹14,999 / mo'
+                : 'Custom Retainer'
+              : tier.priceRange;
+
             return (
               <motion.div
                 key={tier.id}
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.2 }}
+                whileHover={{ y: -6, scale: 1.01 }}
+                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
                 className={`rounded-3xl p-8 flex flex-col justify-between relative transition-all duration-300 ${
                   isHighlighted
-                    ? 'bg-gradient-to-b from-blue-50/90 via-white to-indigo-50/50 border-2 border-blue-500 shadow-xl shadow-blue-500/10 ring-4 ring-blue-500/10'
-                    : 'bg-white border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-slate-300'
+                    ? 'bg-gradient-to-b from-blue-50/90 via-white to-indigo-50/50 border-2 border-blue-500 shadow-xl shadow-blue-500/15 ring-4 ring-blue-500/10'
+                    : 'bg-white/90 backdrop-blur-md border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-slate-300'
                 }`}
               >
-                {/* Popular Badge */}
+                {/* Rotating Gradient Popular Badge */}
                 {tier.badge && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[11px] font-extrabold uppercase tracking-wider px-4 py-1 rounded-full shadow-md shadow-blue-600/30 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[11px] font-extrabold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg shadow-blue-600/30 flex items-center gap-1.5 border border-blue-400">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" style={{ animationDuration: '6s' }} />
                     <span>{tier.badge}</span>
                   </div>
                 )}
@@ -128,44 +181,63 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
                   </div>
 
                   {/* Price */}
-                  <div className="mb-8 p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
-                    <div className="text-xs text-slate-500 font-medium">Investment Range</div>
-                    <div className="text-2xl sm:text-3xl font-extrabold font-mono text-slate-900 tracking-tight mt-0.5">
-                      {tier.priceRange}
+                  <div className="mb-8 p-4.5 rounded-2xl bg-slate-50 border border-slate-200/80">
+                    <div className="text-xs text-slate-500 font-medium">
+                      {billingCycle === 'retainer' ? 'Monthly Dedicated Retainer' : 'Fixed Milestone Investment'}
                     </div>
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={displayPrice}
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 5 }}
+                        transition={{ duration: 0.2 }}
+                        className="text-2xl sm:text-3xl font-extrabold font-mono text-slate-900 tracking-tight mt-1"
+                      >
+                        {displayPrice}
+                      </motion.div>
+                    </AnimatePresence>
                     <div className="text-[10px] text-emerald-700 font-bold mt-1 flex items-center gap-1">
                       <ShieldCheck className="w-3 h-3 text-emerald-600" />
                       <span>+ 18% GST B2B Input Tax Credit</span>
                     </div>
                   </div>
 
-                  {/* Features List */}
+                  {/* Features List with Spring Checkmarks */}
                   <div className="space-y-3 mb-8">
                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-3">
                       Included Engineering Deliverables:
                     </span>
                     {tier.features.map((feat, idx) => (
-                      <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-700 font-medium">
+                      <motion.div 
+                        key={idx}
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ delay: idx * 0.05 }}
+                        viewport={{ once: true }}
+                        className="flex items-start gap-2.5 text-xs text-slate-700 font-medium"
+                      >
                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                         <span>{feat}</span>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
 
                 </div>
 
-                {/* Tier CTA Button */}
+                {/* Tier CTA Button with Ripple hover */}
                 <div>
                   <button
-                    onClick={() => onSelectTier(tier.id, tier.name, tier.numericBasePrice)}
-                    className={`w-full py-3.5 px-6 rounded-xl font-bold text-xs shadow-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
+                    onClick={() => onSelectTier(tier.id, `${tier.name} (${billingCycle.toUpperCase()})`, tier.numericBasePrice)}
+                    className={`w-full py-4 px-6 rounded-xl font-bold text-xs shadow-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer relative overflow-hidden group ${
                       isHighlighted
                         ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/25 hover:shadow-lg hover:shadow-blue-600/35 hover:scale-102 active:scale-95'
                         : 'bg-slate-900 hover:bg-slate-800 text-white shadow-slate-900/10 hover:scale-102 active:scale-95'
                     }`}
                   >
+                    <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-out pointer-events-none" />
                     <span>{tier.ctaText}</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
 
