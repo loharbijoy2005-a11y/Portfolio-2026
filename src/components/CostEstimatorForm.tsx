@@ -25,7 +25,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
   const [selectedModules, setSelectedModules] = useState<string[]>(['payment', 'gst-invoicing']);
   const [timeline, setTimeline] = useState<'standard' | 'fast'>('standard');
   const [businessType, setBusinessType] = useState<string>('B2B Enterprise');
-  const [budgetRange, setBudgetRange] = useState<string>('₹1,00,000 - ₹2,50,000');
+  const [budgetRange, setBudgetRange] = useState<string>('₹30,000 - ₹50,000');
   
   // Form fields
   const [name, setName] = useState<string>('');
@@ -64,6 +64,21 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
   const subtotal = (baseCost + modulesCost) * (timeline === 'fast' ? 1.25 : 1);
   const gstAmount = Math.round(subtotal * 0.18);
   const grandTotal = subtotal + gstAmount;
+
+  // Auto-sync Budget Range Dropdown with calculated subtotal
+  useEffect(() => {
+    let range = '₹30,000 - ₹50,000';
+    if (subtotal >= 200000) {
+      range = '₹2,00,000+ Enterprise Scope';
+    } else if (subtotal >= 120000) {
+      range = '₹1,20,000 - ₹2,00,000';
+    } else if (subtotal >= 75000) {
+      range = '₹75,000 - ₹1,20,000';
+    } else if (subtotal >= 50000) {
+      range = '₹50,000 - ₹75,000';
+    }
+    setBudgetRange(range);
+  }, [subtotal]);
 
   useEffect(() => {
     if (preselectedServiceId) {
@@ -415,10 +430,11 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                     onChange={(e) => setBudgetRange(e.target.value)}
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                   >
-                    <option value="₹75,000 - ₹1,50,000">₹75,000 - ₹1,50,000</option>
-                    <option value="₹1,50,000 - ₹3,00,000">₹1,50,000 - ₹3,00,000</option>
-                    <option value="₹3,00,000 - ₹5,00,000">₹3,00,000 - ₹5,00,000</option>
-                    <option value="₹5,00,000+ Enterprise">₹5,00,000+ Enterprise Scope</option>
+                    <option value="₹30,000 - ₹50,000">₹30,000 - ₹50,000</option>
+                    <option value="₹50,000 - ₹75,000">₹50,000 - ₹75,000</option>
+                    <option value="₹75,000 - ₹1,20,000">₹75,000 - ₹1,20,000</option>
+                    <option value="₹1,20,000 - ₹2,00,000">₹1,20,000 - ₹2,00,000</option>
+                    <option value="₹2,00,000+ Enterprise Scope">₹2,00,000+ Enterprise Scope</option>
                   </select>
                 </div>
 
