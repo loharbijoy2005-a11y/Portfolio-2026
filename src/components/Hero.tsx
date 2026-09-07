@@ -47,7 +47,6 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
   const [speedVal] = useState(99);
   const [ttfbVal, setTtfbVal] = useState(142);
   const [fcpVal, setFcpVal] = useState('0.28s');
-  const [isLiveMeasured, setIsLiveMeasured] = useState(false);
 
   useEffect(() => {
     const measurePerformance = () => {
@@ -61,7 +60,6 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
 
           setTtfbVal(calculatedTtfb > 0 ? calculatedTtfb : 138);
           setFcpVal(formattedFcp);
-          setIsLiveMeasured(true);
         }
       } catch (err) {
         setTtfbVal(138);
@@ -287,14 +285,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                     >
                       <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                         <div>
-                          <div className="flex items-center gap-1.5 mb-0.5">
-                            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Lighthouse Performance</h4>
-                            {isLiveMeasured && (
-                              <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">
-                                Measured Live
-                              </span>
-                            )}
-                          </div>
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Lighthouse Performance</h4>
                           <p className="text-sm font-bold text-slate-900">Google Core Web Vitals Benchmark</p>
                         </div>
                         <div className="flex items-center gap-1.5 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
