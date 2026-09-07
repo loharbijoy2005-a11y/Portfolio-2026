@@ -100,6 +100,7 @@ export const PRICING_TIERS_DATA: PricingTier[] = [
 export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
   const [billingCycle, setBillingCycle] = useState<'fixed' | 'retainer'>('fixed');
   const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [selectedTierId, setSelectedTierId] = useState<string>('growth-ecommerce');
 
   const categories = [
     'All',
@@ -108,6 +109,18 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
     'Enterprise Systems',
     'Optimization & Security'
   ];
+
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    if (cat === 'All') {
+      setSelectedTierId('growth-ecommerce');
+    } else {
+      const firstInCat = PRICING_TIERS_DATA.find((t) => t.category === cat);
+      if (firstInCat) {
+        setSelectedTierId(firstInCat.id);
+      }
+    }
+  };
 
   const filteredTiers = activeCategory === 'All'
     ? PRICING_TIERS_DATA
@@ -182,7 +195,7 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
               return (
                 <button
                   key={cat}
-                  onClick={() => setActiveCategory(cat)}
+                  onClick={() => handleCategoryChange(cat)}
                   className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer border ${
                     isActive
                       ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/20 font-bold'
@@ -206,7 +219,7 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
             : 'md:grid-cols-2 lg:grid-cols-4'
         }`}>
           {filteredTiers.map((tier, idx) => {
-            const isHighlighted = tier.isPopular;
+            const isSelected = selectedTierId === tier.id;
 
             const displayPrice = billingCycle === 'retainer'
               ? tier.id === 'perf-seo'
@@ -221,20 +234,23 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
             return (
               <motion.div
                 key={tier.id}
+                onClick={() => setSelectedTierId(tier.id)}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 whileHover={{ y: -6, scale: 1.01 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: idx * 0.1 }}
-                className={`rounded-3xl p-6 sm:p-7 flex flex-col justify-between relative transition-all duration-300 ${
-                  isHighlighted
+                className={`rounded-3xl p-6 sm:p-7 flex flex-col justify-between relative transition-all duration-300 cursor-pointer ${
+                  isSelected
                     ? 'bg-gradient-to-b from-blue-50/90 via-white to-indigo-50/50 border-2 border-blue-500 shadow-xl shadow-blue-500/15 ring-4 ring-blue-500/10'
                     : 'bg-white/90 backdrop-blur-md border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-slate-300'
                 }`}
               >
-                {/* Popular Badge */}
+                {/* Popular / Active Badge */}
                 {tier.badge && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-extrabold uppercase tracking-wider px-3.5 py-1 rounded-full shadow-md shadow-blue-600/30 flex items-center gap-1 border border-blue-400 whitespace-nowrap">
+                  <div className={`absolute -top-3.5 left-1/2 -translate-x-1/2 text-white text-[10px] font-extrabold uppercase tracking-wider px-3.5 py-1 rounded-full shadow-md flex items-center gap-1 border whitespace-nowrap ${
+                    isSelected ? 'bg-blue-600 border-blue-400 shadow-blue-600/30' : 'bg-slate-800 border-slate-600 shadow-slate-900/20'
+                  }`}>
                     <Sparkles className="w-3 h-3 text-amber-300" />
                     <span>{tier.badge}</span>
                   </div>
@@ -243,7 +259,11 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
                 <div>
                   {/* Category Pill & Delivery Time */}
                   <div className="flex items-center justify-between gap-2 mb-3 pt-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200/70 truncate">
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border truncate ${
+                      isSelected
+                        ? 'text-blue-700 bg-blue-100/80 border-blue-300'
+                        : 'text-slate-600 bg-slate-100 border-slate-200'
+                    }`}>
                       {tier.category}
                     </span>
                     <span className="text-[10px] font-mono text-slate-500 shrink-0">
@@ -262,7 +282,9 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
                   </div>
 
                   {/* Price */}
-                  <div className="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+                  <div className={`mb-6 p-4 rounded-2xl border transition-colors ${
+                    isSelected ? 'bg-blue-50/60 border-blue-200' : 'bg-slate-50 border-slate-200/80'
+                  }`}>
                     <div className="text-[11px] text-slate-500 font-medium">
                       {billingCycle === 'retainer' ? 'Monthly Retainer Sprint' : 'Fixed Milestone Investment'}
                     </div>
@@ -305,9 +327,13 @@ export const PricingTiers: React.FC<PricingTiersProps> = ({ onSelectTier }) => {
                 {/* Tier CTA Button */}
                 <div>
                   <button
-                    onClick={() => onSelectTier(tier.id, `${tier.name} (${billingCycle.toUpperCase()})`, tier.numericBasePrice)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedTierId(tier.id);
+                      onSelectTier(tier.id, `${tier.name} (${billingCycle.toUpperCase()})`, tier.numericBasePrice);
+                    }}
                     className={`w-full py-3.5 px-5 rounded-xl font-bold text-xs shadow-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer relative overflow-hidden group ${
-                      isHighlighted
+                      isSelected
                         ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/25 hover:shadow-lg hover:shadow-blue-600/35 active:scale-95'
                         : 'bg-slate-900 hover:bg-slate-800 text-white shadow-slate-900/10 active:scale-95'
                     }`}
