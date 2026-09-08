@@ -1,7 +1,7 @@
 import { sanitizeInput } from './utils/security.js';
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://shadowarrow-project.supabase.co';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://srqvyizakffjuaskzooq.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoYWRvd2Fycm93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MjAxNTAwMDAwMH0.placeholder-key-for-shadow-arrow';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
