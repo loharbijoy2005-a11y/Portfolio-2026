@@ -392,10 +392,11 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
               <form onSubmit={handleSubmit} className="space-y-4">
                 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Your Full Name *</label>
+                  <label htmlFor="costEstimatorFullName" className="text-xs font-bold text-slate-700 block mb-1">Your Full Name *</label>
                   <div className="relative">
                     <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                     <input
+                      id="costEstimatorFullName"
                       type="text"
                       required
                       placeholder="e.g. Rahul Sharma"
@@ -407,10 +408,11 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Work Email Address *</label>
+                  <label htmlFor="costEstimatorEmail" className="text-xs font-bold text-slate-700 block mb-1">Work Email Address *</label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                     <input
+                      id="costEstimatorEmail"
                       type="email"
                       required
                       placeholder="rahul@company.com"
@@ -422,10 +424,11 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Mobile / Phone Number *</label>
+                  <label htmlFor="costEstimatorPhone" className="text-xs font-bold text-slate-700 block mb-1">Mobile / Phone Number *</label>
                   <div className="relative">
                     <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                     <input
+                      id="costEstimatorPhone"
                       type="tel"
                       required
                       placeholder="+91 98765 43210"
@@ -438,8 +441,9 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-bold text-slate-700 block mb-1">Company / Brand Name</label>
+                    <label htmlFor="costEstimatorCompany" className="text-xs font-bold text-slate-700 block mb-1">Company / Brand Name</label>
                     <input
+                      id="costEstimatorCompany"
                       type="text"
                       placeholder="e.g. Acme Corp"
                       value={company}
@@ -449,8 +453,10 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-slate-700 block mb-1">Business Type</label>
+                    <label htmlFor="costEstimatorBusinessType" className="text-xs font-bold text-slate-700 block mb-1">Business Type</label>
                     <select
+                      id="costEstimatorBusinessType"
+                      aria-label="Select Business Type"
                       value={businessType}
                       onChange={(e) => setBusinessType(e.target.value)}
                       className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
@@ -464,8 +470,10 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Estimated Budget Range</label>
+                  <label htmlFor="costEstimatorBudgetRange" className="text-xs font-bold text-slate-700 block mb-1">Estimated Budget Range</label>
                   <select
+                    id="costEstimatorBudgetRange"
+                    aria-label="Select Estimated Budget Range"
                     value={budgetRange}
                     onChange={(e) => setBudgetRange(e.target.value)}
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
@@ -479,8 +487,9 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Project Details / Message</label>
+                  <label htmlFor="costEstimatorMessage" className="text-xs font-bold text-slate-700 block mb-1">Project Details / Message</label>
                   <textarea
+                    id="costEstimatorMessage"
                     rows={3}
                     placeholder="Tell us about your goals, existing stack, or target launch timeline..."
                     value={message}

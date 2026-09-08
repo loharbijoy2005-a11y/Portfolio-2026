@@ -71,6 +71,10 @@ export const FounderBio: React.FC = () => {
               <img
                 src="https://github.com/loharbijoy2005-a11y.png"
                 alt="Bijoy Lohar - Founder & Lead Engineer"
+                width="160"
+                height="160"
+                loading="lazy"
+                decoding="async"
                 className="w-20 h-20 rounded-full object-cover border-2 border-blue-500 mx-auto shadow-lg shadow-blue-500/20 ring-4 ring-blue-50"
               />
 

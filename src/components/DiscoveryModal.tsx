@@ -21,6 +21,8 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [booked, setBooked] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [bookingRefId, setBookingRefId] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -31,9 +33,6 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
     'Wednesday, 12:00 PM IST',
     'Wednesday, 4:00 PM IST'
   ];
-
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [bookingRefId, setBookingRefId] = useState<string | null>(null);
 
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,8 +143,9 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
             {/* User Details */}
             <form onSubmit={handleBooking} className="space-y-3">
               <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">Your Name</label>
+                <label htmlFor="discoveryModalName" className="text-xs font-bold text-slate-700 block mb-1">Your Name</label>
                 <input
+                  id="discoveryModalName"
                   type="text"
                   required
                   placeholder="e.g. Bijoy Lohar"
@@ -156,8 +156,9 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">Your Work Email *</label>
+                <label htmlFor="discoveryModalEmail" className="text-xs font-bold text-slate-700 block mb-1">Your Work Email *</label>
                 <input
+                  id="discoveryModalEmail"
                   type="email"
                   required
                   placeholder="name@company.com"
@@ -168,10 +169,11 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">Mobile / Phone Number *</label>
+                <label htmlFor="discoveryModalPhone" className="text-xs font-bold text-slate-700 block mb-1">Mobile / Phone Number *</label>
                 <div className="relative">
                   <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
                   <input
+                    id="discoveryModalPhone"
                     type="tel"
                     required
                     placeholder="+91 98765 43210"

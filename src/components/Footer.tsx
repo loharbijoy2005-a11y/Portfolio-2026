@@ -37,9 +37,9 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
 
           {/* Quick Nav */}
           <div className="lg:col-span-3 space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
               Quick Navigation
-            </h4>
+            </h3>
             <ul className="space-y-2 text-xs font-medium">
               <li><a href="#work" className="hover:text-blue-400 transition-colors">Featured Case Studies</a></li>
               <li><a href="#services" className="hover:text-blue-400 transition-colors">Core Web Engineering</a></li>
@@ -51,9 +51,9 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
 
           {/* Contact Details */}
           <div className="lg:col-span-4 space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
               Direct Contact & Founder Desk
-            </h4>
+            </h3>
             <div className="space-y-2.5 text-xs text-slate-300">
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-blue-400 shrink-0" />
@@ -66,7 +66,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
                 <span className="text-slate-300">Fast 24-Hour Proposal Response</span>
               </div>
               <div className="flex items-center gap-2 text-slate-400">
-                <MapPin className="w-4 h-4 text-slate-500 shrink-0" />
+                <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
                 <span>India • Remote Global Engineering</span>
               </div>
             </div>
@@ -85,11 +85,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
         </div>
 
         {/* Footer Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <div>
             © {new Date().getFullYear()} Shadow Arrow • Engineered by Bijoy Lohar. All rights reserved.
           </div>
-          <div className="flex items-center gap-4 text-[11px]">
+          <div className="flex items-center gap-4 text-[11px] text-slate-400">
             <button onClick={onOpenPrivacy} className="hover:text-slate-200 transition-colors cursor-pointer">
               Privacy Policy
             </button>

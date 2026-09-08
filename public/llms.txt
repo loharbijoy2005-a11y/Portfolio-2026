@@ -1,0 +1,13 @@
+# Shadow Arrow - High-Performance Web Engineering Studio
+
+> Shadow Arrow is a premier web engineering studio led by founder Bijoy Lohar. We specialize in custom full-stack web applications, Next.js 14 platforms, headless e-commerce engines, scalable APIs, and GST-compliant B2B solutions.
+
+## Core Capabilities
+- **Full-Stack Development**: React 19, Next.js 14 App Router, TypeScript, Node.js, Python, Supabase, PostgreSQL.
+- **Performance Engineering**: Sub-second page load speeds, Google Core Web Vitals optimization, zero-layout-shift responsive design for mobile and desktop.
+- **B2B GST Invoicing & Compliance**: Verified GST-compliant invoice generation, milestone billing, and contract-backed delivery.
+
+## Key Links & Documentation
+- [Official Website](https://www.shadowarrow.in/)
+- [Founder GitHub Profile](https://github.com/loharbijoy2005-a11y)
+- [XML Sitemap](https://www.shadowarrow.in/sitemap.xml)

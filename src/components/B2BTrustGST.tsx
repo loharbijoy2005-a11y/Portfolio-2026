@@ -100,11 +100,13 @@ export const B2BTrustGST: React.FC = () => {
 
               <div>
                 <div className="flex justify-between text-xs font-semibold text-slate-600 mb-1.5">
-                  <span>Project Subtotal:</span>
+                  <label htmlFor="projectSubtotalSlider" className="cursor-pointer">Project Subtotal:</label>
                   <span className="font-mono text-slate-900 text-sm">₹{projectVal.toLocaleString('en-IN')}</span>
                 </div>
 
                 <input
+                  id="projectSubtotalSlider"
+                  aria-label="Project Subtotal Range"
                   type="range"
                   min="50000"
                   max="500000"

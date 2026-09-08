@@ -287,7 +287,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                     >
                       <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                         <div>
-                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Lighthouse Performance</h4>
+                          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Lighthouse Performance</h3>
                           <p className="text-sm font-bold text-slate-900">Google Core Web Vitals Benchmark</p>
                         </div>
                         <div className="flex items-center gap-1.5 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
@@ -407,7 +407,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                       className="space-y-4"
                     >
                       <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Enterprise Stack Architecture</h4>
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Enterprise Stack Architecture</h3>
                         <span className="text-[11px] font-mono text-blue-600 font-bold">100% Strict TypeScript</span>
                       </div>
 
