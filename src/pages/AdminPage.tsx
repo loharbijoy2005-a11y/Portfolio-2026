@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getInquiriesFromDatabase } from '../lib/inquiryService';
 import {
   Shield,
   Lock,
@@ -69,7 +70,7 @@ export const AdminPage: React.FC = () => {
         techStack: ['React', 'Node.js', 'PostgreSQL', 'Tailwind CSS'],
         estimatedBudget: 350000,
         timeline: '4-6 Weeks',
-        details: 'Looking for a high-performance multi-tenant dashboard with automated GST invoicing and Supabase analytics.',
+        details: 'Looking for a high-performance multi-tenant dashboard with automated GST invoicing and analytics.',
         status: 'pending',
         createdAt: new Date(Date.now() - 3600000 * 4).toISOString()
       },
@@ -82,7 +83,7 @@ export const AdminPage: React.FC = () => {
         company: 'GrowthBrands D2C',
         businessType: 'D2C Brand',
         serviceName: 'Headless E-Commerce Engine',
-        techStack: ['Next.js', 'Stripe API', 'GraphQL', 'Supabase'],
+        techStack: ['Next.js', 'Stripe API', 'GraphQL'],
         estimatedBudget: 180000,
         timeline: '2-3 Weeks',
         details: 'Need a sub-second page load storefront with high converting checkout flow and custom payment gateway.',
@@ -96,48 +97,17 @@ export const AdminPage: React.FC = () => {
     if (!isSilent) setIsLoading(true);
     else setIsSilentSyncing(true);
 
-    let localSubmitted: Lead[] = [];
     try {
-      localSubmitted = JSON.parse(localStorage.getItem('shadow_client_inquiries') || '[]');
-    } catch (e) {
-      localSubmitted = [];
-    }
-
-    try {
-      const res = await fetch('/api/admin/inquiries', {
-        headers: { Authorization: `Bearer ${authToken}` }
-      });
-      const data = await res.json();
-      let fetched: Lead[] = [];
-
-      if (res.ok && data.success && Array.isArray(data.data) && data.data.length > 0) {
-        fetched = data.data;
-        if (data.source === 'supabase') {
-          setDataSource('supabase');
-        } else {
-          setDataSource('local');
-        }
-      }
-
-      const combined = [...localSubmitted];
-      fetched.forEach(item => {
-        if (!combined.some(c => c.id === item.id)) {
-          combined.push(item);
-        }
-      });
-
-      if (combined.length === 0) {
-        loadDemoLeads();
+      const unifiedLeads = await getInquiriesFromDatabase(authToken);
+      if (unifiedLeads.length > 0) {
+        setLeads(unifiedLeads);
+        setDataSource('supabase');
       } else {
-        setLeads(combined);
+        loadDemoLeads();
       }
     } catch (err) {
-      const combined = [...localSubmitted];
-      if (combined.length > 0) {
-        setLeads(combined);
-      } else if (!isSilent) {
-        loadDemoLeads();
-      }
+      console.warn('AdminPage fetch leads notice:', err);
+      loadDemoLeads();
     } finally {
       setIsLoading(false);
       setIsSilentSyncing(false);

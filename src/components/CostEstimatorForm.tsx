@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { ESTIMATOR_MODULES, SERVICES_DATA } from '../data/portfolioData';
+import { saveInquiryToDatabase } from '../lib/inquiryService';
 import { 
   Calculator, 
   Send, 
@@ -128,10 +129,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
         .map((id) => ESTIMATOR_MODULES.find((m) => m.id === id)?.name)
         .filter(Boolean) as string[];
 
-      const generatedId = `EST-${Math.floor(100000 + Math.random() * 900000)}`;
-
-      const newLeadObj = {
-        id: generatedId,
+      const result = await saveInquiryToDatabase({
         type: 'Cost Estimate',
         clientName: name,
         clientEmail: email,
@@ -142,44 +140,12 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
         techStack: selectedModNames,
         estimatedBudget: Math.round(subtotal),
         timeline: timeline === 'fast' ? 'Fast Track (1-2 Weeks)' : 'Standard Pace (3-4 Weeks)',
-        details: message,
-        status: 'pending',
-        createdAt: new Date().toISOString()
-      };
-
-      try {
-        const existing = JSON.parse(localStorage.getItem('shadow_client_inquiries') || '[]');
-        existing.unshift(newLeadObj);
-        localStorage.setItem('shadow_client_inquiries', JSON.stringify(existing));
-      } catch (e) {
-        // ignore
-      }
-
-      const res = await fetch('/api/estimates', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          clientName: name,
-          clientEmail: email,
-          clientPhone: phone,
-          company,
-          businessType,
-          serviceName: baseObj.title,
-          techStack: selectedModNames,
-          estimatedBudget: Math.round(subtotal),
-          timeline: timeline === 'fast' ? 'Fast Track (1-2 Weeks)' : 'Standard Pace (3-4 Weeks)',
-          details: message
-        })
+        details: message
       });
 
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setSubmittedLeadId(data.leadId || generatedId);
-      } else {
-        setSubmittedLeadId(generatedId);
-      }
+      setSubmittedLeadId(result.leadId);
     } catch (err) {
-      console.warn('Backend API connection warning, fallback to local reference ID:', err);
+      console.warn('Inquiry submission notice:', err);
       setSubmittedLeadId(`EST-${Math.floor(100000 + Math.random() * 900000)}`);
     } finally {
       setIsSubmitting(false);

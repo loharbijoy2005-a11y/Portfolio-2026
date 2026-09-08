@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getInquiriesFromDatabase } from '../lib/inquiryService';
 import {
   Shield,
   Lock,
@@ -101,43 +102,16 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     if (!isSilent) setIsLoading(true);
     else setIsSilentSyncing(true);
 
-    let localSubmitted: Lead[] = [];
     try {
-      localSubmitted = JSON.parse(localStorage.getItem('shadow_client_inquiries') || '[]');
-    } catch (e) {
-      localSubmitted = [];
-    }
-
-    try {
-      const res = await fetch('/api/admin/inquiries', {
-        headers: { Authorization: `Bearer ${authToken}` }
-      });
-      const data = await res.json();
-      let fetched: Lead[] = [];
-
-      if (res.ok && data.success && Array.isArray(data.data) && data.data.length > 0) {
-        fetched = data.data;
-      }
-
-      const combined = [...localSubmitted];
-      fetched.forEach(item => {
-        if (!combined.some(c => c.id === item.id)) {
-          combined.push(item);
-        }
-      });
-
-      if (combined.length === 0) {
-        loadDemoLeads();
+      const unifiedLeads = await getInquiriesFromDatabase(authToken);
+      if (unifiedLeads.length > 0) {
+        setLeads(unifiedLeads);
       } else {
-        setLeads(combined);
+        loadDemoLeads();
       }
     } catch (err) {
-      const combined = [...localSubmitted];
-      if (combined.length > 0) {
-        setLeads(combined);
-      } else if (!isSilent) {
-        loadDemoLeads();
-      }
+      console.warn('Admin fetch leads notice:', err);
+      loadDemoLeads();
     } finally {
       setIsLoading(false);
       setIsSilentSyncing(false);

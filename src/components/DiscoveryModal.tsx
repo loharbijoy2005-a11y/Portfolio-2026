@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { saveInquiryToDatabase } from '../lib/inquiryService';
 import { 
   X, 
   Calendar, 
@@ -39,49 +40,18 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
     setIsSubmitting(true);
 
     try {
-      const generatedId = `CON-${Math.floor(100000 + Math.random() * 900000)}`;
-      const newLeadObj = {
-        id: generatedId,
+      const result = await saveInquiryToDatabase({
         type: 'Discovery Call',
         clientName: name,
         clientEmail: email,
         clientPhone: phone,
         serviceName: `Discovery Call (${selectedDate})`,
-        techStack: [],
-        estimatedBudget: 0,
-        timeline: 'Flexible',
-        details: `Client requested 30-Minute Architecture Audit for slot: ${selectedDate}. Contact Phone: ${phone}`,
-        status: 'pending',
-        createdAt: new Date().toISOString()
-      };
-
-      try {
-        const existing = JSON.parse(localStorage.getItem('shadow_client_inquiries') || '[]');
-        existing.unshift(newLeadObj);
-        localStorage.setItem('shadow_client_inquiries', JSON.stringify(existing));
-      } catch (e) {
-        // ignore
-      }
-
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          clientName: name,
-          clientEmail: email,
-          clientPhone: phone,
-          serviceName: `Discovery Call (${selectedDate})`,
-          message: `Client requested 30-Minute Architecture Audit for slot: ${selectedDate}. Contact Phone: ${phone}`
-        })
+        details: `Client requested 30-Minute Architecture Audit for slot: ${selectedDate}. Contact Phone: ${phone}`
       });
 
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setBookingRefId(data.leadId || generatedId);
-      } else {
-        setBookingRefId(generatedId);
-      }
+      setBookingRefId(result.leadId);
     } catch (err) {
+      console.warn('Booking inquiry notice:', err);
       setBookingRefId(`CON-${Math.floor(100000 + Math.random() * 900000)}`);
     } finally {
       setIsSubmitting(false);
