@@ -16,7 +16,8 @@ import {
   UserCheck,
   Building2,
   Database,
-  Phone
+  Phone,
+  Zap
 } from 'lucide-react';
 import { AntiInspectShield } from './components/AntiInspectShield';
 
@@ -43,45 +44,13 @@ export const App: React.FC = () => {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('shadow_admin_token'));
   const [leads, setLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSilentSyncing, setIsSilentSyncing] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'contacted' | 'converted'>('all');
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
 
   const [securityAlert, setSecurityAlert] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (token) {
-      fetchLeads(token);
-    }
-  }, [token]);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setErrorMsg('');
-
-    try {
-      const res = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setToken(data.token);
-        localStorage.setItem('shadow_admin_token', data.token);
-        fetchLeads(data.token);
-      } else {
-        setErrorMsg(data.error || 'Invalid admin credentials.');
-      }
-    } catch (err) {
-      setErrorMsg('Failed to connect to backend API.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const DEFAULT_SEED_LEADS: Lead[] = [
     {
@@ -134,8 +103,10 @@ export const App: React.FC = () => {
     }
   ];
 
-  const fetchLeads = async (authToken: string) => {
-    setIsLoading(true);
+  const fetchLeads = async (authToken: string, isSilent = false) => {
+    if (!isSilent) setIsLoading(true);
+    else setIsSilentSyncing(true);
+
     try {
       const res = await fetch('/api/admin/inquiries', {
         headers: { Authorization: `Bearer ${authToken}` }
@@ -143,11 +114,49 @@ export const App: React.FC = () => {
       const data = await res.json();
       if (res.ok && data.success && Array.isArray(data.data) && data.data.length > 0) {
         setLeads(data.data);
-      } else {
+      } else if (!isSilent) {
         setLeads(DEFAULT_SEED_LEADS);
       }
     } catch (err) {
-      setLeads(DEFAULT_SEED_LEADS);
+      if (!isSilent) setLeads(DEFAULT_SEED_LEADS);
+    } finally {
+      setIsLoading(false);
+      setIsSilentSyncing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!token) return;
+    fetchLeads(token);
+    // Auto live sync every 8 seconds so any inquiry from frontend immediately pops up!
+    const interval = setInterval(() => {
+      fetchLeads(token, true);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [token]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setErrorMsg('');
+
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setToken(data.token);
+        localStorage.setItem('shadow_admin_token', data.token);
+        fetchLeads(data.token);
+      } else {
+        setErrorMsg(data.error || 'Invalid admin credentials.');
+      }
+    } catch (err) {
+      setErrorMsg('Failed to connect to backend API.');
     } finally {
       setIsLoading(false);
     }
@@ -203,11 +212,13 @@ export const App: React.FC = () => {
   };
 
   const filteredLeads = leads.filter(lead => {
+    const query = searchQuery.toLowerCase();
     const matchesSearch =
-      lead.clientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      lead.clientEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      lead.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      lead.serviceName.toLowerCase().includes(searchQuery.toLowerCase());
+      lead.clientName.toLowerCase().includes(query) ||
+      lead.clientEmail.toLowerCase().includes(query) ||
+      (lead.clientPhone && lead.clientPhone.toLowerCase().includes(query)) ||
+      lead.id.toLowerCase().includes(query) ||
+      lead.serviceName.toLowerCase().includes(query);
 
     const matchesStatus = statusFilter === 'all' || lead.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -219,26 +230,34 @@ export const App: React.FC = () => {
 
   return (
     <AntiInspectShield isActive={true} onSecurityAlert={handleSecurityAlert}>
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+      <div className="min-h-screen bg-[#FAF7F2] text-[#2D261E] flex flex-col font-sans selection:bg-[#C9A05B] selection:text-white">
         
         {/* Navigation Header */}
-        <header className="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+        <header className="bg-[#F2ECE1] border-b border-[#E5DCD0] px-6 py-4 flex items-center justify-between sticky top-0 z-40 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 border border-blue-400 flex items-center justify-center font-mono font-black text-white text-lg shadow-lg shadow-blue-600/30">
+            <div className="w-10 h-10 rounded-xl bg-[#A37B3E] border border-[#C9A05B] flex items-center justify-center font-mono font-black text-white text-lg shadow-md shadow-amber-900/15">
               SA
             </div>
             <div>
-              <h1 className="text-sm font-black text-white tracking-wider font-mono uppercase">
-                SHADOW ARROW • ISOLATED ADMIN DASHBOARD
+              <h1 className="text-sm font-black text-[#2D261E] tracking-wider font-mono uppercase flex items-center gap-2">
+                <span>SHADOW ARROW</span>
+                <span className="text-[10px] bg-[#E8DEC9] text-[#7A5B22] px-2 py-0.5 rounded-full border border-[#D8CBB2] normal-case font-sans">
+                  Luxury Cream Edition
+                </span>
               </h1>
-              <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
-                <span className="flex items-center gap-1 text-emerald-400 font-bold">
-                  <ShieldCheck className="w-3.5 h-3.5" /> Anti-Inspect Shield Active
+              <div className="flex items-center gap-2 text-[11px] text-[#6E6254] font-mono">
+                <span className="flex items-center gap-1 text-[#1B7043] font-bold">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#1B7043]" /> Anti-Inspect Active
                 </span>
                 <span>•</span>
-                <span className="flex items-center gap-1 text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                  <Database className="w-3.5 h-3.5" /> Supabase Cloud Database: Active
+                <span className="flex items-center gap-1 text-[#1B7043] font-bold bg-[#E6F3ED] px-2 py-0.5 rounded-full border border-[#A8DBBF]">
+                  <Database className="w-3.5 h-3.5" /> Supabase DB: Connected
                 </span>
+                {isSilentSyncing && (
+                  <span className="flex items-center gap-1 text-[#A37B3E] animate-pulse text-[10px] font-semibold">
+                    <Zap className="w-3 h-3" /> Live Syncing...
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -247,10 +266,10 @@ export const App: React.FC = () => {
             {token && (
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-bold flex items-center gap-2 transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[#F5E6E6] hover:bg-[#EED5D5] text-[#9E2A2A] border border-[#E4C2C2] text-xs font-bold flex items-center gap-2 transition-colors cursor-pointer"
               >
                 <LogOut className="w-4 h-4" />
-                <span>Logout Session</span>
+                <span>Logout</span>
               </button>
             )}
           </div>
@@ -261,26 +280,26 @@ export const App: React.FC = () => {
           
           {!token ? (
             /* STANDALONE LOGIN GATEWAY */
-            <div className="max-w-md mx-auto my-12 bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-6 shadow-2xl">
+            <div className="max-w-md mx-auto my-12 bg-white border border-[#E8DFD1] rounded-3xl p-8 space-y-6 shadow-xl shadow-amber-950/5">
               <div className="text-center space-y-2">
-                <div className="w-16 h-16 bg-blue-600/10 border border-blue-500/30 text-blue-400 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+                <div className="w-16 h-16 bg-[#FAF4E8] border border-[#E5D7BF] text-[#A37B3E] rounded-2xl flex items-center justify-center mx-auto shadow-inner">
                   <Lock className="w-8 h-8" />
                 </div>
-                <h2 className="text-2xl font-black text-white tracking-tight">Isolated Founder Gateway</h2>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Independent Project Admin Access with Supabase Synchronization & Active Anti-Tamper Defense.
+                <h2 className="text-2xl font-black text-[#2D261E] tracking-tight">Founder Control Access</h2>
+                <p className="text-xs text-[#6E6254] leading-relaxed">
+                  Cream Luxury Interface with Real-Time Supabase Frontend Inquiry Synchronization.
                 </p>
               </div>
 
               {errorMsg && (
-                <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3.5 text-xs text-red-300 flex items-center gap-2.5">
+                <div className="bg-[#FDF0F0] border border-[#F5C2C2] rounded-xl p-3.5 text-xs text-[#9E2A2A] flex items-center gap-2.5">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{errorMsg}</span>
                 </div>
               )}
 
               {securityAlert && (
-                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3.5 text-xs text-amber-300 flex items-center gap-2.5">
+                <div className="bg-[#FFF8E6] border border-[#EAD59E] rounded-xl p-3.5 text-xs text-[#8C5E0D] flex items-center gap-2.5">
                   <Shield className="w-4 h-4 shrink-0" />
                   <span>DevTools inspection attempt intercepted. Session auto-locked.</span>
                 </div>
@@ -288,7 +307,7 @@ export const App: React.FC = () => {
 
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
-                  <label className="text-xs font-bold text-slate-400 block mb-1">
+                  <label className="text-xs font-bold text-[#574B3E] block mb-1">
                     Username
                   </label>
                   <input
@@ -296,12 +315,12 @@ export const App: React.FC = () => {
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-blue-500 transition-all font-mono"
+                    className="w-full px-4 py-3 bg-[#FAF8F5] border border-[#E2D6C5] rounded-xl text-xs text-[#2D261E] focus:outline-none focus:border-[#A37B3E] focus:ring-2 focus:ring-[#A37B3E]/20 transition-all font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-slate-400 block mb-1">
+                  <label className="text-xs font-bold text-[#574B3E] block mb-1">
                     Password
                   </label>
                   <input
@@ -310,31 +329,31 @@ export const App: React.FC = () => {
                     placeholder="••••••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-blue-500 transition-all font-mono"
+                    className="w-full px-4 py-3 bg-[#FAF8F5] border border-[#E2D6C5] rounded-xl text-xs text-[#2D261E] focus:outline-none focus:border-[#A37B3E] focus:ring-2 focus:ring-[#A37B3E]/20 transition-all font-mono"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full bg-[#A37B3E] hover:bg-[#8F6A30] text-white font-bold py-3.5 rounded-xl text-xs shadow-md shadow-amber-900/20 transition-all flex items-center justify-center gap-2 cursor-pointer border border-[#B89252]"
                 >
                   {isLoading ? (
                     <RefreshCw className="w-4 h-4 animate-spin" />
                   ) : (
                     <>
                       <UserCheck className="w-4 h-4" />
-                      <span>Authenticate Gateway</span>
+                      <span>Authenticate Founder Panel</span>
                     </>
                   )}
                 </button>
               </form>
 
-              <div className="bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-[11px] text-slate-400 font-mono text-center">
-                <div className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider flex items-center justify-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5" /> AUTHORIZED ACCESS ONLY
+              <div className="bg-[#F6F0E6] border border-[#E5DCD0] rounded-xl p-3.5 text-[11px] text-[#6E6254] font-mono text-center">
+                <div className="text-[10px] text-[#1B7043] font-bold uppercase tracking-wider flex items-center justify-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#1B7043]" /> AUTHORIZED ACCESS ONLY
                 </div>
-                <div className="text-slate-500">256-Bit JWT Encryption • Rate Limited</div>
+                <div className="text-[#8A7B6B]">256-Bit JWT Encryption • Real-Time Inquiry Stream</div>
               </div>
             </div>
           ) : (
@@ -342,82 +361,82 @@ export const App: React.FC = () => {
             <div className="space-y-6">
               
               {/* Top Banner */}
-              <div className="bg-gradient-to-r from-blue-950/60 via-slate-900 to-indigo-950/60 border border-blue-800/40 rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="bg-gradient-to-r from-[#F5EFE6] via-[#FAF6F0] to-[#EFE7DA] border border-[#E2D7C7] rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
                 <div className="space-y-1 text-center sm:text-left">
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2 justify-center sm:justify-start">
+                  <h2 className="text-lg font-bold text-[#2D261E] flex items-center gap-2 justify-center sm:justify-start">
                     <span>Founder Control Portal</span>
-                    <span className="text-[11px] font-mono font-normal bg-blue-500/20 text-blue-300 px-2.5 py-0.5 rounded-full border border-blue-500/30">
-                      Supabase Sync
+                    <span className="text-[11px] font-mono font-normal bg-[#E8DFD0] text-[#7A5B22] px-2.5 py-0.5 rounded-full border border-[#D5C7B2]">
+                      Live Frontend Sync Active
                     </span>
                   </h2>
-                  <p className="text-xs text-slate-400 max-w-xl">
-                    Review live cost estimate submissions, discovery calls, and project pipeline budgets.
+                  <p className="text-xs text-[#6E6254] max-w-xl">
+                    Review live cost estimate submissions, discovery call bookings, and client phone contacts in real-time.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => token && fetchLeads(token)}
-                    className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 border border-slate-700 transition-colors cursor-pointer"
+                    className="px-4 py-2.5 bg-white hover:bg-[#FAF6F0] text-[#2D261E] rounded-xl text-xs font-bold flex items-center gap-2 border border-[#DCD1C4] shadow-sm transition-colors cursor-pointer"
                   >
-                    <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-                    <span>Sync Supabase Data</span>
+                    <RefreshCw className={`w-3.5 h-3.5 text-[#A37B3E] ${isLoading ? 'animate-spin' : ''}`} />
+                    <span>Sync Supabase Inquiries</span>
                   </button>
                 </div>
               </div>
 
               {/* Metrics Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-1">
-                  <div className="text-slate-400 text-xs font-semibold flex items-center justify-between">
-                    <span>Total Client Leads</span>
-                    <Briefcase className="w-4 h-4 text-blue-400" />
+                <div className="bg-white border border-[#E8DFD1] rounded-2xl p-5 space-y-1 shadow-sm">
+                  <div className="text-[#6E6254] text-xs font-semibold flex items-center justify-between">
+                    <span>Total Client Inquiries</span>
+                    <Briefcase className="w-4 h-4 text-[#A37B3E]" />
                   </div>
-                  <div className="text-3xl font-black text-white font-mono">{leads.length}</div>
-                  <div className="text-[10px] text-slate-500">Recorded in Database</div>
+                  <div className="text-3xl font-black text-[#2D261E] font-mono">{leads.length}</div>
+                  <div className="text-[10px] text-[#998A78]">Captured in Database</div>
                 </div>
 
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-1">
-                  <div className="text-slate-400 text-xs font-semibold flex items-center justify-between">
+                <div className="bg-white border border-[#E8DFD1] rounded-2xl p-5 space-y-1 shadow-sm">
+                  <div className="text-[#6E6254] text-xs font-semibold flex items-center justify-between">
                     <span>Estimated Pipeline</span>
-                    <IndianRupee className="w-4 h-4 text-emerald-400" />
+                    <IndianRupee className="w-4 h-4 text-[#1B7043]" />
                   </div>
-                  <div className="text-3xl font-black text-emerald-400 font-mono">
+                  <div className="text-3xl font-black text-[#1B7043] font-mono">
                     ₹{totalValue.toLocaleString('en-IN')}
                   </div>
-                  <div className="text-[10px] text-slate-500">Gross Estimated Scope</div>
+                  <div className="text-[10px] text-[#998A78]">Gross Project Valuation</div>
                 </div>
 
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-1">
-                  <div className="text-slate-400 text-xs font-semibold flex items-center justify-between">
+                <div className="bg-white border border-[#E8DFD1] rounded-2xl p-5 space-y-1 shadow-sm">
+                  <div className="text-[#6E6254] text-xs font-semibold flex items-center justify-between">
                     <span>Pending Action</span>
-                    <Clock className="w-4 h-4 text-amber-400" />
+                    <Clock className="w-4 h-4 text-[#B46D12]" />
                   </div>
-                  <div className="text-3xl font-black text-amber-400 font-mono">{pendingCount}</div>
-                  <div className="text-[10px] text-slate-500">Awaiting Proposal Response</div>
+                  <div className="text-3xl font-black text-[#B46D12] font-mono">{pendingCount}</div>
+                  <div className="text-[10px] text-[#998A78]">New Client Leads</div>
                 </div>
 
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-1">
-                  <div className="text-slate-400 text-xs font-semibold flex items-center justify-between">
-                    <span>Commissioned Deals</span>
-                    <CheckCircle className="w-4 h-4 text-purple-400" />
+                <div className="bg-white border border-[#E8DFD1] rounded-2xl p-5 space-y-1 shadow-sm">
+                  <div className="text-[#6E6254] text-xs font-semibold flex items-center justify-between">
+                    <span>Converted Deals</span>
+                    <CheckCircle className="w-4 h-4 text-[#7A42B8]" />
                   </div>
-                  <div className="text-3xl font-black text-purple-400 font-mono">{convertedCount}</div>
-                  <div className="text-[10px] text-slate-500">Active Client Contracts</div>
+                  <div className="text-3xl font-black text-[#7A42B8] font-mono">{convertedCount}</div>
+                  <div className="text-[10px] text-[#998A78]">Active Commissioned Clients</div>
                 </div>
               </div>
 
               {/* Filter and Search Toolbar */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900 p-4 border border-slate-800 rounded-2xl">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 border border-[#E8DFD1] rounded-2xl shadow-sm">
                 
                 <div className="relative w-full sm:w-80">
-                  <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                  <Search className="w-4 h-4 text-[#998A78] absolute left-3.5 top-3" />
                   <input
                     type="text"
-                    placeholder="Search by name, email, scope or ID..."
+                    placeholder="Search by name, email, phone, scope..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-blue-500 transition-all"
+                    className="w-full pl-9 pr-4 py-2.5 bg-[#FAF8F5] border border-[#E2D6C5] rounded-xl text-xs text-[#2D261E] placeholder:text-[#A39585] focus:outline-none focus:border-[#A37B3E] focus:ring-2 focus:ring-[#A37B3E]/20 transition-all"
                   />
                 </div>
 
@@ -428,8 +447,8 @@ export const App: React.FC = () => {
                       onClick={() => setStatusFilter(filter)}
                       className={`px-3.5 py-2 rounded-xl text-xs font-bold capitalize transition-colors cursor-pointer ${
                         statusFilter === filter
-                          ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                          : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
+                          ? 'bg-[#A37B3E] text-white shadow-sm'
+                          : 'bg-[#FAF8F5] text-[#6E6254] hover:text-[#2D261E] border border-[#E2D6C5]'
                       }`}
                     >
                       {filter}
@@ -440,11 +459,11 @@ export const App: React.FC = () => {
               </div>
 
               {/* Leads Table */}
-              <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+              <div className="bg-white border border-[#E8DFD1] rounded-2xl overflow-hidden shadow-sm">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="bg-slate-950 text-slate-400 uppercase text-[10px] font-mono tracking-wider border-b border-slate-800">
+                      <tr className="bg-[#F4EFE6] text-[#42392E] uppercase text-[10px] font-mono tracking-wider border-b border-[#E3D8C8]">
                         <th className="p-4 font-bold">Reference ID</th>
                         <th className="p-4 font-bold">Client Contact</th>
                         <th className="p-4 font-bold">Scope / Service</th>
@@ -454,45 +473,45 @@ export const App: React.FC = () => {
                         <th className="p-4 font-bold text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/80 font-medium">
+                    <tbody className="divide-y divide-[#EFE8DC] font-medium">
                       {filteredLeads.length === 0 ? (
                         <tr>
-                          <td colSpan={7} className="p-12 text-center text-slate-500">
-                            No client leads found in database.
+                          <td colSpan={7} className="p-12 text-center text-[#998A78]">
+                            No client inquiries found in database matching search criteria.
                           </td>
                         </tr>
                       ) : (
                         filteredLeads.map((lead) => (
-                          <tr key={lead.id} className="hover:bg-slate-800/50 transition-colors">
-                            <td className="p-4 font-mono text-blue-400 font-bold">
+                          <tr key={lead.id} className="hover:bg-[#FAF5ED] transition-colors">
+                            <td className="p-4 font-mono text-[#A37B3E] font-bold">
                               {lead.id}
                             </td>
                             <td className="p-4">
-                              <div className="font-bold text-white">{lead.clientName}</div>
-                              <div className="text-[11px] text-slate-400">{lead.clientEmail}</div>
+                              <div className="font-bold text-[#2D261E]">{lead.clientName}</div>
+                              <div className="text-[11px] text-[#6E6254]">{lead.clientEmail}</div>
                               {lead.clientPhone && (
-                                <div className="text-[11px] text-emerald-400 font-mono flex items-center gap-1 mt-0.5 font-semibold">
-                                  <Phone className="w-3 h-3" /> {lead.clientPhone}
+                                <div className="text-[11px] text-[#1B7043] font-mono flex items-center gap-1 mt-0.5 font-semibold">
+                                  <Phone className="w-3 h-3 text-[#1B7043]" /> {lead.clientPhone}
                                 </div>
                               )}
                               {lead.company && (
-                                <div className="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5">
+                                <div className="text-[10px] text-[#8C7E6E] flex items-center gap-1 mt-0.5">
                                   <Building2 className="w-3 h-3" /> {lead.company}
                                 </div>
                               )}
                             </td>
-                            <td className="p-4 text-slate-200">
+                            <td className="p-4 text-[#2D261E]">
                               <div className="font-semibold">{lead.serviceName}</div>
                               {lead.techStack && lead.techStack.length > 0 && (
-                                <div className="text-[10px] text-slate-400 truncate max-w-[200px]">
+                                <div className="text-[10px] text-[#8C7E6E] truncate max-w-[200px]">
                                   {lead.techStack.join(', ')}
                                 </div>
                               )}
                             </td>
-                            <td className="p-4 font-mono text-emerald-400 font-bold">
+                            <td className="p-4 font-mono text-[#1B7043] font-bold">
                               ₹{lead.estimatedBudget.toLocaleString('en-IN')}
                             </td>
-                            <td className="p-4 text-slate-400">
+                            <td className="p-4 text-[#6E6254]">
                               {lead.timeline}
                             </td>
                             <td className="p-4">
@@ -501,28 +520,28 @@ export const App: React.FC = () => {
                                 onChange={(e) => handleStatusChange(lead.id, e.target.value as any)}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-bold border focus:outline-none cursor-pointer ${
                                   lead.status === 'pending'
-                                    ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
+                                    ? 'bg-[#FDF6E2] border-[#E8D49E] text-[#8C5E0D]'
                                     : lead.status === 'contacted'
-                                    ? 'bg-blue-500/10 border-blue-500/30 text-blue-300'
-                                    : 'bg-purple-500/10 border-purple-500/30 text-purple-300'
+                                    ? 'bg-[#EAF3FD] border-[#B5D5FA] text-[#1C5AA6]'
+                                    : 'bg-[#E6F6ED] border-[#A8E4C3] text-[#13663B]'
                                 }`}
                               >
-                                <option value="pending" className="bg-slate-900 text-white">Pending</option>
-                                <option value="contacted" className="bg-slate-900 text-white">Contacted</option>
-                                <option value="converted" className="bg-slate-900 text-white">Converted</option>
+                                <option value="pending">Pending</option>
+                                <option value="contacted">Contacted</option>
+                                <option value="converted">Converted</option>
                               </select>
                             </td>
                             <td className="p-4 text-right space-x-1.5">
                               <button
                                 onClick={() => setSelectedLead(lead)}
-                                className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                                className="p-2 rounded-xl bg-[#FAF6F0] hover:bg-[#F2ECE1] text-[#6E6254] hover:text-[#2D261E] border border-[#E2D6C5] transition-colors cursor-pointer"
                                 title="View Full Details"
                               >
                                 <Eye className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => handleDeleteLead(lead.id)}
-                                className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-colors cursor-pointer"
+                                className="p-2 rounded-xl bg-[#FDF0F0] hover:bg-[#FADADA] text-[#9E2A2A] border border-[#F5C2C2] transition-colors cursor-pointer"
                                 title="Delete Lead"
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -541,18 +560,18 @@ export const App: React.FC = () => {
 
         </main>
 
-        {/* Lead Detail Notes Drawer */}
+        {/* Lead Detail Notes Drawer Modal */}
         {selectedLead && (
-          <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-lg w-full space-y-4 text-white shadow-2xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="fixed inset-0 z-50 bg-[#1A1612]/50 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-[#FAF7F2] border border-[#E2D6C5] rounded-3xl p-6 max-w-lg w-full space-y-4 text-[#2D261E] shadow-2xl">
+              <div className="flex items-center justify-between border-b border-[#E8DFD1] pb-3">
                 <div>
-                  <span className="text-xs font-mono font-bold text-blue-400">{selectedLead.id}</span>
-                  <h3 className="text-base font-bold text-white">{selectedLead.clientName}</h3>
+                  <span className="text-xs font-mono font-bold text-[#A37B3E]">{selectedLead.id}</span>
+                  <h3 className="text-base font-bold text-[#2D261E]">{selectedLead.clientName}</h3>
                 </div>
                 <button
                   onClick={() => setSelectedLead(null)}
-                  className="p-1 text-slate-400 hover:text-white cursor-pointer"
+                  className="p-1 text-[#8C7E6E] hover:text-[#2D261E] cursor-pointer"
                 >
                   ✕
                 </button>
@@ -561,57 +580,57 @@ export const App: React.FC = () => {
               <div className="space-y-3.5 text-xs">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold block">Client Name:</span>
-                    <div className="font-bold text-white text-sm">{selectedLead.clientName}</div>
+                    <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block">Client Name:</span>
+                    <div className="font-bold text-[#2D261E] text-sm">{selectedLead.clientName}</div>
                   </div>
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold block">Work Email:</span>
-                    <div className="font-mono text-blue-300 truncate">{selectedLead.clientEmail}</div>
+                    <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block">Work Email:</span>
+                    <div className="font-mono text-[#1C5AA6] truncate">{selectedLead.clientEmail}</div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold block">Mobile / Phone Number:</span>
+                    <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block">Mobile / Phone Number:</span>
                     {selectedLead.clientPhone ? (
                       <a
                         href={`tel:${selectedLead.clientPhone}`}
-                        className="font-mono text-emerald-400 font-bold flex items-center gap-1 hover:underline text-xs"
+                        className="font-mono text-[#1B7043] font-bold flex items-center gap-1 hover:underline text-xs"
                       >
                         <Phone className="w-3.5 h-3.5" /> {selectedLead.clientPhone}
                       </a>
                     ) : (
-                      <div className="text-slate-500 italic">Not Provided</div>
+                      <div className="text-[#998A78] italic">Not Provided</div>
                     )}
                   </div>
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold block">Company / Brand:</span>
-                    <div className="font-semibold text-slate-200">{selectedLead.company || 'Not Specified'}</div>
+                    <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block">Company / Brand:</span>
+                    <div className="font-semibold text-[#2D261E]">{selectedLead.company || 'Not Specified'}</div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold block">Business Category:</span>
-                    <div className="font-semibold text-slate-200">{selectedLead.businessType || 'General Client'}</div>
+                    <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block">Business Category:</span>
+                    <div className="font-semibold text-[#2D261E]">{selectedLead.businessType || 'General Client'}</div>
                   </div>
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold block">Timeline Sprint:</span>
-                    <div className="text-slate-200 font-semibold">{selectedLead.timeline}</div>
+                    <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block">Timeline Sprint:</span>
+                    <div className="text-[#2D261E] font-semibold">{selectedLead.timeline}</div>
                   </div>
                 </div>
 
                 <div>
-                  <span className="text-slate-500 text-[10px] uppercase font-bold block">Commissioned Service / Scope:</span>
-                  <div className="font-bold text-white text-xs bg-slate-950 p-2 rounded-lg border border-slate-800">{selectedLead.serviceName}</div>
+                  <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block mb-1">Commissioned Service / Scope:</span>
+                  <div className="font-bold text-[#2D261E] text-xs bg-white p-2.5 rounded-lg border border-[#E2D6C5]">{selectedLead.serviceName}</div>
                 </div>
 
                 {selectedLead.techStack && selectedLead.techStack.length > 0 && (
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold block mb-1">Architectural Add-on Modules:</span>
+                    <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block mb-1">Architectural Add-on Modules:</span>
                     <div className="flex flex-wrap gap-1.5">
                       {selectedLead.techStack.map((tech, idx) => (
-                        <span key={idx} className="bg-blue-500/10 text-blue-300 border border-blue-500/30 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold">
+                        <span key={idx} className="bg-[#FAF4E8] text-[#7A5B22] border border-[#E5D7BF] font-mono text-[10px] px-2 py-0.5 rounded-full font-bold">
                           {tech}
                         </span>
                       ))}
@@ -619,27 +638,27 @@ export const App: React.FC = () => {
                   </div>
                 )}
 
-                <div className="grid grid-cols-2 gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800">
+                <div className="grid grid-cols-2 gap-3 bg-white p-3 rounded-xl border border-[#E8DFD1]">
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold block">Estimated Investment:</span>
-                    <div className="font-mono font-black text-emerald-400 text-base">₹{selectedLead.estimatedBudget.toLocaleString('en-IN')}</div>
+                    <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block">Estimated Investment:</span>
+                    <div className="font-mono font-black text-[#1B7043] text-base">₹{selectedLead.estimatedBudget.toLocaleString('en-IN')}</div>
                   </div>
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold block">Timeline Sprint:</span>
-                    <div className="text-slate-200 font-semibold">{selectedLead.timeline}</div>
+                    <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block">Timeline Sprint:</span>
+                    <div className="text-[#2D261E] font-semibold">{selectedLead.timeline}</div>
                   </div>
                 </div>
 
                 <div>
-                  <span className="text-slate-500 text-[10px] uppercase font-bold block mb-1">Submission Date & Time:</span>
-                  <div className="font-mono text-[11px] text-slate-400">
+                  <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block mb-1">Submission Date & Time:</span>
+                  <div className="font-mono text-[11px] text-[#6E6254]">
                     {new Date(selectedLead.createdAt).toLocaleString('en-IN', { dateStyle: 'full', timeStyle: 'short' })}
                   </div>
                 </div>
 
                 <div>
-                  <span className="text-slate-500 text-[10px] uppercase font-bold block mb-1">Detailed Project Message & Scope:</span>
-                  <div className="p-3.5 bg-slate-950 rounded-xl border border-slate-800 text-slate-300 whitespace-pre-wrap leading-relaxed text-xs max-h-48 overflow-y-auto">
+                  <span className="text-[#8C7E6E] text-[10px] uppercase font-bold block mb-1">Detailed Project Message & Scope:</span>
+                  <div className="p-3.5 bg-white rounded-xl border border-[#E2D6C5] text-[#2D261E] whitespace-pre-wrap leading-relaxed text-xs max-h-48 overflow-y-auto">
                     {selectedLead.details || 'No additional project requirements noted.'}
                   </div>
                 </div>
@@ -648,9 +667,9 @@ export const App: React.FC = () => {
               <div className="pt-2 flex justify-end">
                 <button
                   onClick={() => setSelectedLead(null)}
-                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold cursor-pointer"
+                  className="px-4 py-2 bg-[#A37B3E] hover:bg-[#8F6A30] text-white rounded-xl text-xs font-bold cursor-pointer border border-[#B89252]"
                 >
-                  Close Notes
+                  Close Details
                 </button>
               </div>
             </div>
