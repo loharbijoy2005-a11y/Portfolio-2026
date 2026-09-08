@@ -45,7 +45,6 @@ export const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'contacted' | 'converted'>('all');
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [dataSource, setDataSource] = useState<'supabase' | 'local'>('supabase');
 
   const [securityAlert, setSecurityAlert] = useState<string | null>(null);
 
@@ -139,11 +138,6 @@ export const App: React.FC = () => {
       const data = await res.json();
       if (res.ok && data.success && Array.isArray(data.data) && data.data.length > 0) {
         setLeads(data.data);
-        if (data.source === 'supabase') {
-          setDataSource('supabase');
-        } else {
-          setDataSource('local');
-        }
       } else {
         setLeads(DEFAULT_SEED_LEADS);
       }
@@ -237,8 +231,8 @@ export const App: React.FC = () => {
                   <ShieldCheck className="w-3.5 h-3.5" /> Anti-Inspect Shield Active
                 </span>
                 <span>•</span>
-                <span className="flex items-center gap-1 text-blue-400">
-                  <Database className="w-3.5 h-3.5" /> Supabase Storage: {dataSource === 'supabase' ? 'Connected' : 'Sync Mode'}
+                <span className="flex items-center gap-1 text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                  <Database className="w-3.5 h-3.5" /> Supabase Cloud Database: Active
                 </span>
               </div>
             </div>
