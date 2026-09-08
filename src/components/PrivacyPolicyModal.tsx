@@ -148,7 +148,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, 
               <ul className="list-disc pl-5 space-y-1.5 text-slate-600">
                 <li><strong className="text-slate-800">Tax Record Retention:</strong> GST billing records, tax invoices, and payment receipts are retained for 7 years as mandatory under Indian Goods and Services Tax Rules.</li>
                 <li><strong className="text-slate-800">Staging Credentials Deletion:</strong> Temporary database credentials, SSH keys, and staging access tokens provided during development are permanently purged within 14 days of final production deployment handover.</li>
-                <li><strong className="text-slate-800">Right to Erasure:</strong> Clients may request the deletion of non-statutory personal data by emailing support@shadowarrow.in.</li>
+                <li><strong className="text-slate-800">Right to Erasure:</strong> Clients may request the deletion of non-statutory personal data by emailing support.shadowarrow@gmail.com.</li>
               </ul>
             </section>
 
@@ -164,7 +164,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, 
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 font-mono text-xs space-y-1">
                 <div><strong className="text-slate-900">Entity:</strong> ShadowArrow Web Engineering</div>
                 <div><strong className="text-slate-900">Lead Officer:</strong> Bijoy Lohar (Founder & Lead Engineer)</div>
-                <div><strong className="text-slate-900">Official Desk Email:</strong> support@shadowarrow.in</div>
+                <div><strong className="text-slate-900">Official Desk Email:</strong> support.shadowarrow@gmail.com</div>
                 <div><strong className="text-slate-900">Direct WhatsApp:</strong> +91 92427 25326</div>
                 <div><strong className="text-slate-900">Jurisdiction:</strong> India</div>
               </div>
