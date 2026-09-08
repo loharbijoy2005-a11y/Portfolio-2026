@@ -101,18 +101,43 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     if (!isSilent) setIsLoading(true);
     else setIsSilentSyncing(true);
 
+    let localSubmitted: Lead[] = [];
+    try {
+      localSubmitted = JSON.parse(localStorage.getItem('shadow_client_inquiries') || '[]');
+    } catch (e) {
+      localSubmitted = [];
+    }
+
     try {
       const res = await fetch('/api/admin/inquiries', {
         headers: { Authorization: `Bearer ${authToken}` }
       });
       const data = await res.json();
+      let fetched: Lead[] = [];
+
       if (res.ok && data.success && Array.isArray(data.data) && data.data.length > 0) {
-        setLeads(data.data);
+        fetched = data.data;
+      }
+
+      const combined = [...localSubmitted];
+      fetched.forEach(item => {
+        if (!combined.some(c => c.id === item.id)) {
+          combined.push(item);
+        }
+      });
+
+      if (combined.length === 0) {
+        loadDemoLeads();
+      } else {
+        setLeads(combined);
+      }
+    } catch (err) {
+      const combined = [...localSubmitted];
+      if (combined.length > 0) {
+        setLeads(combined);
       } else if (!isSilent) {
         loadDemoLeads();
       }
-    } catch (err) {
-      if (!isSilent) loadDemoLeads();
     } finally {
       setIsLoading(false);
       setIsSilentSyncing(false);

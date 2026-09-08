@@ -126,7 +126,34 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
     try {
       const selectedModNames = selectedModules
         .map((id) => ESTIMATOR_MODULES.find((m) => m.id === id)?.name)
-        .filter(Boolean);
+        .filter(Boolean) as string[];
+
+      const generatedId = `EST-${Math.floor(100000 + Math.random() * 900000)}`;
+
+      const newLeadObj = {
+        id: generatedId,
+        type: 'Cost Estimate',
+        clientName: name,
+        clientEmail: email,
+        clientPhone: phone,
+        company,
+        businessType,
+        serviceName: baseObj.title,
+        techStack: selectedModNames,
+        estimatedBudget: Math.round(subtotal),
+        timeline: timeline === 'fast' ? 'Fast Track (1-2 Weeks)' : 'Standard Pace (3-4 Weeks)',
+        details: message,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        const existing = JSON.parse(localStorage.getItem('shadow_client_inquiries') || '[]');
+        existing.unshift(newLeadObj);
+        localStorage.setItem('shadow_client_inquiries', JSON.stringify(existing));
+      } catch (e) {
+        // ignore
+      }
 
       const res = await fetch('/api/estimates', {
         method: 'POST',
@@ -147,9 +174,9 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
 
       const data = await res.json();
       if (res.ok && data.success) {
-        setSubmittedLeadId(data.leadId);
+        setSubmittedLeadId(data.leadId || generatedId);
       } else {
-        setSubmittedLeadId(`EST-${Math.floor(100000 + Math.random() * 900000)}`);
+        setSubmittedLeadId(generatedId);
       }
     } catch (err) {
       console.warn('Backend API connection warning, fallback to local reference ID:', err);

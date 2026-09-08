@@ -39,6 +39,30 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
     setIsSubmitting(true);
 
     try {
+      const generatedId = `CON-${Math.floor(100000 + Math.random() * 900000)}`;
+      const newLeadObj = {
+        id: generatedId,
+        type: 'Discovery Call',
+        clientName: name,
+        clientEmail: email,
+        clientPhone: phone,
+        serviceName: `Discovery Call (${selectedDate})`,
+        techStack: [],
+        estimatedBudget: 0,
+        timeline: 'Flexible',
+        details: `Client requested 30-Minute Architecture Audit for slot: ${selectedDate}. Contact Phone: ${phone}`,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        const existing = JSON.parse(localStorage.getItem('shadow_client_inquiries') || '[]');
+        existing.unshift(newLeadObj);
+        localStorage.setItem('shadow_client_inquiries', JSON.stringify(existing));
+      } catch (e) {
+        // ignore
+      }
+
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -53,9 +77,9 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
 
       const data = await res.json();
       if (res.ok && data.success) {
-        setBookingRefId(data.leadId);
+        setBookingRefId(data.leadId || generatedId);
       } else {
-        setBookingRefId(`CON-${Math.floor(100000 + Math.random() * 900000)}`);
+        setBookingRefId(generatedId);
       }
     } catch (err) {
       setBookingRefId(`CON-${Math.floor(100000 + Math.random() * 900000)}`);
