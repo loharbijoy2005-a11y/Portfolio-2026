@@ -8,7 +8,8 @@ import {
   CheckCircle2, 
   ShieldCheck, 
   User, 
-  Mail
+  Mail,
+  Phone
 } from 'lucide-react';
 
 interface CostEstimatorProps {
@@ -29,6 +30,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
   // Form fields
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
   const [company, setCompany] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   
@@ -132,6 +134,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
         body: JSON.stringify({
           clientName: name,
           clientEmail: email,
+          clientPhone: phone,
           company,
           businessType,
           serviceName: baseObj.title,
@@ -420,6 +423,21 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                       placeholder="rahul@company.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">Mobile / Phone Number *</label>
+                  <div className="relative">
+                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                    <input
+                      type="tel"
+                      required
+                      placeholder="+91 98765 43210"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
                       className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                     />
                   </div>

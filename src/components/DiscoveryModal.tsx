@@ -5,7 +5,8 @@ import {
   Clock, 
   ShieldCheck, 
   CheckCircle2, 
-  Sparkles
+  Sparkles,
+  Phone
 } from 'lucide-react';
 
 interface DiscoveryModalProps {
@@ -17,6 +18,7 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
   const [selectedDate, setSelectedDate] = useState<string>('Tomorrow, 2:00 PM IST');
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
   const [booked, setBooked] = useState<boolean>(false);
 
   if (!isOpen) return null;
@@ -43,8 +45,9 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
         body: JSON.stringify({
           clientName: name,
           clientEmail: email,
+          clientPhone: phone,
           serviceName: `Discovery Call (${selectedDate})`,
-          message: `Client requested 30-Minute Architecture Audit for slot: ${selectedDate}`
+          message: `Client requested 30-Minute Architecture Audit for slot: ${selectedDate}. Contact Phone: ${phone}`
         })
       });
 
@@ -159,7 +162,7 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-700 block mb-1">Your Work Email</label>
+                <label className="text-xs font-bold text-slate-700 block mb-1">Your Work Email *</label>
                 <input
                   type="email"
                   required
@@ -168,6 +171,21 @@ export const DiscoveryModal: React.FC<DiscoveryModalProps> = ({ isOpen, onClose 
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">Mobile / Phone Number *</label>
+                <div className="relative">
+                  <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                  <input
+                    type="tel"
+                    required
+                    placeholder="+91 98765 43210"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full pl-8 pr-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  />
+                </div>
               </div>
 
               <button

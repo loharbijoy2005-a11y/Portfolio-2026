@@ -90,6 +90,7 @@ export default async function handler(req, res) {
         type: item.type,
         clientName: item.client_name,
         clientEmail: item.client_email,
+        clientPhone: item.client_phone || item.clientPhone || '',
         company: item.company,
         businessType: item.business_type,
         serviceName: item.service_name,

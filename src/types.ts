@@ -78,6 +78,7 @@ export interface EstimateOptions {
   includeGST: boolean;
   name: string;
   email: string;
+  phone: string;
   company: string;
   message: string;
 }

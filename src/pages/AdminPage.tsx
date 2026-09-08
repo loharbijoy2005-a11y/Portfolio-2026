@@ -16,7 +16,8 @@ import {
   UserCheck,
   Building2,
   ArrowLeft,
-  Database
+  Database,
+  Phone
 } from 'lucide-react';
 import { AntiInspectShield } from '../components/AntiInspectShield';
 
@@ -25,6 +26,7 @@ interface Lead {
   type: string;
   clientName: string;
   clientEmail: string;
+  clientPhone?: string;
   company?: string;
   businessType?: string;
   serviceName: string;
@@ -479,6 +481,11 @@ export const AdminPage: React.FC = () => {
                             <td className="p-4">
                               <div className="font-bold text-white">{lead.clientName}</div>
                               <div className="text-[11px] text-slate-400">{lead.clientEmail}</div>
+                              {lead.clientPhone && (
+                                <div className="text-[11px] text-emerald-400 font-mono flex items-center gap-1 mt-0.5 font-semibold">
+                                  <Phone className="w-3 h-3" /> {lead.clientPhone}
+                                </div>
+                              )}
                               {lead.company && (
                                 <div className="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5">
                                   <Building2 className="w-3 h-3" /> {lead.company}

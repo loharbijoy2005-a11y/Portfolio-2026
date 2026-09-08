@@ -86,7 +86,7 @@ app.get('/api/health', (req, res) => {
 // Submit Cost Estimate / Lead
 app.post('/api/estimates', (req, res) => {
   try {
-    const { clientName, clientEmail, serviceName, techStack, estimatedBudget, timeline, details } = req.body;
+    const { clientName, clientEmail, clientPhone, serviceName, techStack, estimatedBudget, timeline, details } = req.body;
 
     if (!clientName || !clientEmail) {
       return res.status(400).json({ error: 'Client name and email are required' });
@@ -100,6 +100,7 @@ app.post('/api/estimates', (req, res) => {
       type: 'Cost Estimate',
       clientName: clientName.trim(),
       clientEmail: clientEmail.trim(),
+      clientPhone: (clientPhone || '').trim(),
       serviceName: serviceName || 'Custom Full-Stack Solution',
       techStack: Array.isArray(techStack) ? techStack : [],
       estimatedBudget: Number(estimatedBudget) || 0,
@@ -127,7 +128,7 @@ app.post('/api/estimates', (req, res) => {
 // Submit Direct Contact / Discovery Request
 app.post('/api/contact', (req, res) => {
   try {
-    const { clientName, clientEmail, message, serviceName } = req.body;
+    const { clientName, clientEmail, clientPhone, message, serviceName } = req.body;
 
     if (!clientName || !clientEmail) {
       return res.status(400).json({ error: 'Client name and email are required' });
@@ -141,6 +142,7 @@ app.post('/api/contact', (req, res) => {
       type: 'Discovery Call',
       clientName: clientName.trim(),
       clientEmail: clientEmail.trim(),
+      clientPhone: (clientPhone || '').trim(),
       serviceName: serviceName || 'General Inquiry',
       techStack: [],
       estimatedBudget: 0,
@@ -152,6 +154,7 @@ app.post('/api/contact', (req, res) => {
 
     inquiries.unshift(newContact);
     writeInquiries(inquiries);
+    insertLeadToSupabase(newContact);
 
     res.status(201).json({
       success: true,

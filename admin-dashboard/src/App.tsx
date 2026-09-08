@@ -15,7 +15,8 @@ import {
   ShieldCheck,
   UserCheck,
   Building2,
-  Database
+  Database,
+  Phone
 } from 'lucide-react';
 import { AntiInspectShield } from './components/AntiInspectShield';
 
@@ -24,6 +25,7 @@ interface Lead {
   type: string;
   clientName: string;
   clientEmail: string;
+  clientPhone?: string;
   company?: string;
   businessType?: string;
   serviceName: string;
@@ -87,6 +89,7 @@ export const App: React.FC = () => {
       type: 'Cost Estimate',
       clientName: 'Vikram Sharma',
       clientEmail: 'vikram@techventure.in',
+      clientPhone: '+91 98765 43210',
       company: 'TechVenture Labs',
       businessType: 'B2B Corporate',
       serviceName: 'Enterprise SaaS Platform',
@@ -102,6 +105,7 @@ export const App: React.FC = () => {
       type: 'Discovery Call',
       clientName: 'Ananya Patel',
       clientEmail: 'ananya@growthbrands.co',
+      clientPhone: '+91 98123 45678',
       company: 'GrowthBrands D2C',
       businessType: 'D2C Brand',
       serviceName: 'Headless E-Commerce Engine',
@@ -117,6 +121,7 @@ export const App: React.FC = () => {
       type: 'Cost Estimate',
       clientName: 'Rohan Mehta',
       clientEmail: 'rohan@apexlogistics.io',
+      clientPhone: '+91 99887 76655',
       company: 'Apex Logistics',
       businessType: 'B2B Corporate',
       serviceName: 'Custom Full-Stack System',
@@ -465,6 +470,11 @@ export const App: React.FC = () => {
                             <td className="p-4">
                               <div className="font-bold text-white">{lead.clientName}</div>
                               <div className="text-[11px] text-slate-400">{lead.clientEmail}</div>
+                              {lead.clientPhone && (
+                                <div className="text-[11px] text-emerald-400 font-mono flex items-center gap-1 mt-0.5 font-semibold">
+                                  <Phone className="w-3 h-3" /> {lead.clientPhone}
+                                </div>
+                              )}
                               {lead.company && (
                                 <div className="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5">
                                   <Building2 className="w-3 h-3" /> {lead.company}
@@ -562,12 +572,32 @@ export const App: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
+                    <span className="text-slate-500 text-[10px] uppercase font-bold block">Mobile / Phone Number:</span>
+                    {selectedLead.clientPhone ? (
+                      <a
+                        href={`tel:${selectedLead.clientPhone}`}
+                        className="font-mono text-emerald-400 font-bold flex items-center gap-1 hover:underline text-xs"
+                      >
+                        <Phone className="w-3.5 h-3.5" /> {selectedLead.clientPhone}
+                      </a>
+                    ) : (
+                      <div className="text-slate-500 italic">Not Provided</div>
+                    )}
+                  </div>
+                  <div>
                     <span className="text-slate-500 text-[10px] uppercase font-bold block">Company / Brand:</span>
                     <div className="font-semibold text-slate-200">{selectedLead.company || 'Not Specified'}</div>
                   </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <span className="text-slate-500 text-[10px] uppercase font-bold block">Business Category:</span>
                     <div className="font-semibold text-slate-200">{selectedLead.businessType || 'General Client'}</div>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 text-[10px] uppercase font-bold block">Timeline Sprint:</span>
+                    <div className="text-slate-200 font-semibold">{selectedLead.timeline}</div>
                   </div>
                 </div>
 

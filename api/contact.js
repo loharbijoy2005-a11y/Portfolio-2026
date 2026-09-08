@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { clientName, clientEmail, clientPhone, company, businessType, serviceName, techStack, estimatedBudget, timeline, details } = req.body || {};
+    const { clientName, clientEmail, clientPhone, serviceName, message } = req.body || {};
 
     if (!clientName || !clientEmail) {
       return res.status(400).json({ error: 'Client name and email are required' });
@@ -34,23 +34,23 @@ export default async function handler(req, res) {
     const cleanName = sanitizeInput(clientName);
     const cleanEmail = sanitizeInput(clientEmail);
     const cleanPhone = sanitizeInput(clientPhone || '');
-    const cleanCompany = sanitizeInput(company || '');
-    const cleanDetails = sanitizeInput(details || '');
-    const leadId = `EST-${Math.floor(100000 + Math.random() * 900000)}`;
+    const cleanService = sanitizeInput(serviceName || 'Discovery Call');
+    const cleanMessage = sanitizeInput(message || '');
+    const leadId = `CON-${Math.floor(100000 + Math.random() * 900000)}`;
 
     const newLead = {
       id: leadId,
-      type: 'Cost Estimate',
+      type: 'Discovery Call',
       client_name: cleanName,
       client_email: cleanEmail,
       client_phone: cleanPhone,
-      company: cleanCompany,
-      business_type: sanitizeInput(businessType || ''),
-      service_name: sanitizeInput(serviceName || 'Custom Scope'),
-      tech_stack: Array.isArray(techStack) ? techStack.map(sanitizeInput) : [],
-      estimated_budget: Number(estimatedBudget) || 0,
-      timeline: sanitizeInput(timeline || '3-4 Weeks'),
-      details: cleanDetails,
+      company: '',
+      business_type: '',
+      service_name: cleanService,
+      tech_stack: [],
+      estimated_budget: 0,
+      timeline: 'Flexible',
+      details: cleanMessage,
       status: 'pending',
       created_at: new Date().toISOString()
     };
@@ -64,18 +64,18 @@ export default async function handler(req, res) {
 
     return res.status(201).json({
       success: true,
-      message: 'Project estimate submitted successfully to Shadow Arrow Vercel Serverless Backend!',
+      message: 'Discovery call request received successfully!',
       leadId,
       lead: {
         id: leadId,
         clientName: cleanName,
         clientEmail: cleanEmail,
-        company: cleanCompany,
-        estimatedBudget: Number(estimatedBudget) || 0,
+        clientPhone: cleanPhone,
+        serviceName: cleanService,
         createdAt: newLead.created_at
       }
     });
   } catch (err) {
-    return res.status(500).json({ error: 'Server error processing estimate payload' });
+    return res.status(500).json({ error: 'Server error processing contact request' });
   }
 }
