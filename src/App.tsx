@@ -22,7 +22,6 @@ import { Footer } from './components/Footer';
 import { DiscoveryModal } from './components/DiscoveryModal';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { TermsOfServiceModal } from './components/TermsOfServiceModal';
-import { AdminPage } from './pages/AdminPage';
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 35, filter: 'blur(8px)' },
@@ -254,7 +253,6 @@ export const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/" element={<MainWebsite />} />
-        <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<MainWebsite />} />
       </Routes>
     </Router>

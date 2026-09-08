@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <title>Shadow Arrow • Standalone Founder Control Portal</title>
+    <title>Shadow Arrow • Isolated Founder Gateway</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,15 +14,6 @@
   </head>
   <body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-blue-600 selection:text-white">
     <div id="root"></div>
-    <script type="module">
-      import React from 'react';
-      import { createRoot } from 'react-dom/client';
-      import './src/index.css';
-      import { AdminPage } from './src/pages/AdminPage.tsx';
-
-      createRoot(document.getElementById('root')).render(
-        React.createElement(React.StrictMode, null, React.createElement(AdminPage))
-      );
-    </script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
