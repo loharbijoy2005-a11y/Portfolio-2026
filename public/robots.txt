@@ -1,0 +1,8 @@
+# Shadow Arrow Web Engineering - Robots.txt
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin
+
+# Sitemap URL for Googlebot & Bingbot
+Sitemap: https://www.shadowarrow.in/sitemap.xml
