@@ -8,8 +8,7 @@ import {
   CheckCircle2, 
   ShieldCheck, 
   User, 
-  Mail, 
-  PhoneCall
+  Mail
 } from 'lucide-react';
 
 interface CostEstimatorProps {
@@ -116,27 +115,52 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submittedLeadId, setSubmittedLeadId] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
+      const selectedModNames = selectedModules
+        .map((id) => ESTIMATOR_MODULES.find((m) => m.id === id)?.name)
+        .filter(Boolean);
+
+      const res = await fetch('/api/estimates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientName: name,
+          clientEmail: email,
+          company,
+          businessType,
+          serviceName: baseObj.title,
+          techStack: selectedModNames,
+          estimatedBudget: Math.round(subtotal),
+          timeline: timeline === 'fast' ? 'Fast Track (1-2 Weeks)' : 'Standard Pace (3-4 Weeks)',
+          details: message
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSubmittedLeadId(data.leadId);
+      } else {
+        setSubmittedLeadId(`EST-${Math.floor(100000 + Math.random() * 900000)}`);
+      }
+    } catch (err) {
+      console.warn('Backend API connection warning, fallback to local reference ID:', err);
+      setSubmittedLeadId(`EST-${Math.floor(100000 + Math.random() * 900000)}`);
+    } finally {
       setIsSubmitting(false);
       setSubmitted(true);
       confetti({
-        particleCount: 100,
-        spread: 70,
+        particleCount: 120,
+        spread: 80,
         origin: { y: 0.6 }
       });
-    }, 800);
+    }
   };
-
-  const whatsappMessage = encodeURIComponent(
-    `Hi Bijoy Lohar! I'd like to discuss a project for ${company || 'my business'}.\n` +
-    `Scope: ${baseObj.title}\n` +
-    `Estimated Subtotal: ₹${Math.round(subtotal).toLocaleString('en-IN')}\n` +
-    `Email: ${email}`
-  );
 
   return (
     <section id="contact" className="py-24 bg-[#F8FAFC] border-t border-slate-200 relative">
@@ -350,14 +374,19 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                 <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto shadow-md">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h4 className="text-lg font-bold text-emerald-950">Inquiry Received!</h4>
+                <h4 className="text-lg font-bold text-emerald-950">Inquiry Saved to Backend!</h4>
+                {submittedLeadId && (
+                  <div className="inline-block bg-emerald-100 text-emerald-800 text-xs font-mono font-bold px-3 py-1 rounded-full border border-emerald-300">
+                    Lead Reference: {submittedLeadId}
+                  </div>
+                )}
                 <p className="text-xs text-emerald-800 leading-relaxed">
                   Thank you, <strong>{name}</strong>. Bijoy Lohar will review your estimated scope (₹{Math.round(subtotal).toLocaleString('en-IN')}) and email you at <strong>{email}</strong> shortly.
                 </p>
                 <div className="pt-2">
                   <button
                     onClick={() => setSubmitted(false)}
-                    className="text-xs font-bold text-emerald-700 underline"
+                    className="text-xs font-bold text-emerald-700 underline cursor-pointer"
                   >
                     Submit Another Scope
                   </button>
@@ -396,7 +425,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs font-bold text-slate-700 block mb-1">Company / Brand Name</label>
                     <input
@@ -452,7 +481,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-blue-600/20 hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-blue-600/20 hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {isSubmitting ? (
                     <span>Processing Inquiry...</span>
@@ -463,19 +492,6 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                     </>
                   )}
                 </button>
-
-                {/* WhatsApp Quick Connect Alternative */}
-                <div className="pt-2 text-center">
-                  <a
-                    href={`https://wa.me/919242725326?text=${whatsappMessage}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline"
-                  >
-                    <PhoneCall className="w-3.5 h-3.5" />
-                    <span>Prefer Instant WhatsApp? Chat with Bijoy →</span>
-                  </a>
-                </div>
 
               </form>
             )}

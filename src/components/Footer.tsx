@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
+import { ShieldCheck, Mail, MapPin, ArrowUpRight } from 'lucide-react';
 
 interface FooterProps {
   onOpenPrivacy?: () => void;
@@ -62,10 +62,8 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
                 </a>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                <a href="https://wa.me/919242725326" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                  +91 92427 25326 (WhatsApp Direct)
-                </a>
+                <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span className="text-slate-300">Fast 24-Hour Proposal Response</span>
               </div>
               <div className="flex items-center gap-2 text-slate-400">
                 <MapPin className="w-4 h-4 text-slate-500 shrink-0" />

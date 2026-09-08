@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .vercel
+.env
+.env.*
+!.env.example
+server/data/*.json

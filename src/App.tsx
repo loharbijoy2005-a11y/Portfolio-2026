@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CinematicSplash } from './components/CinematicSplash';
 import { CustomCursor } from './components/CustomCursor';
@@ -18,10 +19,10 @@ import { B2BTrustGST } from './components/B2BTrustGST';
 import { PricingTiers } from './components/PricingTiers';
 import { CostEstimatorForm } from './components/CostEstimatorForm';
 import { Footer } from './components/Footer';
-import { WhatsAppFloating } from './components/WhatsAppFloating';
 import { DiscoveryModal } from './components/DiscoveryModal';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { TermsOfServiceModal } from './components/TermsOfServiceModal';
+import { AdminPage } from './pages/AdminPage';
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 35, filter: 'blur(8px)' },
@@ -33,7 +34,7 @@ const sectionVariants = {
   }
 };
 
-export const App: React.FC = () => {
+const MainWebsite: React.FC = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [termsModalOpen, setTermsModalOpen] = useState(false);
@@ -226,9 +227,6 @@ export const App: React.FC = () => {
         onOpenTerms={() => setTermsModalOpen(true)}
       />
 
-      {/* Floating WhatsApp Quick Connect */}
-      <WhatsAppFloating />
-
       {/* Direct Discovery Call Booking Modal */}
       <DiscoveryModal
         isOpen={bookingModalOpen}
@@ -248,6 +246,18 @@ export const App: React.FC = () => {
       />
 
     </div>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainWebsite />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="*" element={<MainWebsite />} />
+      </Routes>
+    </Router>
   );
 };
 
