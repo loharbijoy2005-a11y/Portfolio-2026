@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { SpotlightCard } from './SpotlightCard';
 import { MagneticButton } from './MagneticButton';
 import { 
@@ -32,7 +32,6 @@ export const FounderBio: React.FC = () => {
   const [timeStr, setTimeStr] = useState('');
   const [experienceText, setExperienceText] = useState('1-2+ Yrs');
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
-  const [messageIndex, setMessageIndex] = useState(() => Math.floor(Math.random() * 10));
   const [isDraggingPopup, setIsDraggingPopup] = useState(false);
 
   // Motion Values for Popup Drag Tracking
@@ -79,12 +78,7 @@ export const FounderBio: React.FC = () => {
     updateTimeAndGreeting();
     const clockInterval = setInterval(updateTimeAndGreeting, 1000);
 
-    // 3. Cycle popup messages every 3s across 10 rich brand value props
-    const messageInterval = setInterval(() => {
-      setMessageIndex((prev) => (prev + 1) % 10);
-    }, 3000);
-
-    // 4. Real-time GitHub Activity Tracker across ALL user repositories
+    // 3. Real-time GitHub Activity Tracker across ALL user repositories
     const fetchGitHubActivity = async () => {
       try {
         const eventsRes = await fetch('https://api.github.com/users/loharbijoy2005-a11y/events/public');
@@ -160,89 +154,101 @@ export const FounderBio: React.FC = () => {
     return () => {
       clearInterval(clockInterval);
       clearInterval(ghInterval);
-      clearInterval(messageInterval);
     };
   }, []);
 
-  const renderGreetingIcon = () => {
-    let timeGreetingTitle = 'Good Morning!';
-    let timeIcon = <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />;
+  // Typewriter Greeting & Dynamic Refresh Message Engine
+  const [activeStep, setActiveStep] = useState<0 | 1>(0); // 0: Time Greeting, 1: Refresh Random Brand Msg
+  const [typedText, setTypedText] = useState('');
+  const [randomBrandIdx] = useState(() => Math.floor(Math.random() * 9));
 
+  // Determine Time-based Greeting based on IST hour
+  const getGreetingItem = () => {
     if (currentHour >= 5 && currentHour < 12) {
-      timeGreetingTitle = 'Good Morning!';
-      timeIcon = <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />;
+      return {
+        icon: <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />,
+        text: 'Good Morning! ☀️'
+      };
     } else if (currentHour >= 12 && currentHour < 17) {
-      timeGreetingTitle = 'Good Afternoon!';
-      timeIcon = <Coffee className="w-3.5 h-3.5 text-amber-500 shrink-0" />;
+      return {
+        icon: <Coffee className="w-3.5 h-3.5 text-amber-500 shrink-0" />,
+        text: 'Good Afternoon! ☕'
+      };
     } else if (currentHour >= 17 && currentHour < 22) {
-      timeGreetingTitle = 'Good Evening!';
-      timeIcon = <Sunset className="w-3.5 h-3.5 text-orange-400 shrink-0" />;
+      return {
+        icon: <Sunset className="w-3.5 h-3.5 text-orange-400 shrink-0" />,
+        text: 'Good Evening! 🌅'
+      };
     } else {
-      timeGreetingTitle = 'Late Night Coding';
-      timeIcon = <Moon className="w-3.5 h-3.5 text-indigo-400 shrink-0" />;
+      return {
+        icon: <Moon className="w-3.5 h-3.5 text-indigo-400 shrink-0" />,
+        text: 'Late Night Coding 🌙'
+      };
+    }
+  };
+
+  const brandMessagesList = [
+    {
+      icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
+      text: 'Official GST-Verified Invoicing & Compliance 📜'
+    },
+    {
+      icon: <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />,
+      text: 'Engineered for Performance • Built for Business Growth 🚀'
+    },
+    {
+      icon: <Code className="w-3.5 h-3.5 text-blue-400 shrink-0" />,
+      text: 'Production-Ready Next.js & TypeScript Platforms ⚡'
+    },
+    {
+      icon: <Gauge className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
+      text: 'Sub-Second Response Times (TTFB < 100ms) ⏱️'
+    },
+    {
+      icon: <Rocket className="w-3.5 h-3.5 text-amber-400 shrink-0" />,
+      text: 'Direct Founder Accountability • Zero Agency Bloat 👤'
+    },
+    {
+      icon: <Gauge className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
+      text: 'Google Core Web Vitals Benchmark: 99 / 100 🎯'
+    },
+    {
+      icon: <TrendingUp className="w-3.5 h-3.5 text-blue-400 shrink-0" />,
+      text: 'Average Client Conversion Boost +240% 📈'
+    },
+    {
+      icon: <Sparkles className="w-3.5 h-3.5 text-purple-400 shrink-0" />,
+      text: 'React 19 • Next.js • Python FastAPI • Supabase ✨'
+    },
+    {
+      icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
+      text: '100% Founder-Led Codebase Architecture 💎'
+    }
+  ];
+
+  const greetingItem = getGreetingItem();
+  const selectedBrandItem = brandMessagesList[randomBrandIdx % brandMessagesList.length];
+  const activeMessageItem = activeStep === 0 ? greetingItem : selectedBrandItem;
+
+  // Typewriter effect loop
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    const targetText = activeMessageItem.text;
+
+    if (typedText.length < targetText.length) {
+      timeout = setTimeout(() => {
+        setTypedText(targetText.slice(0, typedText.length + 1));
+      }, 45); // Typewriter speed: 45ms per character
+    } else {
+      // Finished typing current text -> hold for 3.5s, then switch step & reset
+      timeout = setTimeout(() => {
+        setTypedText('');
+        setActiveStep((prev) => (prev === 0 ? 1 : 0));
+      }, 3500);
     }
 
-    const messageList = [
-      {
-        icon: timeIcon,
-        text: timeGreetingTitle
-      },
-      {
-        icon: <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0 animate-pulse" />,
-        text: 'Engineered for Performance • Built for Business Growth 🚀'
-      },
-      {
-        icon: <Code className="w-3.5 h-3.5 text-blue-400 shrink-0" />,
-        text: 'Production-Ready Next.js & TypeScript Platforms ⚡'
-      },
-      {
-        icon: <Gauge className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
-        text: 'Sub-Second Response Times (TTFB < 100ms) ⏱️'
-      },
-      {
-        icon: <Rocket className="w-3.5 h-3.5 text-amber-400 shrink-0" />,
-        text: 'Direct Founder Accountability • Zero Agency Bloat 👤'
-      },
-      {
-        icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
-        text: 'Official GST-Verified Invoicing & Compliance 📜'
-      },
-      {
-        icon: <Gauge className="w-3.5 h-3.5 text-emerald-400 shrink-0 animate-pulse" />,
-        text: 'Google Core Web Vitals Benchmark: 99 / 100 🎯'
-      },
-      {
-        icon: <TrendingUp className="w-3.5 h-3.5 text-blue-400 shrink-0" />,
-        text: 'Average Client Conversion Boost +240% 📈'
-      },
-      {
-        icon: <Sparkles className="w-3.5 h-3.5 text-purple-400 shrink-0 animate-spin-slow" />,
-        text: 'React 19 • Next.js • Python FastAPI • Supabase ✨'
-      },
-      {
-        icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
-        text: '100% Founder-Led Codebase Architecture 💎'
-      }
-    ];
-
-    const currentMsg = messageList[messageIndex % messageList.length];
-
-    return (
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={messageIndex}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6 }}
-          transition={{ duration: 0.25 }}
-          className="flex items-center gap-1.5 font-semibold text-slate-100"
-        >
-          {currentMsg.icon}
-          <span>{currentMsg.text}</span>
-        </motion.span>
-      </AnimatePresence>
-    );
-  };
+    return () => clearTimeout(timeout);
+  }, [typedText, activeStep, activeMessageItem.text]);
 
   return (
     <section className="py-20 bg-white border-t border-slate-200/80 relative z-10 overflow-visible">
@@ -381,8 +387,12 @@ export const FounderBio: React.FC = () => {
                   className="absolute -top-3 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap cursor-grab select-none active:cursor-grabbing touch-none"
                   title="Official GST-Verified Invoicing & Compliance 📜 - Click & drag me anywhere! I am tethered by an elastic chain & snap back on release."
                 >
-                  <div className="relative bg-slate-900/95 text-white text-[10px] font-semibold px-3.5 py-1 rounded-xl shadow-lg shadow-slate-950/40 border border-slate-700/80 flex items-center justify-center backdrop-blur-md">
-                    {renderGreetingIcon()}
+                  <div className="relative bg-slate-900/95 text-white text-[10px] sm:text-[11px] font-semibold px-3.5 py-1.5 rounded-xl shadow-lg shadow-slate-950/40 border border-slate-700/80 flex items-center justify-center backdrop-blur-md gap-1.5 min-h-[30px]">
+                    {activeMessageItem.icon}
+                    <span className="flex items-center tracking-tight font-mono text-[11px] text-slate-100 font-medium">
+                      <span>{typedText}</span>
+                      <span className="w-1.5 h-3 bg-blue-400 ml-0.5 animate-pulse inline-block rounded-2xs opacity-85" />
+                    </span>
                     {/* Tail */}
                     <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45 border-r border-b border-slate-700/80"></div>
                   </div>
