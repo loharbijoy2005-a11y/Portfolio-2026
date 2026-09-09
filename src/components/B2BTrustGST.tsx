@@ -93,9 +93,19 @@ export const B2BTrustGST: React.FC = () => {
                   <Calculator className="w-5 h-5 text-blue-600" />
                   <h3 className="font-bold text-sm">B2B GST Invoice Simulator</h3>
                 </div>
-                <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
-                  GST Verified
-                </span>
+                <motion.span 
+                  drag
+                  dragSnapToOrigin={true}
+                  dragElastic={0.2}
+                  dragTransition={{ bounceStiffness: 600, bounceDamping: 22 }}
+                  whileHover={{ scale: 1.08 }}
+                  whileDrag={{ scale: 1.15, zIndex: 50 }}
+                  className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded cursor-grab active:cursor-grabbing select-none touch-none border border-emerald-300 flex items-center gap-1 shadow-2xs"
+                  title="Official GST-Verified Invoicing & Compliance 📜 - Drag me anywhere! I snap back when released."
+                >
+                  <span>GST Verified 📜</span>
+                  <span className="text-[8px] font-sans bg-emerald-200 text-emerald-900 px-1 rounded">Drag ✊</span>
+                </motion.span>
               </div>
 
               <div>

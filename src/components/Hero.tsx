@@ -197,9 +197,19 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                   {pillVariations[headlineIdx % pillVariations.length]}
                 </motion.div>
               </AnimatePresence>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200 shrink-0">
-                GST Registered
-              </span>
+              <motion.span 
+                drag
+                dragSnapToOrigin={true}
+                dragElastic={0.2}
+                dragTransition={{ bounceStiffness: 600, bounceDamping: 22 }}
+                whileHover={{ scale: 1.08 }}
+                whileDrag={{ scale: 1.15, zIndex: 50 }}
+                className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold border border-emerald-300 shrink-0 cursor-grab active:cursor-grabbing select-none touch-none shadow-2xs hover:bg-emerald-100 transition-colors flex items-center gap-1"
+                title="Official GST-Verified Invoicing & Compliance 📜 - Drag me anywhere! I snap back when dropped."
+              >
+                <span>GST Registered 📜</span>
+                <span className="text-[9px] bg-emerald-200 text-emerald-900 px-1 rounded font-sans">Drag ✊</span>
+              </motion.span>
             </div>
 
             {/* Main Headline (Original styling, slightly smaller font size) */}

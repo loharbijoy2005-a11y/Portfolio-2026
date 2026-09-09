@@ -272,10 +272,20 @@ export const FounderBio: React.FC = () => {
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Direct 1-on-1 Access to Bijoy Lohar</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <motion.div 
+                  drag
+                  dragSnapToOrigin={true}
+                  dragElastic={0.2}
+                  dragTransition={{ bounceStiffness: 600, bounceDamping: 22 }}
+                  whileHover={{ scale: 1.04 }}
+                  whileDrag={{ scale: 1.12, zIndex: 50 }}
+                  className="flex items-center gap-2 p-1.5 px-2.5 rounded-xl bg-emerald-50 border border-emerald-300/90 text-emerald-950 font-semibold cursor-grab active:cursor-grabbing select-none touch-none shadow-xs hover:bg-emerald-100/90 transition-colors"
+                  title="Official GST-Verified Invoicing & Compliance 📜 - Click & drag me anywhere! Snaps back on release."
+                >
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Official Verified GST Billing & Compliance</span>
-                </div>
+                  <span>Official GST-Verified Invoicing & Compliance 📜</span>
+                  <span className="ml-auto text-[9px] font-bold bg-emerald-200/90 text-emerald-900 px-1.5 py-0.5 rounded-md border border-emerald-300/80 shadow-2xs">Drag ✊</span>
+                </motion.div>
               </div>
             </motion.div>
 
@@ -292,8 +302,14 @@ export const FounderBio: React.FC = () => {
 
               {/* Profile Avatar + Instagram Note Bubble */}
               <div className="relative inline-block mx-auto pt-4">
-                {/* Floating Instagram Note Bubble with Smooth Motion Animation */}
+                {/* Floating Instagram Note Bubble with Draggable Snap-Back Motion Animation */}
                 <motion.div 
+                  drag
+                  dragSnapToOrigin={true}
+                  dragElastic={0.2}
+                  dragTransition={{ bounceStiffness: 600, bounceDamping: 22 }}
+                  whileDrag={{ scale: 1.15, zIndex: 50, cursor: 'grabbing' }}
+                  whileHover={{ scale: 1.08, y: -4 }}
                   initial={{ opacity: 0, scale: 0.7, y: 8 }}
                   animate={{ 
                     opacity: 1, 
@@ -305,8 +321,8 @@ export const FounderBio: React.FC = () => {
                     scale: { type: "spring", stiffness: 300, damping: 20 },
                     y: { duration: 2.8, repeat: Infinity, ease: "easeInOut" }
                   }}
-                  whileHover={{ scale: 1.08, y: -8 }}
-                  className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap cursor-pointer select-none"
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap cursor-grab select-none active:cursor-grabbing touch-none"
+                  title="Official GST-Verified Invoicing & Compliance 📜 - Click & drag me anywhere! Snaps back on release."
                 >
                   <div className="relative bg-slate-900/95 text-white text-[10px] font-semibold px-3.5 py-1 rounded-xl shadow-lg shadow-slate-950/40 border border-slate-700/80 flex items-center justify-center backdrop-blur-md">
                     {renderGreetingIcon()}
