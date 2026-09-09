@@ -22,6 +22,7 @@ import { Footer } from './components/Footer';
 import { DiscoveryModal } from './components/DiscoveryModal';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { TermsOfServiceModal } from './components/TermsOfServiceModal';
+import { ScrollToTop } from './components/ScrollToTop';
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 35, filter: 'blur(8px)' },
@@ -243,6 +244,9 @@ const MainWebsite: React.FC = () => {
         isOpen={termsModalOpen}
         onClose={() => setTermsModalOpen(false)}
       />
+
+      {/* Floating Scroll to Top Button */}
+      <ScrollToTop />
 
     </div>
   );

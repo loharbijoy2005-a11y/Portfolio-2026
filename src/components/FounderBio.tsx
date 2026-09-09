@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { SpotlightCard } from './SpotlightCard';
 import { MagneticButton } from './MagneticButton';
 import { 
@@ -10,7 +10,9 @@ import {
   Sun,
   Coffee,
   Sunset,
-  Moon
+  Moon,
+  Zap,
+  Code
 } from 'lucide-react';
 
 interface GitHubStatus {
@@ -26,6 +28,7 @@ export const FounderBio: React.FC = () => {
   const [timeStr, setTimeStr] = useState('');
   const [experienceText, setExperienceText] = useState('1-2+ Yrs');
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
+  const [messageIndex, setMessageIndex] = useState(0);
   const [ghStatus, setGhStatus] = useState<GitHubStatus>({
     isActive: true,
     statusText: 'Active Coding',
@@ -55,7 +58,12 @@ export const FounderBio: React.FC = () => {
     updateTimeAndGreeting();
     const clockInterval = setInterval(updateTimeAndGreeting, 1000);
 
-    // 3. Real-time GitHub Activity Tracker across ALL user repositories
+    // 3. Cycle popup messages every 3.5s
+    const messageInterval = setInterval(() => {
+      setMessageIndex((prev) => (prev + 1) % 4);
+    }, 3500);
+
+    // 4. Real-time GitHub Activity Tracker across ALL user repositories
     const fetchGitHubActivity = async () => {
       try {
         const eventsRes = await fetch('https://api.github.com/users/loharbijoy2005-a11y/events/public');
@@ -69,7 +77,6 @@ export const FounderBio: React.FC = () => {
             const repoFullName = pushEvent.repo.name;
             const repoSimpleName = repoFullName.includes('/') ? repoFullName.split('/')[1] : repoFullName;
 
-            // Fetch exact commit message from that repo's commits API
             const commitsRes = await fetch(`https://api.github.com/repos/${repoFullName}/commits`);
             let commitMsg = 'Codebase Sync';
             let rawDate = pushEvent.created_at;
@@ -132,39 +139,64 @@ export const FounderBio: React.FC = () => {
     return () => {
       clearInterval(clockInterval);
       clearInterval(ghInterval);
+      clearInterval(messageInterval);
     };
   }, []);
 
   const renderGreetingIcon = () => {
+    let timeGreetingTitle = 'Good Morning!';
+    let timeIcon = <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />;
+
     if (currentHour >= 5 && currentHour < 12) {
-      return (
-        <span className="flex items-center gap-1.5 font-semibold text-slate-100">
-          <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-          <span>Good Morning!</span>
-        </span>
-      );
+      timeGreetingTitle = 'Good Morning!';
+      timeIcon = <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />;
     } else if (currentHour >= 12 && currentHour < 17) {
-      return (
-        <span className="flex items-center gap-1.5 font-semibold text-slate-100">
-          <Coffee className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-          <span>Good Afternoon!</span>
-        </span>
-      );
+      timeGreetingTitle = 'Good Afternoon!';
+      timeIcon = <Coffee className="w-3.5 h-3.5 text-amber-500 shrink-0" />;
     } else if (currentHour >= 17 && currentHour < 22) {
-      return (
-        <span className="flex items-center gap-1.5 font-semibold text-slate-100">
-          <Sunset className="w-3.5 h-3.5 text-orange-400 shrink-0" />
-          <span>Good Evening!</span>
-        </span>
-      );
+      timeGreetingTitle = 'Good Evening!';
+      timeIcon = <Sunset className="w-3.5 h-3.5 text-orange-400 shrink-0" />;
     } else {
-      return (
-        <span className="flex items-center gap-1.5 font-semibold text-slate-100">
-          <Moon className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-          <span>Late Night Coding</span>
-        </span>
-      );
+      timeGreetingTitle = 'Late Night Coding';
+      timeIcon = <Moon className="w-3.5 h-3.5 text-indigo-400 shrink-0" />;
     }
+
+    const messageList = [
+      {
+        icon: timeIcon,
+        text: timeGreetingTitle
+      },
+      {
+        icon: <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0 animate-pulse" />,
+        text: 'Building High-Performance Web Apps!'
+      },
+      {
+        icon: <Rocket className="w-3.5 h-3.5 text-blue-400 shrink-0" />,
+        text: 'Zero Layers • 100% Founder Led'
+      },
+      {
+        icon: <Code className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
+        text: 'Sub-Second Speeds & Scalable Code 💎'
+      }
+    ];
+
+    const currentMsg = messageList[messageIndex % messageList.length];
+
+    return (
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={messageIndex}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.25 }}
+          className="flex items-center gap-1.5 font-semibold text-slate-100"
+        >
+          {currentMsg.icon}
+          <span>{currentMsg.text}</span>
+        </motion.span>
+      </AnimatePresence>
+    );
   };
 
   return (
