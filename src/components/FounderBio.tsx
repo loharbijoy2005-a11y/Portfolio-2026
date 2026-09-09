@@ -94,7 +94,7 @@ export const FounderBio: React.FC = () => {
             const diffHours = diffMs / (1000 * 60 * 60);
             const diffMins = Math.floor(diffMs / (1000 * 60));
 
-            const isActive = diffHours <= 3; // Active coding if last push <= 3 hours
+            const isActive = true; // Always active coding
 
             let timeAgo = '';
             if (diffMins < 1) {
@@ -117,7 +117,7 @@ export const FounderBio: React.FC = () => {
 
             setGhStatus({
               isActive,
-              statusText: isActive ? `Active Coding (${timeAgo})` : `Away / Offline (Last push ${timeAgo})`,
+              statusText: `Active Coding (${timeAgo})`,
               lastSeenText: timeAgo,
               formattedDate,
               commitMsg,
