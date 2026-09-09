@@ -305,7 +305,7 @@ export const FounderBio: React.FC = () => {
               className="lg:col-span-4 bg-gradient-to-b from-white via-slate-50/90 to-amber-50/40 rounded-2xl p-6 border border-amber-200/80 shadow-xl shadow-amber-900/10 text-center space-y-4 relative overflow-visible z-20"
             >
               {/* Performance Gradient Top Accent Border */}
-              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-700 via-blue-600 to-amber-600" />
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-700 via-blue-600 to-amber-600 rounded-t-2xl pointer-events-none" />
 
               {/* Profile Avatar + Instagram Note Bubble */}
               <div className="relative inline-block mx-auto pt-4">
