@@ -121,11 +121,23 @@ export async function saveInquiryToDatabase(input: InquiryInput): Promise<{
     console.warn('LocalStorage save error:', e);
   }
 
+function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
   // 2. Direct Supabase Database Insertion
   let supabaseErrorMsg: string | undefined = undefined;
   try {
-    // Omit `id` so PostgreSQL uses DEFAULT gen_random_uuid() for UUID primary key
-    const dbRecord: Omit<InquiryRecord, 'id'> = {
+    // Generate valid v4 UUID so database receives valid primary key even if DEFAULT gen_random_uuid() is missing
+    const dbRecord: InquiryRecord = {
+      id: generateUUID(),
       type: leadObj.type,
       client_name: leadObj.clientName,
       client_email: leadObj.clientEmail,

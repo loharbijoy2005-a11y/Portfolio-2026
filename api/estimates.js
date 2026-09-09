@@ -53,7 +53,15 @@ export default async function handler(req, res) {
 
     const leadId = `EST-${Math.floor(100000 + Math.random() * 900000)}`;
 
+    const uuid = (typeof crypto !== 'undefined' && crypto.randomUUID) 
+      ? crypto.randomUUID() 
+      : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+          const r = Math.random() * 16 | 0;
+          return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+
     const newLead = {
+      id: uuid,
       type: sanitizeInput(type || 'Cost Estimate'),
       client_name: cleanName,
       client_email: cleanEmail,

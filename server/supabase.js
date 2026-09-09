@@ -18,8 +18,16 @@ export const insertLeadToSupabase = async (lead) => {
       ? rawStack
       : (typeof rawStack === 'string' && rawStack.trim() ? rawStack.split(',').map(s => s.trim()).filter(Boolean) : []);
 
+    const uuid = (typeof crypto !== 'undefined' && crypto.randomUUID) 
+      ? crypto.randomUUID() 
+      : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+          const r = Math.random() * 16 | 0;
+          return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+
     const { data, error } = await supabase.from('inquiries').insert([
       {
+        id: uuid,
         type: lead.type || 'Call Request',
         client_name: (lead.clientName || lead.client_name || lead.name || 'Anonymous Client').trim(),
         client_email: (lead.clientEmail || lead.client_email || lead.email || 'no-email@provided.local').trim(),
