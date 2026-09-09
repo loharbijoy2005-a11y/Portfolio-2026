@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { SpotlightCard } from './SpotlightCard';
+import { MagneticButton } from './MagneticButton';
 import { 
   CheckCircle2, 
   Rocket,
@@ -9,7 +10,10 @@ import {
   Sun,
   Coffee,
   Sunset,
-  Moon
+  Moon,
+  GitBranch,
+  Terminal,
+  Activity
 } from 'lucide-react';
 
 interface GitHubStatus {
@@ -25,6 +29,7 @@ export const FounderBio: React.FC = () => {
   const [timeStr, setTimeStr] = useState('');
   const [experienceText, setExperienceText] = useState('1-2+ Yrs');
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
+  const [activeTab, setActiveTab] = useState<'status' | 'commit' | 'specs'>('status');
   const [ghStatus, setGhStatus] = useState<GitHubStatus>({
     isActive: true,
     statusText: 'Active Coding',
@@ -268,38 +273,94 @@ export const FounderBio: React.FC = () => {
                 </h3>
                 <p className="text-xs font-bold text-blue-700 tracking-wide mt-0.5">Founder & Lead Full-Stack Engineer</p>
 
-                {/* 1-Line Instagram Live Status Pill with Glowing Active Effect & Live Clock */}
-                <div className="mt-3 flex justify-center">
-                  <div 
-                    className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white text-[11px] font-mono font-medium shadow-md max-w-full truncate transition-all duration-300 ${
-                      ghStatus.isActive ? 'border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.35)]' : 'border border-slate-800'
-                    }`} 
-                    title={`Latest Push: "${ghStatus.commitMsg}" (${ghStatus.formattedDate})`}
+                {/* Mini Interactive Terminal Tab Switcher */}
+                <div className="mt-3 flex justify-center gap-1 bg-slate-200/80 p-1 rounded-xl text-[10px] font-mono">
+                  <button
+                    onClick={() => setActiveTab('status')}
+                    className={`px-2.5 py-1 rounded-lg font-semibold transition-all duration-150 flex items-center gap-1 cursor-pointer ${
+                      activeTab === 'status' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                    }`}
                   >
-                    <span className="relative flex h-2.5 w-2.5 shrink-0">
-                      {ghStatus.isActive ? (
-                        <>
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
-                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
-                        </>
-                      ) : (
-                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                    <Activity className="w-3 h-3 text-emerald-400" />
+                    <span>Live Status</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab('commit')}
+                    className={`px-2.5 py-1 rounded-lg font-semibold transition-all duration-150 flex items-center gap-1 cursor-pointer ${
+                      activeTab === 'commit' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <GitBranch className="w-3 h-3 text-amber-400" />
+                    <span>Commit</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab('specs')}
+                    className={`px-2.5 py-1 rounded-lg font-semibold transition-all duration-150 flex items-center gap-1 cursor-pointer ${
+                      activeTab === 'specs' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <Terminal className="w-3 h-3 text-blue-400" />
+                    <span>Specs</span>
+                  </button>
+                </div>
+
+                {/* Tab Content Display */}
+                <div className="mt-2 flex justify-center">
+                  {activeTab === 'status' && (
+                    <div 
+                      className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white text-[11px] font-mono font-medium shadow-md max-w-full truncate transition-all duration-300 ${
+                        ghStatus.isActive ? 'border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.35)]' : 'border border-slate-800'
+                      }`} 
+                      title={`Latest Push in ${ghStatus.repoName}: "${ghStatus.commitMsg}"`}
+                    >
+                      <span className="relative flex h-2.5 w-2.5 shrink-0">
+                        {ghStatus.isActive ? (
+                          <>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
+                          </>
+                        ) : (
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                        )}
+                      </span>
+                      <span className="truncate text-slate-200">
+                        {ghStatus.isActive ? (
+                          <span className="text-emerald-400 font-semibold drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]">
+                            Active Coding ({ghStatus.lastSeenText})
+                          </span>
+                        ) : (
+                          <span>Away • Last Push ({ghStatus.lastSeenText})</span>
+                        )}
+                      </span>
+                      <span className="text-slate-600 text-[10px]">•</span>
+                      <span className="text-blue-400 shrink-0 flex items-center gap-1 text-[10px] font-bold">
+                        <Clock className="w-3 h-3 text-blue-400" /> {timeStr || '12:00:00 PM'}
+                      </span>
+                    </div>
+                  )}
+
+                  {activeTab === 'commit' && (
+                    <div className="bg-slate-900 text-white text-[10px] font-mono px-3 py-1.5 rounded-xl border border-slate-800 flex items-center gap-1.5 max-w-full truncate shadow-md">
+                      <GitBranch className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                      <span className="truncate text-amber-300 font-medium" title={`"${ghStatus.commitMsg}" (${ghStatus.formattedDate})`}>
+                        "{ghStatus.commitMsg}"
+                      </span>
+                      {ghStatus.formattedDate && (
+                        <span className="text-slate-400 shrink-0 text-[9px]">({ghStatus.formattedDate})</span>
                       )}
-                    </span>
-                    <span className="truncate text-slate-200">
-                      {ghStatus.isActive ? (
-                        <span className="text-emerald-400 font-semibold drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]">
-                          Active Coding ({ghStatus.lastSeenText})
-                        </span>
-                      ) : (
-                        <span>Away • Last Push ({ghStatus.lastSeenText})</span>
-                      )}
-                    </span>
-                    <span className="text-slate-600 text-[10px]">•</span>
-                    <span className="text-blue-400 shrink-0 flex items-center gap-1 text-[10px] font-bold">
-                      <Clock className="w-3 h-3 text-blue-400" /> {timeStr || '12:00:00 PM'}
-                    </span>
-                  </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'specs' && (
+                    <div className="bg-slate-900 text-blue-400 text-[10px] font-mono px-3 py-1.5 rounded-xl border border-slate-800 flex items-center gap-2 max-w-full truncate shadow-md">
+                      <Terminal className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                      <span className="truncate text-slate-200">
+                        React • Next.js • FastAPI • TTFB &lt; 200ms
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -307,13 +368,15 @@ export const FounderBio: React.FC = () => {
                 <span>Specializing in React, Next.js, Node.js, Python FastAPI, and Razorpay GST Billing Systems.</span>
               </div>
 
-              <a
-                href="#contact"
-                className="w-full py-2.5 px-4 bg-slate-900 hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-              >
-                <span>Direct Founder Consultation</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </a>
+              <MagneticButton strength={25} className="w-full">
+                <a
+                  href="#contact"
+                  className="w-full py-2.5 px-4 bg-slate-900 hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-blue-500/25"
+                >
+                  <span>Direct Founder Consultation</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              </MagneticButton>
             </motion.div>
 
           </div>
