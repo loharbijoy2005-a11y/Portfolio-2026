@@ -1,10 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 export const BackgroundBlobs: React.FC = () => {
+  const [mousePos, setMousePos] = useState({ x: -200, y: -200 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      
+      {/* Mouse Tracking Soft Ambient Radial Light */}
+      <motion.div
+        className="fixed top-0 left-0 w-[450px] h-[450px] rounded-full blur-3xl pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.09) 0%, rgba(245, 158, 11, 0.05) 50%, transparent 70%)',
+        }}
+        animate={{
+          x: mousePos.x - 225,
+          y: mousePos.y - 225,
+        }}
+        transition={{
+          type: 'spring',
+          damping: 35,
+          stiffness: 150,
+          mass: 0.8,
+        }}
+      />
+
       {/* Top-left warm amber drifting blob */}
       <motion.div
         animate={{

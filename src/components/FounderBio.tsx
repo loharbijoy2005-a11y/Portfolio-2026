@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { SpotlightCard } from './SpotlightCard';
 import { MagneticButton } from './MagneticButton';
 import { 
@@ -306,61 +306,94 @@ export const FounderBio: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Tab Content Display */}
-                <div className="mt-2 flex justify-center">
-                  {activeTab === 'status' && (
-                    <div 
-                      className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white text-[11px] font-mono font-medium shadow-md max-w-full truncate transition-all duration-300 ${
-                        ghStatus.isActive ? 'border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.35)]' : 'border border-slate-800'
-                      }`} 
-                      title={`Latest Push in ${ghStatus.repoName}: "${ghStatus.commitMsg}"`}
-                    >
-                      <span className="relative flex h-2.5 w-2.5 shrink-0">
-                        {ghStatus.isActive ? (
-                          <>
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
-                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
-                          </>
-                        ) : (
-                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
-                        )}
-                      </span>
-                      <span className="truncate text-slate-200">
-                        {ghStatus.isActive ? (
-                          <span className="text-emerald-400 font-semibold drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]">
-                            Active Coding ({ghStatus.lastSeenText})
+                {/* Mac IDE-Style Live Developer Box */}
+                <div className="mt-3 bg-slate-950 rounded-xl p-3 border border-slate-800 text-left shadow-lg font-mono text-[11px] space-y-2">
+                  {/* Top Window Dots & Repo Tag */}
+                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-1.5 text-[10px]">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+                    </div>
+                    <span className="text-slate-400 font-bold truncate max-w-[140px]" title={ghStatus.repoName}>
+                      {ghStatus.repoName}
+                    </span>
+                  </div>
+
+                  {/* Dynamic Tab Content with Framer Motion */}
+                  <AnimatePresence mode="wait">
+                    {activeTab === 'status' && (
+                      <motion.div 
+                        key="status" 
+                        initial={{ opacity: 0, y: 4 }} 
+                        animate={{ opacity: 1, y: 0 }} 
+                        exit={{ opacity: 0, y: -4 }}
+                        transition={{ duration: 0.15 }} 
+                        className="space-y-1.5"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                            <span className="relative flex h-2 w-2">
+                              {ghStatus.isActive ? (
+                                <>
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
+                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
+                                </>
+                              ) : (
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                              )}
+                            </span>
+                            <span>{ghStatus.isActive ? 'Active Coding' : 'Away'}</span>
+                          </div>
+                          <span className="text-slate-400 text-[10px] font-medium">{ghStatus.lastSeenText}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-slate-400 text-[10px] pt-0.5 border-t border-slate-900">
+                          <span className="text-slate-500">Live Time (IST)</span>
+                          <span className="text-blue-400 font-bold flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-blue-400 animate-pulse" /> {timeStr || '12:00:00 PM'}
                           </span>
-                        ) : (
-                          <span>Away • Last Push ({ghStatus.lastSeenText})</span>
-                        )}
-                      </span>
-                      <span className="text-slate-600 text-[10px]">•</span>
-                      <span className="text-blue-400 shrink-0 flex items-center gap-1 text-[10px] font-bold">
-                        <Clock className="w-3 h-3 text-blue-400" /> {timeStr || '12:00:00 PM'}
-                      </span>
-                    </div>
-                  )}
+                        </div>
+                      </motion.div>
+                    )}
 
-                  {activeTab === 'commit' && (
-                    <div className="bg-slate-900 text-white text-[10px] font-mono px-3 py-1.5 rounded-xl border border-slate-800 flex items-center gap-1.5 max-w-full truncate shadow-md">
-                      <GitBranch className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                      <span className="truncate text-amber-300 font-medium" title={`"${ghStatus.commitMsg}" (${ghStatus.formattedDate})`}>
-                        "{ghStatus.commitMsg}"
-                      </span>
-                      {ghStatus.formattedDate && (
-                        <span className="text-slate-400 shrink-0 text-[9px]">({ghStatus.formattedDate})</span>
-                      )}
-                    </div>
-                  )}
+                    {activeTab === 'commit' && (
+                      <motion.div 
+                        key="commit" 
+                        initial={{ opacity: 0, y: 4 }} 
+                        animate={{ opacity: 1, y: 0 }} 
+                        exit={{ opacity: 0, y: -4 }}
+                        transition={{ duration: 0.15 }} 
+                        className="space-y-1"
+                      >
+                        <div className="flex items-center gap-1.5 text-amber-300 font-semibold truncate text-[10.5px]">
+                          <GitBranch className="w-3 h-3 text-amber-400 shrink-0" />
+                          <span className="truncate" title={`"${ghStatus.commitMsg}"`}>"{ghStatus.commitMsg}"</span>
+                        </div>
+                        <div className="text-slate-500 text-[9.5px] truncate">
+                          Pushed {ghStatus.lastSeenText} {ghStatus.formattedDate ? `• ${ghStatus.formattedDate}` : ''}
+                        </div>
+                      </motion.div>
+                    )}
 
-                  {activeTab === 'specs' && (
-                    <div className="bg-slate-900 text-blue-400 text-[10px] font-mono px-3 py-1.5 rounded-xl border border-slate-800 flex items-center gap-2 max-w-full truncate shadow-md">
-                      <Terminal className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                      <span className="truncate text-slate-200">
-                        React • Next.js • FastAPI • TTFB &lt; 200ms
-                      </span>
-                    </div>
-                  )}
+                    {activeTab === 'specs' && (
+                      <motion.div 
+                        key="specs" 
+                        initial={{ opacity: 0, y: 4 }} 
+                        animate={{ opacity: 1, y: 0 }} 
+                        exit={{ opacity: 0, y: -4 }}
+                        transition={{ duration: 0.15 }} 
+                        className="space-y-1"
+                      >
+                        <div className="flex items-center gap-1.5 text-blue-400 font-semibold text-[10.5px] truncate">
+                          <Terminal className="w-3 h-3 text-blue-400 shrink-0" />
+                          <span>React 19 • Next.js • FastAPI • Supabase</span>
+                        </div>
+                        <div className="text-emerald-400 text-[9.5px] font-bold">
+                          ⚡ TTFB &lt; 200ms • 100% Founder Architecture
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 

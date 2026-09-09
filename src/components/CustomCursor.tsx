@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
+interface TrailPoint {
+  id: number;
+  x: number;
+  y: number;
+}
+
 export const CustomCursor: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
+  const [trail, setTrail] = useState<TrailPoint[]>([]);
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [hoverText, setHoverText] = useState<string | null>(null);
@@ -11,9 +18,19 @@ export const CustomCursor: React.FC = () => {
   useEffect(() => {
     if (window.matchMedia('(pointer: coarse)').matches) return;
 
+    let lastTime = 0;
     const onMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
       if (!isVisible) setIsVisible(true);
+
+      const now = Date.now();
+      if (now - lastTime > 40) {
+        lastTime = now;
+        setTrail((prev) => [
+          { id: Math.random(), x: e.clientX, y: e.clientY },
+          ...prev.slice(0, 4)
+        ]);
+      }
 
       const target = e.target as HTMLElement | null;
       if (!target) {
@@ -60,10 +77,29 @@ export const CustomCursor: React.FC = () => {
     };
   }, [isVisible]);
 
-  if (!isVisible) return null;
-
   return (
     <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+      {/* Trailing Energy Sparks */}
+      {trail.map((point, index) => {
+        const size = Math.max(1.5, 4.5 - index * 0.8);
+        const opacity = (1 - index / trail.length) * 0.45;
+        return (
+          <motion.div
+            key={point.id}
+            initial={{ scale: 1, opacity }}
+            animate={{ scale: 0, opacity: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="fixed top-0 left-0 rounded-full pointer-events-none bg-blue-500 shadow-[0_0_8px_#3b82f6]"
+            style={{
+              width: size,
+              height: size,
+              x: point.x - size / 2,
+              y: point.y - size / 2,
+            }}
+          />
+        );
+      })}
+
       {/* Outer Glowing Halo Trail */}
       <motion.div
         className="fixed top-0 left-0 w-12 h-12 rounded-full pointer-events-none"
