@@ -6,6 +6,7 @@ interface SpotlightCardProps {
   className?: string;
   spotlightColor?: string;
   hasBorderBeam?: boolean;
+  overflowVisible?: boolean;
   onClick?: () => void;
 }
 
@@ -14,6 +15,7 @@ export const SpotlightCard: React.FC<SpotlightCardProps> = ({
   className = '',
   spotlightColor = 'rgba(59, 130, 246, 0.12)',
   hasBorderBeam = false,
+  overflowVisible = false,
   onClick,
 }) => {
   const mouseX = useMotionValue(0);
@@ -25,13 +27,15 @@ export const SpotlightCard: React.FC<SpotlightCardProps> = ({
     mouseY.set(clientY - top);
   }
 
+  const overflowClass = overflowVisible ? 'overflow-visible' : 'overflow-hidden';
+
   return (
     <motion.div
       onMouseMove={handleMouseMove}
       whileHover={{ y: -6, scale: 1.01 }}
       transition={{ type: 'spring', stiffness: 350, damping: 25 }}
       onClick={onClick}
-      className={`relative rounded-3xl bg-white/85 backdrop-blur-md border border-slate-200/90 p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.08)] transition-all duration-300 overflow-hidden group ${className}`}
+      className={`relative rounded-3xl bg-white/85 backdrop-blur-md border border-slate-200/90 p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.08)] transition-all duration-300 ${overflowClass} group ${className}`}
     >
       {/* Mouse Spotlight Layer */}
       <motion.div

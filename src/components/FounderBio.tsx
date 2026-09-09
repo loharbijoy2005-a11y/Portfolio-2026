@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { SpotlightCard } from './SpotlightCard';
 import { MagneticButton } from './MagneticButton';
 import { 
@@ -33,6 +33,23 @@ export const FounderBio: React.FC = () => {
   const [experienceText, setExperienceText] = useState('1-2+ Yrs');
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
   const [messageIndex, setMessageIndex] = useState(() => Math.floor(Math.random() * 10));
+  const [isDraggingPopup, setIsDraggingPopup] = useState(false);
+
+  // Motion Values for Popup Drag Tracking
+  const popupX = useMotionValue(0);
+  const popupY = useMotionValue(0);
+
+  // Dynamic chain/tether string path connecting origin anchor (0,0) to current (popupX, popupY)
+  const chainPathD = useTransform([popupX, popupY], ([x, y]: number[]) => {
+    const midX = x * 0.5;
+    const midY = y * 0.5 + Math.min(25, Math.max(-25, y * 0.15));
+    return `M 0 0 Q ${midX} ${midY} ${x} ${y}`;
+  });
+
+  const straightLineD = useTransform([popupX, popupY], ([x, y]: number[]) => {
+    return `M 0 0 L ${x} ${y}`;
+  });
+
   const [ghStatus, setGhStatus] = useState<GitHubStatus>({
     isActive: true,
     statusText: 'Active Coding',
@@ -228,10 +245,10 @@ export const FounderBio: React.FC = () => {
   };
 
   return (
-    <section className="py-20 bg-white border-t border-slate-200/80 relative z-10 overflow-hidden">
+    <section className="py-20 bg-white border-t border-slate-200/80 relative z-10 overflow-visible">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <SpotlightCard className="p-8 sm:p-12 bg-gradient-to-br from-white via-slate-50/50 to-blue-50/30 border border-slate-200/90 shadow-xl" spotlightColor="rgba(59, 130, 246, 0.12)">
+        <SpotlightCard className="p-8 sm:p-12 bg-gradient-to-br from-white via-slate-50/50 to-blue-50/30 border border-slate-200/90 shadow-xl overflow-visible" overflowVisible={true} spotlightColor="rgba(59, 130, 246, 0.12)">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
@@ -285,34 +302,84 @@ export const FounderBio: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-              className="lg:col-span-4 bg-gradient-to-b from-white via-slate-50/90 to-amber-50/40 rounded-2xl p-6 border border-amber-200/80 shadow-xl shadow-amber-900/10 text-center space-y-4 relative overflow-hidden"
+              className="lg:col-span-4 bg-gradient-to-b from-white via-slate-50/90 to-amber-50/40 rounded-2xl p-6 border border-amber-200/80 shadow-xl shadow-amber-900/10 text-center space-y-4 relative overflow-visible z-20"
             >
               {/* Performance Gradient Top Accent Border */}
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-700 via-blue-600 to-amber-600" />
 
               {/* Profile Avatar + Instagram Note Bubble */}
               <div className="relative inline-block mx-auto pt-4">
+                {/* Dynamic Tether Chain String connecting origin anchor to popup position */}
+                <svg
+                  className="absolute pointer-events-none overflow-visible z-40 top-0 left-1/2 -translate-x-1/2"
+                  style={{ width: 1, height: 1 }}
+                >
+                  <defs>
+                    <linearGradient id="tetherGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#3b82f6" />
+                      <stop offset="50%" stopColor="#8b5cf6" />
+                      <stop offset="100%" stopColor="#ec4899" />
+                    </linearGradient>
+                    <filter id="glowChainFilter" x="-100%" y="-100%" width="300%" height="300%">
+                      <feGaussianBlur stdDeviation="3" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
+
+                  {/* Outer Glowing Neon Chain Cord */}
+                  <motion.path
+                    d={chainPathD}
+                    stroke="url(#tetherGlow)"
+                    strokeWidth="3.5"
+                    strokeDasharray="6 4"
+                    strokeLinecap="round"
+                    fill="none"
+                    filter="url(#glowChainFilter)"
+                  />
+
+                  {/* Inner Tension Core Cable */}
+                  <motion.path
+                    d={straightLineD}
+                    stroke="#ffffff"
+                    strokeWidth="1.5"
+                    strokeDasharray="3 3"
+                    strokeLinecap="round"
+                    fill="none"
+                    opacity={0.85}
+                  />
+
+                  {/* Metallic Chain Anchor Ring at Origin */}
+                  <circle cx="0" cy="0" r="5" fill="#3b82f6" className="animate-pulse" />
+                  <circle cx="0" cy="0" r="3" fill="#ffffff" />
+                </svg>
+
                 {/* Floating Instagram Note Bubble with Draggable Snap-Back Motion Animation */}
                 <motion.div 
                   drag
                   dragSnapToOrigin={true}
                   dragElastic={0.2}
                   dragTransition={{ bounceStiffness: 600, bounceDamping: 22 }}
-                  whileDrag={{ scale: 1.15, zIndex: 50, cursor: 'grabbing' }}
+                  style={{ x: popupX, y: popupY }}
+                  onDragStart={() => setIsDraggingPopup(true)}
+                  onDragEnd={() => setIsDraggingPopup(false)}
+                  whileDrag={{ scale: 1.15, zIndex: 99999, cursor: 'grabbing' }}
                   whileHover={{ scale: 1.08, y: -4 }}
                   initial={{ opacity: 0, scale: 0.7, y: 8 }}
                   animate={{ 
                     opacity: 1, 
                     scale: 1, 
-                    y: [0, -5, 0] 
+                    y: isDraggingPopup ? 0 : [0, -5, 0] 
                   }}
                   transition={{
                     opacity: { duration: 0.4 },
                     scale: { type: "spring", stiffness: 300, damping: 20 },
                     y: { duration: 2.8, repeat: Infinity, ease: "easeInOut" }
                   }}
-                  className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap cursor-grab select-none active:cursor-grabbing touch-none"
-                  title="Official GST-Verified Invoicing & Compliance 📜 - Click & drag me anywhere! Snaps back on release."
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap cursor-grab select-none active:cursor-grabbing touch-none"
+                  title="Official GST-Verified Invoicing & Compliance 📜 - Click & drag me anywhere! I am tethered by an elastic chain & snap back on release."
                 >
                   <div className="relative bg-slate-900/95 text-white text-[10px] font-semibold px-3.5 py-1 rounded-xl shadow-lg shadow-slate-950/40 border border-slate-700/80 flex items-center justify-center backdrop-blur-md">
                     {renderGreetingIcon()}
