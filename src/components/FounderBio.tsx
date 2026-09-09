@@ -232,14 +232,28 @@ export const FounderBio: React.FC = () => {
 
               {/* Profile Avatar + Instagram Note Bubble */}
               <div className="relative inline-block mx-auto pt-4">
-                {/* Floating Instagram Note Bubble */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap">
-                  <div className="relative bg-slate-900 text-white text-[10px] font-medium px-3 py-1 rounded-xl shadow-lg border border-slate-700 flex items-center justify-center animate-bounce-subtle">
+                {/* Floating Instagram Note Bubble with Smooth Motion Animation */}
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.7, y: 8 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1, 
+                    y: [0, -5, 0] 
+                  }}
+                  transition={{
+                    opacity: { duration: 0.4 },
+                    scale: { type: "spring", stiffness: 300, damping: 20 },
+                    y: { duration: 2.8, repeat: Infinity, ease: "easeInOut" }
+                  }}
+                  whileHover={{ scale: 1.08, y: -8 }}
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap cursor-pointer select-none"
+                >
+                  <div className="relative bg-slate-900/95 text-white text-[10px] font-semibold px-3.5 py-1 rounded-xl shadow-lg shadow-slate-950/40 border border-slate-700/80 flex items-center justify-center backdrop-blur-md">
                     {renderGreetingIcon()}
                     {/* Tail */}
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45 border-r border-b border-slate-700"></div>
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45 border-r border-b border-slate-700/80"></div>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Avatar with Instagram Story Ring */}
                 <div className="p-0.5 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shadow-md">
