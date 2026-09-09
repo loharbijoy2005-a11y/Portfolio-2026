@@ -137,8 +137,8 @@ export const B2BTrustGST: React.FC = () => {
                 </div>
               </div>
 
-              <div className="text-[11px] text-slate-500 text-center leading-tight">
-                *Official tax invoices issued with full GST compliance.
+              <div className="text-[11px] text-slate-500 text-center leading-tight pt-1">
+                *Official tax invoices issued with full GST compliance for all corporate projects.
               </div>
 
             </div>

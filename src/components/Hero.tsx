@@ -15,6 +15,7 @@ import {
   Zap
 } from 'lucide-react';
 import { MagneticButton } from './MagneticButton';
+import { ParticleCanvas } from './ParticleCanvas';
 
 interface HeroProps {
   onStartProject: () => void;
@@ -168,6 +169,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
 
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-grid-pattern hero-glow">
+      <ParticleCanvas />
       
       {/* Ambient background glow elements */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-tr from-blue-400/20 via-indigo-400/15 to-sky-300/10 rounded-full blur-3xl pointer-events-none -z-10" />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Calendar, Menu, X, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Calendar, Menu, X, CheckCircle2, ArrowUpRight } from 'lucide-react';
 import { MagneticButton } from './MagneticButton';
 
 interface NavbarProps {
@@ -93,7 +93,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
           </nav>
 
           {/* Right Actions */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2.5">
             {/* Animated Trust Pill */}
             <motion.div 
               whileHover={{ scale: 1.04, borderColor: 'rgba(59, 130, 246, 0.4)' }}
@@ -102,18 +102,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             >
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <ShieldCheck className="w-3.5 h-3.5 text-blue-600 group-hover:rotate-12 transition-transform duration-300" />
-              <span className="font-semibold text-slate-800">GST Registered • Invoices Provided</span>
+              <span className="font-semibold text-slate-800">GST Registered</span>
             </motion.div>
 
             {/* CTA Button with Shimmer Sweep */}
             <MagneticButton>
               <button
                 onClick={onOpenBooking}
-                className="relative overflow-hidden group inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4.5 py-2 rounded-full text-xs font-bold tracking-wide shadow-md shadow-blue-600/20 hover:shadow-lg hover:shadow-blue-600/35 transition-all duration-200 active:scale-95 cursor-pointer"
+                className="relative overflow-hidden group inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-xs font-bold tracking-wide shadow-md shadow-blue-600/20 hover:shadow-lg hover:shadow-blue-600/35 transition-all duration-200 active:scale-95 cursor-pointer"
               >
                 <span className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000 ease-out pointer-events-none" />
                 <Calendar className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-                <span>Book a Discovery Call</span>
+                <span>Book Call</span>
               </button>
             </MagneticButton>
           </div>

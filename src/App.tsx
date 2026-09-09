@@ -23,6 +23,8 @@ import { DiscoveryModal } from './components/DiscoveryModal';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { TermsOfServiceModal } from './components/TermsOfServiceModal';
 import { ScrollToTop } from './components/ScrollToTop';
+import { CommandPaletteModal } from './components/CommandPaletteModal';
+import { ROICalculator } from './components/ROICalculator';
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 35, filter: 'blur(8px)' },
@@ -38,9 +40,21 @@ const MainWebsite: React.FC = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [termsModalOpen, setTermsModalOpen] = useState(false);
+  const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<string | undefined>(undefined);
   const [selectedCaseStudyTitle, setSelectedCaseStudyTitle] = useState<string | undefined>(undefined);
   const [isSplashActive, setIsSplashActive] = useState<boolean>(true);
+
+  React.useEffect(() => {
+    (window as any).__openCommandPalette = () => setCmdPaletteOpen(true);
+  }, []);
+
+  const handleNavigateSection = (sectionId: string) => {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const handleStartProject = () => {
     const el = document.getElementById('contact');
@@ -196,6 +210,16 @@ const MainWebsite: React.FC = () => {
           <B2BTrustGST />
         </motion.div>
 
+        {/* Interactive Client ROI & Revenue Calculator */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={sectionVariants}
+        >
+          <ROICalculator />
+        </motion.div>
+
         {/* Revamped Transparent Affordable Pricing (INR + GST) */}
         <motion.div
           initial="hidden"
@@ -243,6 +267,13 @@ const MainWebsite: React.FC = () => {
       <TermsOfServiceModal
         isOpen={termsModalOpen}
         onClose={() => setTermsModalOpen(false)}
+      />
+
+      {/* Developer Command Palette Modal (Ctrl+K) */}
+      <CommandPaletteModal
+        isOpen={cmdPaletteOpen}
+        onClose={() => setCmdPaletteOpen(false)}
+        onNavigate={handleNavigateSection}
       />
 
       {/* Floating Scroll to Top Button */}
