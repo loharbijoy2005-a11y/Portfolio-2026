@@ -1,13 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Default Supabase project configuration (override via .env)
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://your-supabase-project.supabase.co';
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your_supabase_anon_key_here';
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://srqvyizakffjuaskzooq.supabase.co';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoYWRvd2Fycm93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MjAxNTAwMDAwMH0.placeholder-key-for-shadow-arrow';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export interface InquiryRecord {
-  id: string;
+  id?: string;
   type: string;
   client_name: string;
   client_email: string;

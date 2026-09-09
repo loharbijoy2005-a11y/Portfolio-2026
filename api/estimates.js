@@ -1,8 +1,8 @@
 import { sanitizeInput } from './utils/security.js';
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://your-supabase-project.supabase.co';
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'your_supabase_anon_key_here';
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://srqvyizakffjuaskzooq.supabase.co';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoYWRvd2Fycm93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MjAxNTAwMDAwMH0.placeholder-key-for-shadow-arrow';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -25,31 +25,45 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { clientName, clientEmail, clientPhone, company, businessType, serviceName, techStack, estimatedBudget, timeline, details } = req.body || {};
+    const { 
+      clientName, clientEmail, clientPhone, company, businessType, serviceName, 
+      techStack, estimatedBudget, timeline, details, type,
+      name, email, phone, service, message, budget, modules 
+    } = req.body || {};
 
-    if (!clientName || !clientEmail) {
-      return res.status(400).json({ error: 'Client name and email are required' });
-    }
-
-    const cleanName = sanitizeInput(clientName);
-    const cleanEmail = sanitizeInput(clientEmail);
-    const cleanPhone = sanitizeInput(clientPhone || '');
+    const cleanName = sanitizeInput(clientName || name || 'Anonymous Client');
+    const cleanEmail = sanitizeInput(clientEmail || email || 'no-email@provided.local');
+    const cleanPhone = sanitizeInput(clientPhone || phone || '');
     const cleanCompany = sanitizeInput(company || '');
-    const cleanDetails = sanitizeInput(details || '');
+    const cleanDetails = sanitizeInput(details || message || '');
+
+    // Parse numeric budget safely
+    const rawBudget = estimatedBudget ?? budget ?? 0;
+    const parsedBudget = typeof rawBudget === 'number' 
+      ? (isNaN(rawBudget) ? 0 : rawBudget)
+      : (parseFloat(String(rawBudget).replace(/[^0-9.]/g, '')) || 0);
+
+    // Parse tech stack array safely
+    const rawStack = techStack || modules || [];
+    const parsedStack = Array.isArray(rawStack)
+      ? rawStack.map(s => sanitizeInput(String(s)))
+      : (typeof rawStack === 'string' && rawStack.trim() 
+          ? rawStack.split(',').map(s => sanitizeInput(s.trim())).filter(Boolean)
+          : []);
+
     const leadId = `EST-${Math.floor(100000 + Math.random() * 900000)}`;
 
     const newLead = {
-      id: leadId,
-      type: 'Cost Estimate',
+      type: sanitizeInput(type || 'Cost Estimate'),
       client_name: cleanName,
       client_email: cleanEmail,
       client_phone: cleanPhone,
       company: cleanCompany,
       business_type: sanitizeInput(businessType || ''),
-      service_name: sanitizeInput(serviceName || 'Custom Scope'),
-      tech_stack: Array.isArray(techStack) ? techStack.map(sanitizeInput) : [],
-      estimated_budget: Number(estimatedBudget) || 0,
-      timeline: sanitizeInput(timeline || '3-4 Weeks'),
+      service_name: sanitizeInput(serviceName || service || 'Cost Estimate'),
+      tech_stack: parsedStack,
+      estimated_budget: parsedBudget,
+      timeline: sanitizeInput(timeline || 'Flexible'),
       details: cleanDetails,
       status: 'pending',
       created_at: new Date().toISOString()
@@ -57,9 +71,14 @@ export default async function handler(req, res) {
 
     // Store in Supabase
     try {
-      await supabase.from('inquiries').insert([newLead]);
+      const { data, error } = await supabase.from('inquiries').insert([newLead]).select();
+      if (error) {
+        console.error('❌ Supabase insertion error in /api/estimates:', error.message, error.details);
+      } else {
+        console.log('✅ Estimate saved to Supabase via /api/estimates:', data?.[0]?.id);
+      }
     } catch (sErr) {
-      console.warn('Supabase insertion notice:', sErr);
+      console.error('❌ Supabase insertion exception in /api/estimates:', sErr);
     }
 
     return res.status(201).json({

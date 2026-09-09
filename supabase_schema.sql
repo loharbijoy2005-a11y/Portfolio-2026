@@ -5,15 +5,15 @@
 
 -- 1. Create Inquiries Table
 CREATE TABLE IF NOT EXISTS public.inquiries (
-    id TEXT PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     type TEXT NOT NULL DEFAULT 'Cost Estimate',
     client_name TEXT NOT NULL,
     client_email TEXT NOT NULL,
     client_phone TEXT DEFAULT '',
     company TEXT DEFAULT '',
     business_type TEXT DEFAULT '',
-    service_name TEXT NOT NULL,
-    tech_stack JSONB DEFAULT '[]'::jsonb,
+    service_name TEXT DEFAULT '',
+    tech_stack TEXT[] DEFAULT '{}',
     estimated_budget NUMERIC DEFAULT 0,
     timeline TEXT DEFAULT 'Flexible',
     details TEXT DEFAULT '',

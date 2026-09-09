@@ -25,9 +25,9 @@ import { TermsOfServiceModal } from './components/TermsOfServiceModal';
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 35, filter: 'blur(8px)' },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
+  visible: {
+    opacity: 1,
+    y: 0,
     filter: 'blur(0px)',
     transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] as const }
   }
@@ -80,7 +80,7 @@ const MainWebsite: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] text-[#1C1917] selection:bg-amber-100 selection:text-amber-900 font-sans relative overflow-x-hidden">
-      
+
       {/* Cinematic Splash Intro Preloader */}
       <CinematicSplash onComplete={() => setIsSplashActive(false)} />
 
@@ -101,7 +101,7 @@ const MainWebsite: React.FC = () => {
 
       {/* Main Content Area */}
       <main className={`relative z-10 space-y-4 transition-opacity duration-500 ${isSplashActive ? 'opacity-0' : 'opacity-100'}`}>
-        
+
         {/* Hero Section */}
         <motion.div
           initial="hidden"

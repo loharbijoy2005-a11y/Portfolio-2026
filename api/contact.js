@@ -1,8 +1,8 @@
 import { sanitizeInput } from './utils/security.js';
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL || 'https://your-supabase-project.supabase.co';
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'your_supabase_anon_key_here';
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://srqvyizakffjuaskzooq.supabase.co';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoYWRvd2Fycm93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MjAxNTAwMDAwMH0.placeholder-key-for-shadow-arrow';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -25,22 +25,21 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { clientName, clientEmail, clientPhone, serviceName, message } = req.body || {};
+    const { 
+      clientName, clientEmail, clientPhone, serviceName, message, type,
+      name, email, phone, service, details 
+    } = req.body || {};
 
-    if (!clientName || !clientEmail) {
-      return res.status(400).json({ error: 'Client name and email are required' });
-    }
-
-    const cleanName = sanitizeInput(clientName);
-    const cleanEmail = sanitizeInput(clientEmail);
-    const cleanPhone = sanitizeInput(clientPhone || '');
-    const cleanService = sanitizeInput(serviceName || 'Discovery Call');
-    const cleanMessage = sanitizeInput(message || '');
+    const cleanName = sanitizeInput(clientName || name || 'Anonymous Client');
+    const cleanEmail = sanitizeInput(clientEmail || email || 'no-email@provided.local');
+    const cleanPhone = sanitizeInput(clientPhone || phone || '');
+    const cleanService = sanitizeInput(serviceName || service || type || 'Call Request');
+    const cleanMessage = sanitizeInput(message || details || '');
+    const leadType = sanitizeInput(type || 'Call Request');
     const leadId = `CON-${Math.floor(100000 + Math.random() * 900000)}`;
 
     const newLead = {
-      id: leadId,
-      type: 'Discovery Call',
+      type: leadType,
       client_name: cleanName,
       client_email: cleanEmail,
       client_phone: cleanPhone,
@@ -57,9 +56,14 @@ export default async function handler(req, res) {
 
     // Store in Supabase
     try {
-      await supabase.from('inquiries').insert([newLead]);
+      const { data, error } = await supabase.from('inquiries').insert([newLead]).select();
+      if (error) {
+        console.error('❌ Supabase insertion error in /api/contact:', error.message, error.details);
+      } else {
+        console.log('✅ Lead saved to Supabase via /api/contact:', data?.[0]?.id);
+      }
     } catch (sErr) {
-      console.warn('Supabase insertion notice:', sErr);
+      console.error('❌ Supabase insertion exception in /api/contact:', sErr);
     }
 
     return res.status(201).json({
