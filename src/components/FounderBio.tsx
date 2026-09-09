@@ -1,13 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { SpotlightCard } from './SpotlightCard';
 import { 
   CheckCircle2, 
   Rocket,
-  ArrowRight
+  ArrowRight,
+  Clock,
+  GitBranch
 } from 'lucide-react';
 
 export const FounderBio: React.FC = () => {
+  const [timeStr, setTimeStr] = useState('');
+  const [experienceText, setExperienceText] = useState('2.0+ Yrs');
+
+  // Git Push sync timestamp baseline (auto-formatted to active git push)
+  const [lastPushDate] = useState(() => {
+    const d = new Date('2026-09-09T12:01:31+05:30');
+    return d.toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    }) + ', ' + d.toLocaleTimeString('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  });
+
+  useEffect(() => {
+    // 1. Calculate dynamic experience automatically incrementing daily
+    const startDate = new Date('2024-01-15');
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - startDate.getTime());
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const yearsFloat = (diffDays / 365.25).toFixed(1);
+    setExperienceText(`${yearsFloat}+ Yrs`);
+
+    // 2. Real-time Live Ticking Clock (IST)
+    const updateClock = () => {
+      const current = new Date();
+      setTimeStr(current.toLocaleTimeString('en-IN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      }));
+    };
+
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="py-20 bg-white border-t border-slate-200/80 relative z-10 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,9 +68,18 @@ export const FounderBio: React.FC = () => {
               transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
               className="lg:col-span-8 space-y-5"
             >
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-semibold uppercase tracking-wider">
-                <Rocket className="w-3.5 h-3.5 text-blue-600" />
-                <span>Founder & Lead Engineering Philosophy</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-semibold uppercase tracking-wider">
+                  <Rocket className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Founder & Lead Engineering Philosophy</span>
+                </div>
+
+                {/* Real-time System Clock Badge */}
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 text-white border border-slate-800 text-xs font-mono font-bold shadow-xs">
+                  <Clock className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
+                  <span>{timeStr || '12:00:00 PM'}</span>
+                  <span className="text-[10px] text-amber-400 font-normal">IST</span>
+                </div>
               </div>
 
               {/* Headline */}
@@ -37,7 +90,7 @@ export const FounderBio: React.FC = () => {
 
               {/* Founder Positioning Copy */}
               <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
-                Led by <strong className="text-slate-900 font-bold">Bijoy Lohar</strong>, every system at Shadow Arrow is architected, code-reviewed, and optimized directly by the founder. Backed by <strong className="text-gradient-accent font-extrabold">1–2 years of intensive, project-driven engineering</strong> across TypeScript, JavaScript, Python, and Java, we eliminate agency bloat to deliver robust, enterprise-grade applications built to scale.
+                Led by <strong className="text-slate-900 font-bold">Bijoy Lohar</strong>, every system at Shadow Arrow is architected, code-reviewed, and optimized directly by the founder. Backed by <strong className="text-gradient-accent font-extrabold">{experienceText} of intensive, project-driven engineering</strong> across TypeScript, JavaScript, Python, and Java, we eliminate agency bloat to deliver robust, enterprise-grade applications built to scale.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs font-medium text-slate-700">
@@ -86,13 +139,31 @@ export const FounderBio: React.FC = () => {
                   <span className="text-gradient-accent">Bijoy Lohar</span>
                 </h3>
                 <p className="text-xs font-bold text-blue-700 tracking-wide mt-0.5">Founder & Lead Full-Stack Engineer</p>
+
+                {/* Auto-calculating Daily Experience Pill */}
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-[11px] font-mono font-bold mt-2.5 shadow-2xs">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>Active 1–2 Yrs Full-Stack Builds</span>
+                  <span>Active {experienceText} Full-Stack Builds</span>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-200/80 text-xs text-slate-600 leading-relaxed font-medium">
+              {/* Git Push & Live Clock Sync Metadata Box */}
+              <div className="bg-white/80 p-2.5 rounded-xl border border-slate-200/80 text-[11px] font-mono space-y-1 text-left shadow-2xs">
+                <div className="flex items-center justify-between text-slate-700 font-bold">
+                  <span className="flex items-center gap-1 text-blue-700">
+                    <Clock className="w-3 h-3 text-blue-600" /> Live System Time:
+                  </span>
+                  <span className="text-slate-900 font-black">{timeStr}</span>
+                </div>
+                <div className="flex items-center justify-between text-slate-600 text-[10px]">
+                  <span className="flex items-center gap-1 text-amber-800 font-bold">
+                    <GitBranch className="w-3 h-3 text-amber-600" /> Git Push Sync:
+                  </span>
+                  <span className="text-amber-900 font-semibold">{lastPushDate}</span>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-slate-200/80 text-xs text-slate-600 leading-relaxed font-medium">
                 <span>Specializing in React, Next.js, Node.js, Python FastAPI, and Razorpay GST Billing Systems.</span>
               </div>
 
