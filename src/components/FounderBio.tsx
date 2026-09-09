@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { SpotlightCard } from './SpotlightCard';
 import { MagneticButton } from './MagneticButton';
 import { 
@@ -10,10 +10,7 @@ import {
   Sun,
   Coffee,
   Sunset,
-  Moon,
-  GitBranch,
-  Terminal,
-  Activity
+  Moon
 } from 'lucide-react';
 
 interface GitHubStatus {
@@ -29,7 +26,6 @@ export const FounderBio: React.FC = () => {
   const [timeStr, setTimeStr] = useState('');
   const [experienceText, setExperienceText] = useState('1-2+ Yrs');
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
-  const [activeTab, setActiveTab] = useState<'status' | 'commit' | 'specs'>('status');
   const [ghStatus, setGhStatus] = useState<GitHubStatus>({
     isActive: true,
     statusText: 'Active Coding',
@@ -273,127 +269,24 @@ export const FounderBio: React.FC = () => {
                 </h3>
                 <p className="text-xs font-bold text-blue-700 tracking-wide mt-0.5">Founder & Lead Full-Stack Engineer</p>
 
-                {/* Mini Interactive Terminal Tab Switcher */}
-                <div className="mt-3 flex justify-center gap-1 bg-slate-200/80 p-1 rounded-xl text-[10px] font-mono">
-                  <button
-                    onClick={() => setActiveTab('status')}
-                    className={`px-2.5 py-1 rounded-lg font-semibold transition-all duration-150 flex items-center gap-1 cursor-pointer ${
-                      activeTab === 'status' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <Activity className="w-3 h-3 text-emerald-400" />
-                    <span>Live Status</span>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveTab('commit')}
-                    className={`px-2.5 py-1 rounded-lg font-semibold transition-all duration-150 flex items-center gap-1 cursor-pointer ${
-                      activeTab === 'commit' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <GitBranch className="w-3 h-3 text-amber-400" />
-                    <span>Commit</span>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveTab('specs')}
-                    className={`px-2.5 py-1 rounded-lg font-semibold transition-all duration-150 flex items-center gap-1 cursor-pointer ${
-                      activeTab === 'specs' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <Terminal className="w-3 h-3 text-blue-400" />
-                    <span>Specs</span>
-                  </button>
-                </div>
-
-                {/* Mac IDE-Style Live Developer Box */}
-                <div className="mt-3 bg-slate-950 rounded-xl p-3 border border-slate-800 text-left shadow-lg font-mono text-[11px] space-y-2">
-                  {/* Top Window Dots & Repo Tag */}
-                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-1.5 text-[10px]">
-                    <div className="flex items-center gap-1.5 group/dots">
-                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 transition-all duration-200 cursor-pointer hover:bg-rose-500 hover:scale-125 hover:shadow-[0_0_10px_#f43f5e]" title="Close"></span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 transition-all duration-200 cursor-pointer hover:bg-amber-500 hover:scale-125 hover:shadow-[0_0_10px_#eab308]" title="Minimize"></span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 transition-all duration-200 cursor-pointer hover:bg-emerald-500 hover:scale-125 hover:shadow-[0_0_10px_#22c55e]" title="Expand"></span>
+                {/* Live Developer Status Box */}
+                <div className="mt-3 bg-slate-950 rounded-xl p-3.5 border border-slate-800 text-left shadow-lg font-mono text-[11px] space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
+                      </span>
+                      <span>Active Coding</span>
                     </div>
-                    <span className="text-slate-400 font-bold truncate max-w-[140px]" title={ghStatus.repoName}>
-                      {ghStatus.repoName}
+                    <span className="text-slate-400 text-[10px] font-medium">{ghStatus.lastSeenText}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-slate-400 text-[10px] pt-1.5 border-t border-slate-900">
+                    <span className="text-slate-500">Live Time (IST)</span>
+                    <span className="text-blue-400 font-bold flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-blue-400 animate-pulse" /> {timeStr || '12:00:00 PM'}
                     </span>
                   </div>
-
-                  {/* Dynamic Tab Content with Framer Motion */}
-                  <AnimatePresence mode="wait">
-                    {activeTab === 'status' && (
-                      <motion.div 
-                        key="status" 
-                        initial={{ opacity: 0, y: 4 }} 
-                        animate={{ opacity: 1, y: 0 }} 
-                        exit={{ opacity: 0, y: -4 }}
-                        transition={{ duration: 0.15 }} 
-                        className="space-y-1.5"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
-                            <span className="relative flex h-2 w-2">
-                              {ghStatus.isActive ? (
-                                <>
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
-                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
-                                </>
-                              ) : (
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                              )}
-                            </span>
-                            <span>{ghStatus.isActive ? 'Active Coding' : 'Away'}</span>
-                          </div>
-                          <span className="text-slate-400 text-[10px] font-medium">{ghStatus.lastSeenText}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-slate-400 text-[10px] pt-0.5 border-t border-slate-900">
-                          <span className="text-slate-500">Live Time (IST)</span>
-                          <span className="text-blue-400 font-bold flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-blue-400 animate-pulse" /> {timeStr || '12:00:00 PM'}
-                          </span>
-                        </div>
-                      </motion.div>
-                    )}
-
-                    {activeTab === 'commit' && (
-                      <motion.div 
-                        key="commit" 
-                        initial={{ opacity: 0, y: 4 }} 
-                        animate={{ opacity: 1, y: 0 }} 
-                        exit={{ opacity: 0, y: -4 }}
-                        transition={{ duration: 0.15 }} 
-                        className="space-y-1"
-                      >
-                        <div className="flex items-center gap-1.5 text-amber-300 font-semibold truncate text-[10.5px]">
-                          <GitBranch className="w-3 h-3 text-amber-400 shrink-0" />
-                          <span className="truncate" title={`"${ghStatus.commitMsg}"`}>"{ghStatus.commitMsg}"</span>
-                        </div>
-                        <div className="text-slate-500 text-[9.5px] truncate">
-                          Pushed {ghStatus.lastSeenText} {ghStatus.formattedDate ? `• ${ghStatus.formattedDate}` : ''}
-                        </div>
-                      </motion.div>
-                    )}
-
-                    {activeTab === 'specs' && (
-                      <motion.div 
-                        key="specs" 
-                        initial={{ opacity: 0, y: 4 }} 
-                        animate={{ opacity: 1, y: 0 }} 
-                        exit={{ opacity: 0, y: -4 }}
-                        transition={{ duration: 0.15 }} 
-                        className="space-y-1"
-                      >
-                        <div className="flex items-center gap-1.5 text-blue-400 font-semibold text-[10.5px] truncate">
-                          <Terminal className="w-3 h-3 text-blue-400 shrink-0" />
-                          <span>React 19 • Next.js • FastAPI • Supabase</span>
-                        </div>
-                        <div className="text-emerald-400 text-[9.5px] font-bold">
-                          ⚡ TTFB &lt; 200ms • 100% Founder Architecture
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </div>
               </div>
 
