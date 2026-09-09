@@ -6,38 +6,40 @@ import {
   Rocket,
   ArrowRight,
   Clock,
-  GitBranch
+  Sun,
+  Coffee,
+  Sunset,
+  Moon
 } from 'lucide-react';
+
+interface GitHubStatus {
+  isActive: boolean;
+  statusText: string;
+  lastSeenText: string;
+  formattedDate: string;
+  commitMsg: string;
+  repoName: string;
+}
 
 export const FounderBio: React.FC = () => {
   const [timeStr, setTimeStr] = useState('');
-  const [experienceText, setExperienceText] = useState('2.0+ Yrs');
-
-  // Git Push sync timestamp baseline (auto-formatted to active git push)
-  const [lastPushDate] = useState(() => {
-    const d = new Date('2026-09-09T12:01:31+05:30');
-    return d.toLocaleDateString('en-IN', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    }) + ', ' + d.toLocaleTimeString('en-IN', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
-    });
+  const [experienceText, setExperienceText] = useState('1-2+ Yrs');
+  const [currentHour, setCurrentHour] = useState(new Date().getHours());
+  const [ghStatus, setGhStatus] = useState<GitHubStatus>({
+    isActive: true,
+    statusText: 'Active Coding (Just now)',
+    lastSeenText: 'Just now',
+    formattedDate: '09 Sep 2026, 12:22 PM',
+    commitMsg: 'Codebase Sync & Optimization',
+    repoName: 'Shadow-Arrow-Website'
   });
 
   useEffect(() => {
-    // 1. Calculate dynamic experience automatically incrementing daily
-    const startDate = new Date('2024-01-15');
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - startDate.getTime());
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const yearsFloat = (diffDays / 365.25).toFixed(1);
-    setExperienceText(`${yearsFloat}+ Yrs`);
+    // 1. Set experience text to 1-2+ Yrs as requested
+    setExperienceText('1-2+ Yrs');
 
-    // 2. Real-time Live Ticking Clock (IST)
-    const updateClock = () => {
+    // 2. Dynamic Time-based Greeting (Morning, Afternoon, Evening, Late Night)
+    const updateTimeAndGreeting = () => {
       const current = new Date();
       setTimeStr(current.toLocaleTimeString('en-IN', {
         hour: '2-digit',
@@ -45,12 +47,109 @@ export const FounderBio: React.FC = () => {
         second: '2-digit',
         hour12: true
       }));
+
+      setCurrentHour(current.getHours());
     };
 
-    updateClock();
-    const interval = setInterval(updateClock, 1000);
-    return () => clearInterval(interval);
+    updateTimeAndGreeting();
+    const clockInterval = setInterval(updateTimeAndGreeting, 1000);
+
+    // 3. Real-time GitHub Activity Tracker (3-hour active threshold)
+    const fetchGitHubActivity = async () => {
+      try {
+        const res = await fetch('https://api.github.com/users/loharbijoy2005-a11y/events/public');
+        if (!res.ok) return;
+        const events = await res.json();
+
+        if (Array.isArray(events) && events.length > 0) {
+          const pushEvent = events.find((e: any) => e.type === 'PushEvent' || e.type === 'CreateEvent') || events[0];
+
+          if (pushEvent && pushEvent.created_at) {
+            const eventTime = new Date(pushEvent.created_at).getTime();
+            const currentTime = Date.now();
+            const diffMs = currentTime - eventTime;
+            const diffHours = diffMs / (1000 * 60 * 60);
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+
+            const isActive = diffHours <= 3; // Active coding if last push <= 3 hours
+
+            let timeAgo = '';
+            if (diffMins < 1) {
+              timeAgo = 'Just now';
+            } else if (diffMins < 60) {
+              timeAgo = `${diffMins}m ago`;
+            } else {
+              const h = Math.floor(diffHours);
+              const m = diffMins % 60;
+              timeAgo = `${h}h ${m}m ago`;
+            }
+
+            const formattedDate = new Date(pushEvent.created_at).toLocaleString('en-IN', {
+              day: '2-digit',
+              month: 'short',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true
+            });
+
+            const commitMsg = pushEvent.payload?.commits?.[0]?.message || 'Codebase Sync & Optimization';
+            const repoName = pushEvent.repo?.name ? pushEvent.repo.name.split('/')[1] : 'Shadow-Arrow-Website';
+
+            setGhStatus({
+              isActive,
+              statusText: isActive ? `Active Coding (Pushed ${timeAgo})` : `Away / Offline (Last push ${timeAgo})`,
+              lastSeenText: timeAgo,
+              formattedDate,
+              commitMsg,
+              repoName
+            });
+          }
+        }
+      } catch (err) {
+        // Keep fallback state on network error
+      }
+    };
+
+    fetchGitHubActivity();
+    const ghInterval = setInterval(fetchGitHubActivity, 15000); // Poll GitHub API every 15s
+
+    return () => {
+      clearInterval(clockInterval);
+      clearInterval(ghInterval);
+    };
   }, []);
+
+  const renderGreetingIcon = () => {
+    if (currentHour >= 5 && currentHour < 12) {
+      return (
+        <span className="flex items-center gap-1.5 font-semibold text-slate-100">
+          <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span>Good Morning!</span>
+        </span>
+      );
+    } else if (currentHour >= 12 && currentHour < 17) {
+      return (
+        <span className="flex items-center gap-1.5 font-semibold text-slate-100">
+          <Coffee className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+          <span>Good Afternoon!</span>
+        </span>
+      );
+    } else if (currentHour >= 17 && currentHour < 22) {
+      return (
+        <span className="flex items-center gap-1.5 font-semibold text-slate-100">
+          <Sunset className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+          <span>Good Evening!</span>
+        </span>
+      );
+    } else {
+      return (
+        <span className="flex items-center gap-1.5 font-semibold text-slate-100">
+          <Moon className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+          <span>Late Night Coding</span>
+        </span>
+      );
+    }
+  };
 
   return (
     <section className="py-20 bg-white border-t border-slate-200/80 relative z-10 overflow-hidden">
@@ -68,18 +167,9 @@ export const FounderBio: React.FC = () => {
               transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
               className="lg:col-span-8 space-y-5"
             >
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-semibold uppercase tracking-wider">
-                  <Rocket className="w-3.5 h-3.5 text-blue-600" />
-                  <span>Founder & Lead Engineering Philosophy</span>
-                </div>
-
-                {/* Real-time System Clock Badge */}
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 text-white border border-slate-800 text-xs font-mono font-bold shadow-xs">
-                  <Clock className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
-                  <span>{timeStr || '12:00:00 PM'}</span>
-                  <span className="text-[10px] text-amber-400 font-normal">IST</span>
-                </div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-semibold uppercase tracking-wider">
+                <Rocket className="w-3.5 h-3.5 text-blue-600" />
+                <span>Founder & Lead Engineering Philosophy</span>
               </div>
 
               {/* Headline */}
@@ -124,15 +214,38 @@ export const FounderBio: React.FC = () => {
               {/* Performance Gradient Top Accent Border */}
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-700 via-blue-600 to-amber-600" />
 
-              <img
-                src="https://github.com/loharbijoy2005-a11y.png"
-                alt="Bijoy Lohar - Founder & Lead Engineer"
-                width="160"
-                height="160"
-                loading="lazy"
-                decoding="async"
-                className="w-20 h-20 rounded-full object-cover border-2 border-blue-600 mx-auto shadow-lg shadow-blue-600/25 ring-4 ring-amber-500/20"
-              />
+              {/* Profile Avatar + Instagram Note Bubble */}
+              <div className="relative inline-block mx-auto pt-4">
+                {/* Floating Instagram Note Bubble */}
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap">
+                  <div className="relative bg-slate-900 text-white text-[10px] font-medium px-3 py-1 rounded-xl shadow-lg border border-slate-700 flex items-center justify-center animate-bounce-subtle">
+                    {renderGreetingIcon()}
+                    {/* Tail */}
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45 border-r border-b border-slate-700"></div>
+                  </div>
+                </div>
+
+                {/* Avatar with Instagram Story Ring */}
+                <div className="p-0.5 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shadow-md">
+                  <img
+                    src="https://github.com/loharbijoy2005-a11y.png"
+                    alt="Bijoy Lohar - Founder & Lead Engineer"
+                    width="160"
+                    height="160"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-white mx-auto shadow-inner"
+                  />
+                </div>
+
+                {/* Instagram Live Online Indicator Dot */}
+                {ghStatus.isActive && (
+                  <span className="absolute bottom-0 right-0 flex h-4 w-4 rounded-full bg-emerald-500 ring-2 ring-white items-center justify-center shadow-[0_0_12px_#10b981]" title="Active Coding">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
+                  </span>
+                )}
+              </div>
 
               <div>
                 <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">
@@ -140,26 +253,38 @@ export const FounderBio: React.FC = () => {
                 </h3>
                 <p className="text-xs font-bold text-blue-700 tracking-wide mt-0.5">Founder & Lead Full-Stack Engineer</p>
 
-                {/* Auto-calculating Daily Experience Pill */}
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 text-[11px] font-mono font-bold mt-2.5 shadow-2xs">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>Active {experienceText} Full-Stack Builds</span>
-                </div>
-              </div>
-
-              {/* Git Push & Live Clock Sync Metadata Box */}
-              <div className="bg-white/80 p-2.5 rounded-xl border border-slate-200/80 text-[11px] font-mono space-y-1 text-left shadow-2xs">
-                <div className="flex items-center justify-between text-slate-700 font-bold">
-                  <span className="flex items-center gap-1 text-blue-700">
-                    <Clock className="w-3 h-3 text-blue-600" /> Live System Time:
-                  </span>
-                  <span className="text-slate-900 font-black">{timeStr}</span>
-                </div>
-                <div className="flex items-center justify-between text-slate-600 text-[10px]">
-                  <span className="flex items-center gap-1 text-amber-800 font-bold">
-                    <GitBranch className="w-3 h-3 text-amber-600" /> Git Push Sync:
-                  </span>
-                  <span className="text-amber-900 font-semibold">{lastPushDate}</span>
+                {/* 1-Line Instagram Live Status Pill with Glowing Active Effect & Live Clock */}
+                <div className="mt-3 flex justify-center">
+                  <div 
+                    className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white text-[11px] font-mono font-medium shadow-md max-w-full truncate transition-all duration-300 ${
+                      ghStatus.isActive ? 'border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.35)]' : 'border border-slate-800'
+                    }`} 
+                    title={`Latest Push: "${ghStatus.commitMsg}" (${ghStatus.formattedDate})`}
+                  >
+                    <span className="relative flex h-2.5 w-2.5 shrink-0">
+                      {ghStatus.isActive ? (
+                        <>
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
+                        </>
+                      ) : (
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                      )}
+                    </span>
+                    <span className="truncate text-slate-200">
+                      {ghStatus.isActive ? (
+                        <span className="text-emerald-400 font-semibold drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]">
+                          Active Coding ({ghStatus.lastSeenText})
+                        </span>
+                      ) : (
+                        <span>Away • Last Push ({ghStatus.lastSeenText})</span>
+                      )}
+                    </span>
+                    <span className="text-slate-600 text-[10px]">•</span>
+                    <span className="text-blue-400 shrink-0 flex items-center gap-1 text-[10px] font-bold">
+                      <Clock className="w-3 h-3 text-blue-400" /> {timeStr || '12:00:00 PM'}
+                    </span>
+                  </div>
                 </div>
               </div>
 
