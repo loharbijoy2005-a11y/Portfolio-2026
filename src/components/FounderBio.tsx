@@ -54,18 +54,35 @@ export const FounderBio: React.FC = () => {
     updateTimeAndGreeting();
     const clockInterval = setInterval(updateTimeAndGreeting, 1000);
 
-    // 3. Real-time GitHub Activity Tracker (Direct Repo Commits API)
+    // 3. Real-time GitHub Activity Tracker across ALL user repositories
     const fetchGitHubActivity = async () => {
       try {
-        const res = await fetch('https://api.github.com/repos/loharbijoy2005-a11y/Shadow-Arrow-Website/commits');
-        if (!res.ok) return;
-        const commits = await res.json();
+        const eventsRes = await fetch('https://api.github.com/users/loharbijoy2005-a11y/events/public');
+        if (!eventsRes.ok) return;
+        const events = await eventsRes.json();
 
-        if (Array.isArray(commits) && commits.length > 0) {
-          const latestCommit = commits[0];
-          const rawDate = latestCommit.commit?.committer?.date || latestCommit.commit?.author?.date;
+        if (Array.isArray(events) && events.length > 0) {
+          const pushEvent = events.find((e: any) => e.type === 'PushEvent' || e.type === 'CreateEvent') || events[0];
 
-          if (rawDate) {
+          if (pushEvent && pushEvent.repo?.name) {
+            const repoFullName = pushEvent.repo.name;
+            const repoSimpleName = repoFullName.includes('/') ? repoFullName.split('/')[1] : repoFullName;
+
+            // Fetch exact commit message from that repo's commits API
+            const commitsRes = await fetch(`https://api.github.com/repos/${repoFullName}/commits`);
+            let commitMsg = 'Codebase Sync';
+            let rawDate = pushEvent.created_at;
+
+            if (commitsRes.ok) {
+              const commits = await commitsRes.json();
+              if (Array.isArray(commits) && commits.length > 0) {
+                const latestCommit = commits[0];
+                rawDate = latestCommit.commit?.committer?.date || latestCommit.commit?.author?.date || pushEvent.created_at;
+                const rawMsg = latestCommit.commit?.message || 'Codebase Sync';
+                commitMsg = rawMsg.split('\n')[0];
+              }
+            }
+
             const eventTime = new Date(rawDate).getTime();
             const currentTime = Date.now();
             const diffMs = currentTime - eventTime;
@@ -93,16 +110,13 @@ export const FounderBio: React.FC = () => {
               hour12: true
             });
 
-            const rawMsg = latestCommit.commit?.message || 'Codebase Sync';
-            const commitMsg = rawMsg.split('\n')[0];
-
             setGhStatus({
               isActive,
-              statusText: isActive ? `Active Coding (Pushed ${timeAgo})` : `Away / Offline (Last push ${timeAgo})`,
+              statusText: isActive ? `Active Coding (${timeAgo})` : `Away / Offline (Last push ${timeAgo})`,
               lastSeenText: timeAgo,
               formattedDate,
               commitMsg,
-              repoName: 'Shadow-Arrow-Website'
+              repoName: repoSimpleName
             });
           }
         }
