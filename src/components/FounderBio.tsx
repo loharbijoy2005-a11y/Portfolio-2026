@@ -12,7 +12,9 @@ import {
   Sunset,
   Moon,
   Zap,
-  Code
+  Code,
+  Sparkles,
+  Activity
 } from 'lucide-react';
 
 interface GitHubStatus {
@@ -168,15 +170,27 @@ export const FounderBio: React.FC = () => {
       },
       {
         icon: <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0 animate-pulse" />,
-        text: 'Building High-Performance Web Apps!'
+        text: 'Building High-Performance Web Apps! ⚡'
       },
       {
         icon: <Rocket className="w-3.5 h-3.5 text-blue-400 shrink-0" />,
-        text: 'Zero Layers • 100% Founder Led'
+        text: 'Zero Layers • 100% Direct Founder Led 🚀'
       },
       {
         icon: <Code className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
         text: 'Sub-Second Speeds & Scalable Code 💎'
+      },
+      {
+        icon: <Sparkles className="w-3.5 h-3.5 text-purple-400 shrink-0 animate-spin-slow" />,
+        text: 'React 19 • Next.js • FastAPI • Supabase ✨'
+      },
+      {
+        icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
+        text: 'Verified GST Billing & B2B Compliance 📜'
+      },
+      {
+        icon: <Activity className="w-3.5 h-3.5 text-rose-400 shrink-0 animate-pulse" />,
+        text: 'TTFB < 200ms • Enterprise Velocity ⏱️'
       }
     ];
 
