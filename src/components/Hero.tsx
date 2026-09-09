@@ -121,47 +121,47 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
   const pillVariations = [
     (
       <>
-        <span className="font-extrabold text-slate-900">Shadow Arrow</span>
+        <span className="font-extrabold text-slate-900 shrink-0">Shadow Arrow</span>
         <span className="text-slate-300">•</span>
-        <span className="text-blue-700 font-bold flex items-center gap-1"><Zap className="w-3 h-3 text-blue-600" /> 100% Modern Stack</span>
-        <span className="text-slate-300">•</span>
-        <span className="text-slate-700 font-medium">Direct Founder-Led Engineering by Bijoy Lohar</span>
+        <span className="text-blue-700 font-bold flex items-center gap-1 shrink-0"><Zap className="w-3 h-3 text-blue-600" /> 100% Modern Stack</span>
+        <span className="text-slate-300 hidden md:inline">•</span>
+        <span className="text-slate-700 font-medium hidden md:inline">Direct Founder-Led Engineering</span>
       </>
     ),
     (
       <>
-        <span className="font-extrabold text-slate-900">Shadow Arrow</span>
+        <span className="font-extrabold text-slate-900 shrink-0">Shadow Arrow</span>
         <span className="text-slate-300">•</span>
-        <span className="text-emerald-700 font-bold flex items-center gap-1"><Gauge className="w-3 h-3 text-emerald-600" /> Sub-Second TTFB &lt; 100ms</span>
-        <span className="text-slate-300">•</span>
-        <span className="text-slate-700 font-medium">Zero Agency Bloat • Direct Access</span>
+        <span className="text-emerald-700 font-bold flex items-center gap-1 shrink-0"><Gauge className="w-3 h-3 text-emerald-600" /> Sub-Second TTFB</span>
+        <span className="text-slate-300 hidden md:inline">•</span>
+        <span className="text-slate-700 font-medium hidden md:inline">Zero Agency Bloat • Direct Access</span>
       </>
     ),
     (
       <>
-        <span className="font-extrabold text-slate-900">Shadow Arrow</span>
+        <span className="font-extrabold text-slate-900 shrink-0">Shadow Arrow</span>
         <span className="text-slate-300">•</span>
-        <span className="text-purple-700 font-bold flex items-center gap-1"><Sparkles className="w-3 h-3 text-purple-600" /> Core Web Vitals 99/100</span>
-        <span className="text-slate-300">•</span>
-        <span className="text-slate-700 font-medium">Scalable Web Architecture</span>
+        <span className="text-purple-700 font-bold flex items-center gap-1 shrink-0"><Sparkles className="w-3 h-3 text-purple-600" /> Core Web Vitals 99/100</span>
+        <span className="text-slate-300 hidden md:inline">•</span>
+        <span className="text-slate-700 font-medium hidden md:inline">Scalable Web Architecture</span>
       </>
     ),
     (
       <>
-        <span className="font-extrabold text-slate-900">Shadow Arrow</span>
+        <span className="font-extrabold text-slate-900 shrink-0">Shadow Arrow</span>
         <span className="text-slate-300">•</span>
-        <span className="text-indigo-700 font-bold flex items-center gap-1"><Code2 className="w-3 h-3 text-indigo-600" /> Next.js 15 &amp; TypeScript Engine</span>
-        <span className="text-slate-300">•</span>
-        <span className="text-slate-700 font-medium">Production-Ready Digital Apps</span>
+        <span className="text-indigo-700 font-bold flex items-center gap-1 shrink-0"><Code2 className="w-3 h-3 text-indigo-600" /> Next.js 15 Engine</span>
+        <span className="text-slate-300 hidden md:inline">•</span>
+        <span className="text-slate-700 font-medium hidden md:inline">Production-Ready Digital Apps</span>
       </>
     ),
     (
       <>
-        <span className="font-extrabold text-slate-900">Shadow Arrow</span>
+        <span className="font-extrabold text-slate-900 shrink-0">Shadow Arrow</span>
         <span className="text-slate-300">•</span>
-        <span className="text-amber-700 font-bold flex items-center gap-1"><TrendingUp className="w-3 h-3 text-amber-600" /> +240% Average Client Conversion Boost</span>
-        <span className="text-slate-300">•</span>
-        <span className="text-slate-700 font-medium">Contract-Backed Delivery</span>
+        <span className="text-amber-700 font-bold flex items-center gap-1 shrink-0"><TrendingUp className="w-3 h-3 text-amber-600" /> +240% Conversion Boost</span>
+        <span className="text-slate-300 hidden md:inline">•</span>
+        <span className="text-slate-700 font-medium hidden md:inline">Contract-Backed Delivery</span>
       </>
     )
   ];
@@ -180,24 +180,24 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
           <div className="lg:col-span-7 space-y-6 text-left">
             
             {/* Sub-badge with Modern Trust Badge & Dynamic Message Rotation */}
-            <div className="inline-flex flex-wrap items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-slate-200/90 text-slate-800 text-xs font-semibold shadow-xs backdrop-blur-md min-h-[36px]">
-              <span className="flex h-2.5 w-2.5 relative shrink-0">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/95 border border-slate-200/90 text-slate-800 text-[11px] sm:text-xs font-semibold shadow-xs backdrop-blur-md max-w-full overflow-x-auto no-scrollbar">
+              <span className="flex h-2 w-2 sm:h-2.5 sm:w-2.5 relative shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 bg-emerald-500"></span>
               </span>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={headlineIdx}
-                  initial={{ opacity: 0, y: 5 }}
+                  initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -5 }}
+                  exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.25 }}
-                  className="flex flex-wrap items-center gap-2"
+                  className="flex items-center gap-1.5 sm:gap-2 whitespace-nowrap"
                 >
                   {pillVariations[headlineIdx % pillVariations.length]}
                 </motion.div>
               </AnimatePresence>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200 shrink-0">
+              <span className="px-2 py-0.5 sm:px-2.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] sm:text-[11px] font-bold border border-emerald-200 shrink-0">
                 GST Registered
               </span>
             </div>
