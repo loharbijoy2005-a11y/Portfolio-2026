@@ -24,6 +24,17 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => {
   const [activeTab, setActiveTab] = useState<'perf' | 'gst' | 'stack'>('perf');
 
+  // Hero dynamic messaging state (random on refresh + auto-rotates every 4.5s)
+  const [heroMsgIndex, setHeroMsgIndex] = useState(() => Math.floor(Math.random() * 5));
+
+  useEffect(() => {
+    const heroInterval = setInterval(() => {
+      setHeroMsgIndex((prev) => (prev + 1) % 5);
+    }, 4500);
+
+    return () => clearInterval(heroInterval);
+  }, []);
+
   // 3D Perspective Tilt Values
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -85,6 +96,82 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
     { name: 'WhatsApp Cloud API', desc: 'Instant Webhooks', badgeStyle: 'bg-teal-950 text-teal-300 border-teal-800 hover:bg-teal-900', dotColor: 'bg-teal-400' },
   ];
 
+  const pillVariations = [
+    (
+      <>
+        <span className="font-extrabold text-slate-900">Shadow Arrow</span>
+        <span className="text-slate-300">•</span>
+        <span className="text-blue-700 font-bold flex items-center gap-1"><Zap className="w-3 h-3 text-blue-600" /> 100% Modern Stack</span>
+        <span className="text-slate-300">•</span>
+        <span className="text-slate-700 font-medium">Direct Founder-Led Engineering by Bijoy Lohar</span>
+      </>
+    ),
+    (
+      <>
+        <span className="font-extrabold text-slate-900">Shadow Arrow</span>
+        <span className="text-slate-300">•</span>
+        <span className="text-emerald-700 font-bold flex items-center gap-1"><Gauge className="w-3 h-3 text-emerald-600" /> Sub-Second TTFB &lt; 100ms</span>
+        <span className="text-slate-300">•</span>
+        <span className="text-slate-700 font-medium">Zero Agency Bloat • Direct Access</span>
+      </>
+    ),
+    (
+      <>
+        <span className="font-extrabold text-slate-900">Shadow Arrow</span>
+        <span className="text-slate-300">•</span>
+        <span className="text-purple-700 font-bold flex items-center gap-1"><Sparkles className="w-3 h-3 text-purple-600" /> Core Web Vitals 99/100</span>
+        <span className="text-slate-300">•</span>
+        <span className="text-slate-700 font-medium">Scalable Web Architecture</span>
+      </>
+    ),
+    (
+      <>
+        <span className="font-extrabold text-slate-900">Shadow Arrow</span>
+        <span className="text-slate-300">•</span>
+        <span className="text-indigo-700 font-bold flex items-center gap-1"><Code2 className="w-3 h-3 text-indigo-600" /> Next.js 15 &amp; TypeScript Engine</span>
+        <span className="text-slate-300">•</span>
+        <span className="text-slate-700 font-medium">Production-Ready Digital Apps</span>
+      </>
+    ),
+    (
+      <>
+        <span className="font-extrabold text-slate-900">Shadow Arrow</span>
+        <span className="text-slate-300">•</span>
+        <span className="text-amber-700 font-bold flex items-center gap-1"><TrendingUp className="w-3 h-3 text-amber-600" /> +240% Average Client Conversion Boost</span>
+        <span className="text-slate-300">•</span>
+        <span className="text-slate-700 font-medium">Contract-Backed Delivery</span>
+      </>
+    )
+  ];
+
+  const subheadlineVariations = [
+    (
+      <>
+        Shadow Arrow delivers production-ready web platforms engineered with modern <strong className="text-slate-900 font-semibold">Next.js &amp; TypeScript</strong> architectures. We build sub-second, high-converting digital products backed by <strong className="text-blue-700 font-semibold">direct founder accountability</strong> and GST-verified invoicing.
+      </>
+    ),
+    (
+      <>
+        We eliminate agency bloat by delivering enterprise-grade web engineering directly led by founder <strong className="text-slate-900 font-semibold">Bijoy Lohar</strong>. Optimized for <strong className="text-blue-700 font-semibold">sub-200ms TTFB load times</strong>, high conversion rates, and 100% contract-backed delivery.
+      </>
+    ),
+    (
+      <>
+        Architected for maximum velocity and zero latency. Shadow Arrow crafts custom full-stack web applications, SaaS dashboards, and e-commerce platforms backed by <strong className="text-blue-700 font-semibold">official GST compliance &amp; B2B verified invoicing</strong>.
+      </>
+    ),
+    (
+      <>
+        From architecture design to production deployment, work directly with founder &amp; lead engineer <strong className="text-slate-900 font-semibold">Bijoy Lohar</strong>. Sub-second performance, clean maintainable codebases, and <strong className="text-blue-700 font-semibold">100% IP code handoff</strong>.
+      </>
+    ),
+    (
+      <>
+        High-performance digital engines built with <strong className="text-slate-900 font-semibold">Next.js, React 19, Python FastAPI, and Supabase</strong>. Delivering <strong className="text-blue-700 font-semibold">99/100 Core Web Vitals benchmarks</strong> and direct 1-on-1 founder engineering.
+      </>
+    )
+  ];
+
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-grid-pattern hero-glow">
       
@@ -98,18 +185,25 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
           {/* Left Hero Content */}
           <div className="lg:col-span-7 space-y-6 text-left">
             
-            {/* Sub-badge with Modern Trust Badge */}
-            <div className="inline-flex flex-wrap items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-slate-200/90 text-slate-800 text-xs font-semibold shadow-xs backdrop-blur-md">
-              <span className="flex h-2.5 w-2.5 relative">
+            {/* Sub-badge with Modern Trust Badge & Dynamic Message Rotation */}
+            <div className="inline-flex flex-wrap items-center gap-2 px-4 py-2 rounded-full bg-white/90 border border-slate-200/90 text-slate-800 text-xs font-semibold shadow-xs backdrop-blur-md min-h-[36px]">
+              <span className="flex h-2.5 w-2.5 relative shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
-              <span className="font-extrabold text-slate-900">Shadow Arrow</span>
-              <span className="text-slate-300">•</span>
-              <span className="text-blue-700 font-bold flex items-center gap-1"><Zap className="w-3 h-3 text-blue-600" /> 100% Modern Stack</span>
-              <span className="text-slate-300">•</span>
-              <span className="text-slate-700 font-medium">Direct Founder-Led Engineering by Bijoy Lohar</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={heroMsgIndex}
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  transition={{ duration: 0.25 }}
+                  className="flex flex-wrap items-center gap-2"
+                >
+                  {pillVariations[heroMsgIndex % pillVariations.length]}
+                </motion.div>
+              </AnimatePresence>
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200 shrink-0">
                 GST Registered
               </span>
             </div>
@@ -120,10 +214,21 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
               Built for <span className="underline decoration-blue-500/30 underline-offset-8">Business Growth</span>.
             </h1>
 
-            {/* Sub-headline / Core Positioning */}
-            <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-2xl">
-              Shadow Arrow delivers production-ready web platforms engineered with modern <strong className="text-slate-900 font-semibold">Next.js & TypeScript</strong> architectures. We build sub-second, high-converting digital products backed by <strong className="text-blue-700 font-semibold">direct founder accountability</strong> and GST-verified invoicing.
-            </p>
+            {/* Sub-headline / Core Positioning with Dynamic Transition */}
+            <div className="min-h-[72px]">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={heroMsgIndex}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-2xl"
+                >
+                  {subheadlineVariations[heroMsgIndex % subheadlineVariations.length]}
+                </motion.p>
+              </AnimatePresence>
+            </div>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
