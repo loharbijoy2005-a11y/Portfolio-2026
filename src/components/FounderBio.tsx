@@ -272,20 +272,10 @@ export const FounderBio: React.FC = () => {
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Direct 1-on-1 Access to Bijoy Lohar</span>
                 </div>
-                <motion.div 
-                  drag
-                  dragSnapToOrigin={true}
-                  dragElastic={0.2}
-                  dragTransition={{ bounceStiffness: 600, bounceDamping: 22 }}
-                  whileHover={{ scale: 1.04 }}
-                  whileDrag={{ scale: 1.12, zIndex: 50 }}
-                  className="flex items-center gap-2 p-1.5 px-2.5 rounded-xl bg-emerald-50 border border-emerald-300/90 text-emerald-950 font-semibold cursor-grab active:cursor-grabbing select-none touch-none shadow-xs hover:bg-emerald-100/90 transition-colors"
-                  title="Official GST-Verified Invoicing & Compliance 📜 - Click & drag me anywhere! Snaps back on release."
-                >
+                <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Official GST-Verified Invoicing & Compliance 📜</span>
-                  <span className="ml-auto text-[9px] font-bold bg-emerald-200/90 text-emerald-900 px-1.5 py-0.5 rounded-md border border-emerald-300/80 shadow-2xs">Drag ✊</span>
-                </motion.div>
+                  <span>Official Verified GST Billing & Compliance</span>
+                </div>
               </div>
             </motion.div>
 
