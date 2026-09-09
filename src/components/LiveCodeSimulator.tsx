@@ -216,9 +216,9 @@ export const LiveCodeSimulator: React.FC = () => {
             {/* Editor Window Top Bar */}
             <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-800 text-xs">
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-rose-500 inline-block" />
-                <span className="w-3 h-3 rounded-full bg-amber-500 inline-block" />
-                <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block transition-all duration-200 cursor-pointer hover:bg-rose-500 hover:scale-125 hover:shadow-[0_0_10px_#f43f5e]" title="Close" />
+                <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block transition-all duration-200 cursor-pointer hover:bg-amber-500 hover:scale-125 hover:shadow-[0_0_10px_#eab308]" title="Minimize" />
+                <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block transition-all duration-200 cursor-pointer hover:bg-emerald-500 hover:scale-125 hover:shadow-[0_0_10px_#22c55e]" title="Expand" />
                 <span className="text-slate-400 font-mono ml-2 text-[11px] flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-blue-400" />
                   <span>{scenario.filename}</span>

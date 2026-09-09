@@ -294,9 +294,9 @@ export const FullStackEmulator: React.FC = () => {
             {/* macOS Window Header */}
             <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-800 text-xs">
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-rose-500 inline-block" />
-                <span className="w-3 h-3 rounded-full bg-amber-500 inline-block" />
-                <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block transition-all duration-200 cursor-pointer hover:bg-rose-500 hover:scale-125 hover:shadow-[0_0_10px_#f43f5e]" title="Close" />
+                <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block transition-all duration-200 cursor-pointer hover:bg-amber-500 hover:scale-125 hover:shadow-[0_0_10px_#eab308]" title="Minimize" />
+                <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block transition-all duration-200 cursor-pointer hover:bg-emerald-500 hover:scale-125 hover:shadow-[0_0_10px_#22c55e]" title="Expand" />
                 <span className="text-slate-400 font-mono text-[11px] ml-2">git checkout -b production</span>
               </div>
               <span className="px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 text-[10px] border border-blue-700/50">

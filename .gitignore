@@ -28,3 +28,6 @@ dist-ssr
 .env.*
 !.env.example
 server/data/*.json
+
+# Local Brain Reference
+brain.md

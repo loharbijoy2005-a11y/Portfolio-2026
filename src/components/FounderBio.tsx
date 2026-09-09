@@ -310,10 +310,10 @@ export const FounderBio: React.FC = () => {
                 <div className="mt-3 bg-slate-950 rounded-xl p-3 border border-slate-800 text-left shadow-lg font-mono text-[11px] space-y-2">
                   {/* Top Window Dots & Repo Tag */}
                   <div className="flex items-center justify-between border-b border-slate-800/80 pb-1.5 text-[10px]">
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+                    <div className="flex items-center gap-1.5 group/dots">
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 transition-all duration-200 cursor-pointer hover:bg-rose-500 hover:scale-125 hover:shadow-[0_0_10px_#f43f5e]" title="Close"></span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 transition-all duration-200 cursor-pointer hover:bg-amber-500 hover:scale-125 hover:shadow-[0_0_10px_#eab308]" title="Minimize"></span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 transition-all duration-200 cursor-pointer hover:bg-emerald-500 hover:scale-125 hover:shadow-[0_0_10px_#22c55e]" title="Expand"></span>
                     </div>
                     <span className="text-slate-400 font-bold truncate max-w-[140px]" title={ghStatus.repoName}>
                       {ghStatus.repoName}
