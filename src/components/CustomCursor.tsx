@@ -104,40 +104,40 @@ export const CustomCursor: React.FC = () => {
       <motion.div
         className="fixed top-0 left-0 w-12 h-12 rounded-full pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.18) 0%, rgba(217, 119, 6, 0.1) 50%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, rgba(217, 119, 6, 0.08) 50%, transparent 70%)',
         }}
         animate={{
           x: mousePosition.x - 24,
           y: mousePosition.y - 24,
-          scale: isClicked ? 0.8 : isHovered ? 2.2 : 1,
-          opacity: isHovered ? 0.95 : 0.65,
+          scale: isClicked ? 0.85 : 1,
+          opacity: isHovered ? 0.8 : 0.5,
         }}
         transition={{
           type: 'spring',
-          damping: 24,
-          stiffness: 220,
-          mass: 0.35,
+          damping: 28,
+          stiffness: 300,
+          mass: 0.2,
         }}
       />
 
       {/* Main Interactive Ring */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border pointer-events-none flex items-center justify-center backdrop-blur-[1px]"
+        className="fixed top-0 left-0 w-7 h-7 rounded-full border pointer-events-none flex items-center justify-center backdrop-blur-[1px]"
         animate={{
-          x: mousePosition.x - 16,
-          y: mousePosition.y - 16,
-          scale: isClicked ? 0.75 : isHovered ? 1.8 : 1,
-          backgroundColor: isHovered ? 'rgba(37, 99, 235, 0.12)' : 'rgba(255, 255, 255, 0.05)',
-          borderColor: isHovered ? 'rgba(37, 99, 235, 0.85)' : 'rgba(163, 123, 62, 0.45)',
+          x: mousePosition.x - 14,
+          y: mousePosition.y - 14,
+          scale: isClicked ? 0.85 : 1,
+          backgroundColor: isHovered ? 'rgba(37, 99, 235, 0.08)' : 'rgba(255, 255, 255, 0.04)',
+          borderColor: isHovered ? 'rgba(37, 99, 235, 0.75)' : 'rgba(163, 123, 62, 0.35)',
           boxShadow: isHovered
-            ? '0 0 20px rgba(37, 99, 235, 0.35), inset 0 0 10px rgba(217, 119, 6, 0.15)'
-            : '0 0 8px rgba(163, 123, 62, 0.15)',
+            ? '0 0 12px rgba(37, 99, 235, 0.25)'
+            : '0 0 6px rgba(163, 123, 62, 0.1)',
         }}
         transition={{
           type: 'spring',
-          damping: 26,
-          stiffness: 340,
-          mass: 0.2,
+          damping: 30,
+          stiffness: 400,
+          mass: 0.15,
         }}
       >
         {hoverText && (
@@ -156,7 +156,7 @@ export const CustomCursor: React.FC = () => {
         animate={{
           x: mousePosition.x - 5,
           y: mousePosition.y - 5,
-          scale: isClicked ? 1.6 : isHovered ? 0.4 : 1,
+          scale: isClicked ? 1.2 : 1,
         }}
         transition={{
           type: 'spring',
