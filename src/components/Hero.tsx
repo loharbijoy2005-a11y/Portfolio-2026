@@ -24,93 +24,38 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => {
   const [activeTab, setActiveTab] = useState<'perf' | 'gst' | 'stack'>('perf');
 
-  // Headline & Subheadline Typewriter Animation State
-  const headlinePairs = [
+  // Dynamic Headline & Subheadline list (selected randomly ON PAGE REFRESH ONLY)
+  const headlineList = [
     {
-      part1: 'Engineered for Performance.',
-      part2: 'Built for Business Growth.',
-      sub: 'Shadow Arrow delivers production-ready web platforms engineered with modern Next.js & TypeScript architectures. We build sub-second, high-converting digital products backed by direct founder accountability and GST-verified invoicing.'
+      line1: <>Engineered for <span className="text-gradient-accent">Performance</span>.</>,
+      line2: <>Built for <span className="underline decoration-blue-500/30 underline-offset-8">Business Growth</span>.</>,
+      sub: <>Shadow Arrow delivers production-ready web platforms engineered with modern <strong className="text-slate-900 font-semibold">Next.js &amp; TypeScript</strong> architectures. We build sub-second, high-converting digital products backed by <strong className="text-blue-700 font-semibold">direct founder accountability</strong> and GST-verified invoicing.</>
     },
     {
-      part1: 'Zero Agency Bloat.',
-      part2: '100% Founder-Led Velocity.',
-      sub: 'We eliminate agency layers by delivering enterprise-grade web engineering directly architected by founder Bijoy Lohar. Optimized for sub-200ms TTFB load times, high conversion rates, and 100% contract-backed delivery.'
+      line1: <>Zero Agency <span className="text-gradient-accent">Bloat</span>.</>,
+      line2: <>100% <span className="underline decoration-blue-500/30 underline-offset-8">Founder-Led Velocity</span>.</>,
+      sub: <>We eliminate agency layers by delivering enterprise-grade web engineering directly architected by founder <strong className="text-slate-900 font-semibold">Bijoy Lohar</strong>. Optimized for <strong className="text-blue-700 font-semibold">sub-200ms TTFB load times</strong>, high conversion rates, and 100% contract-backed delivery.</>
     },
     {
-      part1: 'Sub-Second Web Platforms.',
-      part2: 'Built to Scale Revenue.',
-      sub: 'Architected for maximum velocity and zero latency. Shadow Arrow crafts custom full-stack web applications, SaaS dashboards, and e-commerce engines backed by official GST compliance and B2B verified invoicing.'
+      line1: <>Sub-Second <span className="text-gradient-accent">Web Platforms</span>.</>,
+      line2: <>Built to <span className="underline decoration-blue-500/30 underline-offset-8">Scale Revenue</span>.</>,
+      sub: <>Architected for maximum velocity and zero latency. Shadow Arrow crafts custom full-stack web applications, SaaS dashboards, and e-commerce platforms backed by <strong className="text-blue-700 font-semibold">official GST compliance &amp; B2B verified invoicing</strong>.</>
     },
     {
-      part1: 'Modern Next.js 15 Engine.',
-      part2: 'Enterprise Grade Quality.',
-      sub: 'High-performance digital engines built with Next.js, React 19, Python FastAPI, and Supabase. Delivering 99/100 Core Web Vitals benchmarks and direct 1-on-1 founder engineering.'
+      line1: <>Modern <span className="text-gradient-accent">Next.js 15 Engine</span>.</>,
+      line2: <>Enterprise <span className="underline decoration-blue-500/30 underline-offset-8">Grade Quality</span>.</>,
+      sub: <>High-performance digital engines built with <strong className="text-slate-900 font-semibold">Next.js, React 19, Python FastAPI, and Supabase</strong>. Delivering <strong className="text-blue-700 font-semibold">99/100 Core Web Vitals benchmarks</strong> and direct 1-on-1 founder engineering.</>
     },
     {
-      part1: 'Contract-Backed Delivery.',
-      part2: 'Verified GST Invoicing.',
-      sub: 'From architecture design to production deployment, work directly with founder & lead engineer Bijoy Lohar. Sub-second performance, clean maintainable codebases, and 100% IP code handoff.'
+      line1: <>Contract-Backed <span className="text-gradient-accent">Delivery</span>.</>,
+      line2: <>Verified <span className="underline decoration-blue-500/30 underline-offset-8">GST Invoicing</span>.</>,
+      sub: <>From architecture design to production deployment, work directly with founder &amp; lead engineer <strong className="text-slate-900 font-semibold">Bijoy Lohar</strong>. Sub-second performance, clean maintainable codebases, and <strong className="text-blue-700 font-semibold">100% IP code handoff</strong>.</>
     }
   ];
 
-  const [heroMsgIndex, setHeroMsgIndex] = useState(() => Math.floor(Math.random() * headlinePairs.length));
-  const [typedPart1, setTypedPart1] = useState('');
-  const [typedPart2, setTypedPart2] = useState('');
-  const [typedSub, setTypedSub] = useState('');
-  const [typingPhase, setTypingPhase] = useState<'PART1' | 'PART2' | 'SUB' | 'PAUSE' | 'DELETING'>('PART1');
-
-  useEffect(() => {
-    const currentPair = headlinePairs[heroMsgIndex % headlinePairs.length];
-    let timeout: ReturnType<typeof setTimeout>;
-
-    if (typingPhase === 'PART1') {
-      if (typedPart1.length < currentPair.part1.length) {
-        timeout = setTimeout(() => {
-          setTypedPart1(currentPair.part1.slice(0, typedPart1.length + 1));
-        }, 40);
-      } else {
-        setTypingPhase('PART2');
-      }
-    } else if (typingPhase === 'PART2') {
-      if (typedPart2.length < currentPair.part2.length) {
-        timeout = setTimeout(() => {
-          setTypedPart2(currentPair.part2.slice(0, typedPart2.length + 1));
-        }, 40);
-      } else {
-        setTypingPhase('SUB');
-      }
-    } else if (typingPhase === 'SUB') {
-      if (typedSub.length < currentPair.sub.length) {
-        timeout = setTimeout(() => {
-          setTypedSub(currentPair.sub.slice(0, typedSub.length + 12));
-        }, 18);
-      } else {
-        setTypedSub(currentPair.sub);
-        setTypingPhase('PAUSE');
-      }
-    } else if (typingPhase === 'PAUSE') {
-      timeout = setTimeout(() => {
-        setTypingPhase('DELETING');
-      }, 4500);
-    } else if (typingPhase === 'DELETING') {
-      if (typedSub.length > 0 || typedPart2.length > 0 || typedPart1.length > 0) {
-        timeout = setTimeout(() => {
-          if (typedSub.length > 0) {
-            setTypedSub((prev) => prev.slice(0, Math.max(0, prev.length - 18)));
-          } else if (typedPart2.length > 0) {
-            setTypedPart2((prev) => prev.slice(0, Math.max(0, prev.length - 3)));
-          } else if (typedPart1.length > 0) {
-            setTypedPart1((prev) => prev.slice(0, Math.max(0, prev.length - 3)));
-          }
-        }, 15);
-      } else {
-        setHeroMsgIndex((prev) => (prev + 1) % headlinePairs.length);
-        setTypingPhase('PART1');
-      }
-    }
-
-    return () => clearTimeout(timeout);
-  }, [typedPart1, typedPart2, typedSub, typingPhase, heroMsgIndex]);
+  // Selected randomly on page refresh ONLY
+  const [headlineIdx] = useState(() => Math.floor(Math.random() * headlineList.length));
+  const currentHeadline = headlineList[headlineIdx % headlineList.length];
 
   // 3D Perspective Tilt Values
   const x = useMotionValue(0);
@@ -242,14 +187,14 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
               </span>
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={heroMsgIndex}
+                  key={headlineIdx}
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -5 }}
                   transition={{ duration: 0.25 }}
                   className="flex flex-wrap items-center gap-2"
                 >
-                  {pillVariations[heroMsgIndex % pillVariations.length]}
+                  {pillVariations[headlineIdx % pillVariations.length]}
                 </motion.div>
               </AnimatePresence>
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200 shrink-0">
@@ -257,27 +202,16 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
               </span>
             </div>
 
-            {/* Main Headline with Real Typewriter Animation */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.14] min-h-[110px] sm:min-h-[135px]">
-              <span className="text-gradient-accent">{typedPart1}</span>
-              {typingPhase === 'PART1' && (
-                <span className="inline-block w-1 h-8 sm:h-12 bg-blue-600 ml-1 animate-pulse align-middle" />
-              )}
+            {/* Main Headline (Original styling, slightly smaller font size) */}
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.14]">
+              {currentHeadline.line1}
               <br />
-              <span className="underline decoration-blue-500/30 underline-offset-8 text-slate-900">
-                {typedPart2}
-              </span>
-              {(typingPhase === 'PART2' || typingPhase === 'SUB') && (
-                <span className="inline-block w-1 h-8 sm:h-12 bg-amber-500 ml-1 animate-pulse align-middle" />
-              )}
+              {currentHeadline.line2}
             </h1>
 
-            {/* Sub-headline / Core Positioning with Real Typewriter Effect */}
-            <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-2xl min-h-[75px]">
-              {typedSub}
-              {typingPhase === 'SUB' && (
-                <span className="inline-block w-0.5 h-5 bg-blue-600 ml-1 animate-pulse align-middle" />
-              )}
+            {/* Sub-headline / Core Positioning */}
+            <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-2xl">
+              {currentHeadline.sub}
             </p>
 
             {/* CTAs */}
