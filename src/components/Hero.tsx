@@ -186,10 +186,10 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
               </span>
-              <span>⚡ TTFB: 81ms (Pass)</span>
+              <span>⚡ TTFB: {ttfbVal}ms (Pass)</span>
             </motion.div>
 
-            {/* Floating Physics Badge 2: Bottom-Left (Lighthouse 99/100) */}
+            {/* Floating Physics Badge 2: Bottom-Left (Lighthouse dynamic) */}
             <motion.div
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
@@ -197,7 +197,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartProject, onExploreWork }) => 
               className="absolute -bottom-5 -left-3 z-40 bg-white/95 text-slate-900 text-xs font-extrabold px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-xl flex items-center gap-2 backdrop-blur-md cursor-pointer select-none"
             >
               <span className="text-amber-500">🎯</span>
-              <span>Lighthouse 99/100</span>
+              <span>Lighthouse {speedVal}/100</span>
             </motion.div>
 
             {/* Background Glow */}

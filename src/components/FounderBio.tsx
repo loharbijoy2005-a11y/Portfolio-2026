@@ -32,7 +32,7 @@ export const FounderBio: React.FC = () => {
   const [timeStr, setTimeStr] = useState('');
   const [experienceText, setExperienceText] = useState('1-2+ Yrs');
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
-  const [messageIndex, setMessageIndex] = useState(0);
+  const [messageIndex, setMessageIndex] = useState(() => Math.floor(Math.random() * 10));
   const [ghStatus, setGhStatus] = useState<GitHubStatus>({
     isActive: true,
     statusText: 'Active Coding',
