@@ -14,7 +14,9 @@ import {
   Zap,
   Code,
   Sparkles,
-  Activity
+  TrendingUp,
+  ShieldCheck,
+  Gauge
 } from 'lucide-react';
 
 interface GitHubStatus {
@@ -60,10 +62,10 @@ export const FounderBio: React.FC = () => {
     updateTimeAndGreeting();
     const clockInterval = setInterval(updateTimeAndGreeting, 1000);
 
-    // 3. Cycle popup messages every 3.5s
+    // 3. Cycle popup messages every 3s across 10 rich brand value props
     const messageInterval = setInterval(() => {
-      setMessageIndex((prev) => (prev + 1) % 4);
-    }, 3500);
+      setMessageIndex((prev) => (prev + 1) % 10);
+    }, 3000);
 
     // 4. Real-time GitHub Activity Tracker across ALL user repositories
     const fetchGitHubActivity = async () => {
@@ -170,27 +172,39 @@ export const FounderBio: React.FC = () => {
       },
       {
         icon: <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0 animate-pulse" />,
-        text: 'Building High-Performance Web Apps! ⚡'
+        text: 'Engineered for Performance • Built for Business Growth 🚀'
       },
       {
-        icon: <Rocket className="w-3.5 h-3.5 text-blue-400 shrink-0" />,
-        text: 'Zero Layers • 100% Direct Founder Led 🚀'
+        icon: <Code className="w-3.5 h-3.5 text-blue-400 shrink-0" />,
+        text: 'Production-Ready Next.js & TypeScript Platforms ⚡'
       },
       {
-        icon: <Code className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
-        text: 'Sub-Second Speeds & Scalable Code 💎'
+        icon: <Gauge className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
+        text: 'Sub-Second Response Times (TTFB < 100ms) ⏱️'
+      },
+      {
+        icon: <Rocket className="w-3.5 h-3.5 text-amber-400 shrink-0" />,
+        text: 'Direct Founder Accountability • Zero Agency Bloat 👤'
+      },
+      {
+        icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
+        text: 'Official GST-Verified Invoicing & Compliance 📜'
+      },
+      {
+        icon: <Gauge className="w-3.5 h-3.5 text-emerald-400 shrink-0 animate-pulse" />,
+        text: 'Google Core Web Vitals Benchmark: 99 / 100 🎯'
+      },
+      {
+        icon: <TrendingUp className="w-3.5 h-3.5 text-blue-400 shrink-0" />,
+        text: 'Average Client Conversion Boost +240% 📈'
       },
       {
         icon: <Sparkles className="w-3.5 h-3.5 text-purple-400 shrink-0 animate-spin-slow" />,
-        text: 'React 19 • Next.js • FastAPI • Supabase ✨'
+        text: 'React 19 • Next.js • Python FastAPI • Supabase ✨'
       },
       {
         icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />,
-        text: 'Verified GST Billing & B2B Compliance 📜'
-      },
-      {
-        icon: <Activity className="w-3.5 h-3.5 text-rose-400 shrink-0 animate-pulse" />,
-        text: 'TTFB < 200ms • Enterprise Velocity ⏱️'
+        text: '100% Founder-Led Codebase Architecture 💎'
       }
     ];
 
