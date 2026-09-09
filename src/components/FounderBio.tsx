@@ -27,10 +27,10 @@ export const FounderBio: React.FC = () => {
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
   const [ghStatus, setGhStatus] = useState<GitHubStatus>({
     isActive: true,
-    statusText: 'Active Coding (Just now)',
+    statusText: 'Active Coding',
     lastSeenText: 'Just now',
-    formattedDate: '09 Sep 2026, 12:22 PM',
-    commitMsg: 'Codebase Sync & Optimization',
+    formattedDate: '',
+    commitMsg: 'Codebase Sync',
     repoName: 'Shadow-Arrow-Website'
   });
 
@@ -54,18 +54,19 @@ export const FounderBio: React.FC = () => {
     updateTimeAndGreeting();
     const clockInterval = setInterval(updateTimeAndGreeting, 1000);
 
-    // 3. Real-time GitHub Activity Tracker (3-hour active threshold)
+    // 3. Real-time GitHub Activity Tracker (Direct Repo Commits API)
     const fetchGitHubActivity = async () => {
       try {
-        const res = await fetch('https://api.github.com/users/loharbijoy2005-a11y/events/public');
+        const res = await fetch('https://api.github.com/repos/loharbijoy2005-a11y/Shadow-Arrow-Website/commits');
         if (!res.ok) return;
-        const events = await res.json();
+        const commits = await res.json();
 
-        if (Array.isArray(events) && events.length > 0) {
-          const pushEvent = events.find((e: any) => e.type === 'PushEvent' || e.type === 'CreateEvent') || events[0];
+        if (Array.isArray(commits) && commits.length > 0) {
+          const latestCommit = commits[0];
+          const rawDate = latestCommit.commit?.committer?.date || latestCommit.commit?.author?.date;
 
-          if (pushEvent && pushEvent.created_at) {
-            const eventTime = new Date(pushEvent.created_at).getTime();
+          if (rawDate) {
+            const eventTime = new Date(rawDate).getTime();
             const currentTime = Date.now();
             const diffMs = currentTime - eventTime;
             const diffHours = diffMs / (1000 * 60 * 60);
@@ -84,7 +85,7 @@ export const FounderBio: React.FC = () => {
               timeAgo = `${h}h ${m}m ago`;
             }
 
-            const formattedDate = new Date(pushEvent.created_at).toLocaleString('en-IN', {
+            const formattedDate = new Date(rawDate).toLocaleString('en-IN', {
               day: '2-digit',
               month: 'short',
               hour: '2-digit',
@@ -92,8 +93,8 @@ export const FounderBio: React.FC = () => {
               hour12: true
             });
 
-            const commitMsg = pushEvent.payload?.commits?.[0]?.message || 'Codebase Sync & Optimization';
-            const repoName = pushEvent.repo?.name ? pushEvent.repo.name.split('/')[1] : 'Shadow-Arrow-Website';
+            const rawMsg = latestCommit.commit?.message || 'Codebase Sync';
+            const commitMsg = rawMsg.split('\n')[0];
 
             setGhStatus({
               isActive,
@@ -101,7 +102,7 @@ export const FounderBio: React.FC = () => {
               lastSeenText: timeAgo,
               formattedDate,
               commitMsg,
-              repoName
+              repoName: 'Shadow-Arrow-Website'
             });
           }
         }
