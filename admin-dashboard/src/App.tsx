@@ -7,7 +7,6 @@ import {
   Search,
   CheckCircle,
   Clock,
-  Trash2,
   Eye,
   IndianRupee,
   Briefcase,
@@ -134,7 +133,20 @@ export const App: React.FC = () => {
         }
       });
 
-      setLeads(combined);
+      const statusOverrides: Record<string, 'pending' | 'contacted' | 'converted'> = JSON.parse(
+        localStorage.getItem('shadow_inquiry_status_overrides') || '{}'
+      );
+
+      setLeads(prevLeads => {
+        return combined.map(lead => {
+          const override = statusOverrides[lead.id];
+          const current = prevLeads.find(p => p.id === lead.id);
+          return {
+            ...lead,
+            status: override || current?.status || lead.status
+          };
+        });
+      });
     } catch (err) {
       const combined = [...localSubmitted];
       DEFAULT_SEED_LEADS.forEach(item => {
@@ -142,7 +154,21 @@ export const App: React.FC = () => {
           combined.push(item);
         }
       });
-      setLeads(combined);
+
+      const statusOverrides: Record<string, 'pending' | 'contacted' | 'converted'> = JSON.parse(
+        localStorage.getItem('shadow_inquiry_status_overrides') || '{}'
+      );
+
+      setLeads(prevLeads => {
+        return combined.map(lead => {
+          const override = statusOverrides[lead.id];
+          const current = prevLeads.find(p => p.id === lead.id);
+          return {
+            ...lead,
+            status: override || current?.status || lead.status
+          };
+        });
+      });
     } finally {
       setIsLoading(false);
       setIsSilentSyncing(false);
@@ -192,6 +218,14 @@ export const App: React.FC = () => {
   };
 
   const handleStatusChange = async (leadId: string, newStatus: 'pending' | 'contacted' | 'converted') => {
+    try {
+      const overrides: Record<string, string> = JSON.parse(
+        localStorage.getItem('shadow_inquiry_status_overrides') || '{}'
+      );
+      overrides[leadId] = newStatus;
+      localStorage.setItem('shadow_inquiry_status_overrides', JSON.stringify(overrides));
+    } catch (e) {}
+
     setLeads(prev =>
       prev.map(l => (l.id === leadId ? { ...l, status: newStatus } : l))
     );
@@ -208,24 +242,6 @@ export const App: React.FC = () => {
         });
       } catch (err) {
         console.warn('Status update error:', err);
-      }
-    }
-  };
-
-  const handleDeleteLead = async (leadId: string) => {
-    if (!window.confirm(`Are you sure you want to delete lead ${leadId}?`)) return;
-
-    setLeads(prev => prev.filter(l => l.id !== leadId));
-    if (selectedLead?.id === leadId) setSelectedLead(null);
-
-    if (token) {
-      try {
-        await fetch(`/api/admin/inquiries/${leadId}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` }
-        });
-      } catch (err) {
-        console.warn('Delete lead error:', err);
       }
     }
   };
@@ -555,20 +571,14 @@ export const App: React.FC = () => {
                                 <option value="converted">Converted</option>
                               </select>
                             </td>
-                            <td className="p-4 text-right space-x-1.5">
+                            <td className="p-4 text-right">
                               <button
                                 onClick={() => setSelectedLead(lead)}
-                                className="p-2 rounded-xl bg-[#FAF6F0] hover:bg-[#F2ECE1] text-[#6E6254] hover:text-[#2D261E] border border-[#E2D6C5] transition-colors cursor-pointer"
+                                className="px-3.5 py-2 rounded-xl bg-[#FAF6F0] hover:bg-[#F2ECE1] text-[#6E6254] hover:text-[#2D261E] border border-[#E2D6C5] transition-colors cursor-pointer text-xs font-bold inline-flex items-center gap-1.5"
                                 title="View Full Details"
                               >
-                                <Eye className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteLead(lead.id)}
-                                className="p-2 rounded-xl bg-[#FDF0F0] hover:bg-[#FADADA] text-[#9E2A2A] border border-[#F5C2C2] transition-colors cursor-pointer"
-                                title="Delete Lead"
-                              >
-                                <Trash2 className="w-4 h-4" />
+                                <Eye className="w-4 h-4 text-[#A37B3E]" />
+                                <span>Inspect Scope</span>
                               </button>
                             </td>
                           </tr>

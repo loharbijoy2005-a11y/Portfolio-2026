@@ -65,6 +65,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   const [securityAlert, setSecurityAlert] = useState<string | null>(null);
 
   const loadDemoLeads = () => {
+    const statusOverrides: Record<string, 'pending' | 'contacted' | 'converted'> = JSON.parse(
+      localStorage.getItem('shadow_inquiry_status_overrides') || '{}'
+    );
     setLeads([
       {
         id: 'EST-849201',
@@ -79,7 +82,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
         estimatedBudget: 350000,
         timeline: '4-6 Weeks',
         details: 'Looking for a high-performance multi-tenant dashboard with automated GST invoicing and analytics.',
-        status: 'pending',
+        status: statusOverrides['EST-849201'] || 'pending',
         createdAt: new Date(Date.now() - 3600000 * 4).toISOString()
       },
       {
@@ -95,7 +98,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
         estimatedBudget: 180000,
         timeline: '2-3 Weeks',
         details: 'Need a sub-second page load storefront with high converting checkout flow and custom payment gateway.',
-        status: 'contacted',
+        status: statusOverrides['EST-739104'] || 'contacted',
         createdAt: new Date(Date.now() - 3600000 * 28).toISOString()
       }
     ]);
@@ -108,7 +111,19 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     try {
       const unifiedLeads = await getInquiriesFromDatabase(authToken);
       if (unifiedLeads.length > 0) {
-        setLeads(unifiedLeads);
+        setLeads(prevLeads => {
+          const statusOverrides: Record<string, string> = JSON.parse(
+            localStorage.getItem('shadow_inquiry_status_overrides') || '{}'
+          );
+          return unifiedLeads.map(lead => {
+            const override = statusOverrides[lead.id];
+            const current = prevLeads.find(p => p.id === lead.id);
+            return {
+              ...lead,
+              status: (override as any) || current?.status || lead.status
+            };
+          });
+        });
       } else {
         loadDemoLeads();
       }
@@ -170,13 +185,19 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   };
 
   const handleStatusChange = async (leadId: string, newStatus: 'pending' | 'contacted' | 'converted') => {
-    // 1. Optimistic local React state update
+    const targetLead = leads.find(l => l.id === leadId);
+
+    // Optimistically update local component state first for instant UI feedback
     setLeads(prev =>
-      prev.map(l => (l.id === leadId ? { ...l, status: newStatus } : l))
+      prev.map(l => (l.id === leadId || (targetLead && l.clientEmail && l.clientEmail === targetLead.clientEmail) ? { ...l, status: newStatus } : l))
     );
 
-    // 2. Persist to LocalStorage, Supabase PostgreSQL, and Backend API
-    await updateInquiryStatus(leadId, newStatus, token || undefined);
+    // Execute multi-strategy update to Supabase (UUID, ilike email, ilike name) + localStorage + backend API
+    const res = await updateInquiryStatus(leadId, newStatus, token || undefined, targetLead?.clientEmail, targetLead?.clientName);
+
+    if (res && res.error) {
+      console.warn('Inquiry status update warning:', res.error);
+    }
   };
 
   const [typeFilter, setTypeFilter] = useState<'all' | 'calls' | 'estimates'>('all');

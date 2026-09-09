@@ -79,12 +79,22 @@ export default async function handler(req, res) {
   if (req.method === 'PATCH') {
     const id = req.body?.id || req.query?.id;
     const status = req.body?.status || req.query?.status;
-    if (!id || !status) {
-      return res.status(400).json({ error: 'Lead ID and status are required' });
+    const email = req.body?.email || req.query?.email;
+    if (!id && !email) {
+      return res.status(400).json({ error: 'Lead ID or email and status are required' });
     }
 
     try {
-      await supabase.from('inquiries').update({ status: sanitizeInput(status) }).eq('id', id);
+      const sanitizedStatus = sanitizeInput(status);
+      const isUuid = id && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
+
+      if (isUuid) {
+        await supabase.from('inquiries').update({ status: sanitizedStatus }).eq('id', id);
+      }
+      if (email) {
+        await supabase.from('inquiries').update({ status: sanitizedStatus }).eq('client_email', email);
+      }
+
       return res.status(200).json({ success: true, message: 'Status updated' });
     } catch (err) {
       return res.status(500).json({ error: 'Error updating inquiry status' });

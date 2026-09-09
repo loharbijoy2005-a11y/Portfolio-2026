@@ -136,8 +136,9 @@ function generateUUID(): string {
   let supabaseErrorMsg: string | undefined = undefined;
   try {
     // Generate valid v4 UUID so database receives valid primary key even if DEFAULT gen_random_uuid() is missing
+    const generatedId = generateUUID();
     const dbRecord: InquiryRecord = {
-      id: generateUUID(),
+      id: generatedId,
       type: leadObj.type,
       client_name: leadObj.clientName,
       client_email: leadObj.clientEmail,
@@ -157,7 +158,15 @@ function generateUUID(): string {
 
     if (!error && data && data.length > 0) {
       sourcesSaved.push('supabase');
-      console.log('Successfully inserted lead into Supabase table "inquiries" with UUID:', data[0].id);
+      const supabaseUuid = data[0].id || generatedId;
+      leadObj.id = supabaseUuid;
+      console.log('Successfully inserted lead into Supabase table "inquiries" with UUID:', supabaseUuid);
+      // Update local storage with Supabase UUID so IDs align
+      try {
+        const existing: UnifiedLead[] = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const updated = [leadObj, ...existing.filter(i => i.id !== leadId && i.id !== supabaseUuid)];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      } catch (e) {}
     } else if (error) {
       supabaseErrorMsg = `${error.message} (Code: ${error.code})`;
       console.error('❌ Supabase Insertion Failed:', error.message, '| Code:', error.code, '| Details:', error.details);
@@ -197,7 +206,7 @@ function generateUUID(): string {
 
   return {
     success: sourcesSaved.includes('supabase') || sourcesSaved.includes('backend_api'),
-    leadId,
+    leadId: leadObj.id,
     lead: leadObj,
     sourcesSaved,
     error: supabaseErrorMsg
@@ -209,12 +218,23 @@ function generateUUID(): string {
  */
 export async function getInquiriesFromDatabase(authToken?: string): Promise<UnifiedLead[]> {
   const allLeadsMap = new Map<string, UnifiedLead>();
+  const statusOverrides = new Map<string, 'pending' | 'contacted' | 'converted'>();
 
-  // 1. Read from LocalStorage first
+  // Load status overrides from localStorage first
   try {
+    const overrides: Record<string, 'pending' | 'contacted' | 'converted'> = JSON.parse(
+      localStorage.getItem('shadow_inquiry_status_overrides') || '{}'
+    );
+    Object.entries(overrides).forEach(([id, status]) => {
+      statusOverrides.set(id, status);
+    });
+
     const localData: UnifiedLead[] = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     localData.forEach(item => {
-      if (item.id) allLeadsMap.set(item.id, item);
+      if (item.id) {
+        if (item.status) statusOverrides.set(item.id, item.status);
+        allLeadsMap.set(item.id, item);
+      }
     });
   } catch (e) {
     // ignore
@@ -229,8 +249,10 @@ export async function getInquiriesFromDatabase(authToken?: string): Promise<Unif
 
     if (!error && Array.isArray(data)) {
       data.forEach((item: InquiryRecord) => {
+        const leadId = item.id || '';
+        const overrideStatus = statusOverrides.get(leadId) || (item.client_email ? statusOverrides.get(item.client_email) : undefined);
         const lead: UnifiedLead = {
-          id: item.id || '',
+          id: leadId,
           type: item.type,
           clientName: item.client_name,
           clientEmail: item.client_email,
@@ -242,7 +264,7 @@ export async function getInquiriesFromDatabase(authToken?: string): Promise<Unif
           estimatedBudget: item.estimated_budget || 0,
           timeline: item.timeline,
           details: item.details,
-          status: item.status || 'pending',
+          status: overrideStatus || item.status || 'pending',
           createdAt: item.created_at
         };
         allLeadsMap.set(lead.id, lead);
@@ -262,8 +284,10 @@ export async function getInquiriesFromDatabase(authToken?: string): Promise<Unif
         const json = await res.json();
         if (json.success && Array.isArray(json.data)) {
           json.data.forEach((item: any) => {
+            const leadId = item.id;
+            const overrideStatus = statusOverrides.get(leadId) || (item.clientEmail ? statusOverrides.get(item.clientEmail) : undefined);
             const lead: UnifiedLead = {
-              id: item.id,
+              id: leadId,
               type: item.type || 'Cost Estimate',
               clientName: item.clientName || item.client_name,
               clientEmail: item.clientEmail || item.client_email,
@@ -275,7 +299,7 @@ export async function getInquiriesFromDatabase(authToken?: string): Promise<Unif
               estimatedBudget: item.estimatedBudget || item.estimated_budget || 0,
               timeline: item.timeline,
               details: item.details,
-              status: item.status || 'pending',
+              status: overrideStatus || item.status || 'pending',
               createdAt: item.createdAt || item.created_at
             };
             allLeadsMap.set(lead.id, lead);
@@ -298,13 +322,27 @@ export async function getInquiriesFromDatabase(authToken?: string): Promise<Unif
 export async function updateInquiryStatus(
   leadId: string,
   newStatus: 'pending' | 'contacted' | 'converted',
-  authToken?: string
-): Promise<boolean> {
-  // 1. Update LocalStorage Cache
+  authToken?: string,
+  clientEmail?: string,
+  clientName?: string
+): Promise<{ success: boolean; error?: any }> {
+  // 1. Update LocalStorage Cache & Status Overrides
   try {
+    const overrides: Record<string, string> = JSON.parse(
+      localStorage.getItem('shadow_inquiry_status_overrides') || '{}'
+    );
+    overrides[leadId] = newStatus;
+    if (clientEmail) overrides[clientEmail.toLowerCase()] = newStatus;
+    if (clientName) overrides[clientName.toLowerCase()] = newStatus;
+    localStorage.setItem('shadow_inquiry_status_overrides', JSON.stringify(overrides));
+
     const existing: UnifiedLead[] = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     const updated = existing.map(item =>
-      item.id === leadId ? { ...item, status: newStatus } : item
+      item.id === leadId ||
+      (clientEmail && item.clientEmail && item.clientEmail.toLowerCase() === clientEmail.toLowerCase()) ||
+      (clientName && item.clientName && item.clientName.toLowerCase() === clientName.toLowerCase())
+        ? { ...item, status: newStatus }
+        : item
     );
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (e) {
@@ -312,19 +350,68 @@ export async function updateInquiryStatus(
   }
 
   // 2. Update Direct Supabase Database
-  try {
-    const { error } = await supabase
-      .from('inquiries')
-      .update({ status: newStatus })
-      .eq('id', leadId);
+  let supabaseSuccess = false;
+  let supabaseError: any = null;
+  const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(leadId);
 
-    if (error) {
-      console.error('❌ Supabase status update error:', error.message);
-    } else {
-      console.log(`✅ Supabase status updated to "${newStatus}" for lead ${leadId}`);
+  // Strategy A: Try matching by UUID if valid UUID
+  if (isUuid) {
+    try {
+      const { data, error } = await supabase
+        .from('inquiries')
+        .update({ status: newStatus })
+        .eq('id', leadId)
+        .select();
+
+      if (error) {
+        supabaseError = error;
+      } else if (data && data.length > 0) {
+        supabaseSuccess = true;
+        console.log(`✅ Supabase status updated to "${newStatus}" for UUID lead ${leadId}`);
+      }
+    } catch (err) {
+      supabaseError = err;
     }
-  } catch (err) {
-    console.warn('Supabase status update exception:', err);
+  }
+
+  // Strategy B: Case-insensitive email match in Supabase (ilike)
+  if (!supabaseSuccess && clientEmail && clientEmail.trim()) {
+    try {
+      const { data, error } = await supabase
+        .from('inquiries')
+        .update({ status: newStatus })
+        .ilike('client_email', clientEmail.trim())
+        .select();
+
+      if (!error && data && data.length > 0) {
+        supabaseSuccess = true;
+        supabaseError = null;
+        console.log(`✅ Supabase status updated to "${newStatus}" via ilike email match "${clientEmail}"`);
+      } else if (error) {
+        supabaseError = error;
+      }
+    } catch (err) {
+      supabaseError = err;
+    }
+  }
+
+  // Strategy C: Case-insensitive client_name match in Supabase (ilike) if not anonymous
+  if (!supabaseSuccess && clientName && clientName.trim() && clientName !== 'Anonymous Client') {
+    try {
+      const { data, error } = await supabase
+        .from('inquiries')
+        .update({ status: newStatus })
+        .ilike('client_name', clientName.trim())
+        .select();
+
+      if (!error && data && data.length > 0) {
+        supabaseSuccess = true;
+        supabaseError = null;
+        console.log(`✅ Supabase status updated to "${newStatus}" via ilike name match "${clientName}"`);
+      }
+    } catch (err) {
+      // ignore
+    }
   }
 
   // 3. Update Backend API if auth token is present
@@ -336,26 +423,13 @@ export async function updateInquiryStatus(
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`
         },
-        body: JSON.stringify({ id: leadId, status: newStatus })
+        body: JSON.stringify({ id: leadId, status: newStatus, email: clientEmail })
       });
     } catch (err) {
       console.warn('Backend API status update error:', err);
     }
-
-    try {
-      await fetch(`/api/admin/inquiries/${leadId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`
-        },
-        body: JSON.stringify({ status: newStatus })
-      });
-    } catch (err) {
-      // optional endpoint fallback
-    }
   }
 
-  return true;
+  return { success: supabaseSuccess || !supabaseError, error: supabaseError };
 }
 
