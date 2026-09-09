@@ -398,17 +398,31 @@ export const FounderBio: React.FC = () => {
                   </div>
                 </motion.div>
 
-                {/* Avatar with Instagram Story Ring */}
-                <div className="p-0.5 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shadow-md">
-                  <img
-                    src="https://github.com/loharbijoy2005-a11y.png"
-                    alt="Bijoy Lohar - Founder & Lead Engineer"
-                    width="160"
-                    height="160"
-                    loading="lazy"
-                    decoding="async"
-                    className="w-20 h-20 rounded-full object-cover border-2 border-white mx-auto shadow-inner"
+                {/* Avatar with Animated Real-Time Rotating RGB Story Ring */}
+                <div className="relative inline-block mx-auto">
+                  {/* Real-time RGB Glow Aura */}
+                  <motion.div 
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-red-500 via-amber-400 via-emerald-400 via-cyan-400 via-blue-500 via-purple-500 to-pink-500 blur-md opacity-75 pointer-events-none"
                   />
+
+                  {/* Outer 360° Spinning RGB Gradient Laser Ring */}
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 3.5, repeat: Infinity, ease: 'linear' }}
+                    className="p-[3px] rounded-full bg-gradient-to-r from-red-500 via-amber-400 via-emerald-400 via-cyan-400 via-blue-500 via-purple-600 to-pink-500 shadow-xl shadow-purple-500/25 relative z-10"
+                  >
+                    <img
+                      src="https://github.com/loharbijoy2005-a11y.png"
+                      alt="Bijoy Lohar - Founder & Lead Engineer"
+                      width="160"
+                      height="160"
+                      loading="lazy"
+                      decoding="async"
+                      className="w-20 h-20 rounded-full object-cover border-2 border-white mx-auto shadow-inner relative z-10"
+                    />
+                  </motion.div>
                 </div>
 
                 {/* Instagram Live Online Indicator Dot */}
