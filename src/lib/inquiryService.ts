@@ -291,3 +291,71 @@ export async function getInquiriesFromDatabase(authToken?: string): Promise<Unif
   result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   return result;
 }
+
+/**
+ * Update the status of an inquiry across local storage, Supabase, and backend API.
+ */
+export async function updateInquiryStatus(
+  leadId: string,
+  newStatus: 'pending' | 'contacted' | 'converted',
+  authToken?: string
+): Promise<boolean> {
+  // 1. Update LocalStorage Cache
+  try {
+    const existing: UnifiedLead[] = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const updated = existing.map(item =>
+      item.id === leadId ? { ...item, status: newStatus } : item
+    );
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  } catch (e) {
+    console.warn('LocalStorage status update error:', e);
+  }
+
+  // 2. Update Direct Supabase Database
+  try {
+    const { error } = await supabase
+      .from('inquiries')
+      .update({ status: newStatus })
+      .eq('id', leadId);
+
+    if (error) {
+      console.error('❌ Supabase status update error:', error.message);
+    } else {
+      console.log(`✅ Supabase status updated to "${newStatus}" for lead ${leadId}`);
+    }
+  } catch (err) {
+    console.warn('Supabase status update exception:', err);
+  }
+
+  // 3. Update Backend API if auth token is present
+  if (authToken && !authToken.startsWith('demo_')) {
+    try {
+      await fetch('/api/admin/inquiries', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`
+        },
+        body: JSON.stringify({ id: leadId, status: newStatus })
+      });
+    } catch (err) {
+      console.warn('Backend API status update error:', err);
+    }
+
+    try {
+      await fetch(`/api/admin/inquiries/${leadId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+    } catch (err) {
+      // optional endpoint fallback
+    }
+  }
+
+  return true;
+}
+

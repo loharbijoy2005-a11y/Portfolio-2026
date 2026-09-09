@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getInquiriesFromDatabase } from '../lib/inquiryService';
+import { getInquiriesFromDatabase, updateInquiryStatus } from '../lib/inquiryService';
 import {
   Shield,
   Lock,
@@ -170,24 +170,13 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   };
 
   const handleStatusChange = async (leadId: string, newStatus: 'pending' | 'contacted' | 'converted') => {
+    // 1. Optimistic local React state update
     setLeads(prev =>
       prev.map(l => (l.id === leadId ? { ...l, status: newStatus } : l))
     );
 
-    if (token && !token.startsWith('demo_')) {
-      try {
-        await fetch(`/api/admin/inquiries/${leadId}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ status: newStatus })
-        });
-      } catch (err) {
-        console.warn('Status sync error:', err);
-      }
-    }
+    // 2. Persist to LocalStorage, Supabase PostgreSQL, and Backend API
+    await updateInquiryStatus(leadId, newStatus, token || undefined);
   };
 
   const [typeFilter, setTypeFilter] = useState<'all' | 'calls' | 'estimates'>('all');

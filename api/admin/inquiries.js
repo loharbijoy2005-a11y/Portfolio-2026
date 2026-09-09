@@ -77,7 +77,8 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'PATCH') {
-    const { id, status } = req.body || {};
+    const id = req.body?.id || req.query?.id;
+    const status = req.body?.status || req.query?.status;
     if (!id || !status) {
       return res.status(400).json({ error: 'Lead ID and status are required' });
     }
