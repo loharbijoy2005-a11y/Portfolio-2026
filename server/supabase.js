@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://srqvyizakffjuaskzooq.supabase.co';
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoYWRvd2Fycm93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MjAxNTAwMDAwMH0.placeholder-key-for-shadow-arrow';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNycXZ5aXpha2ZmanVhc2t6b29xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MDYyMTEsImV4cCI6MjEwNDM4MjIxMX0.ydlKWOBNIyJXLjTUu7t4TH1YDWOAfd6mMtM8yTP2pyM';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -9,13 +9,13 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 export const insertLeadToSupabase = async (lead) => {
   try {
     const rawBudget = lead.estimatedBudget ?? lead.estimated_budget ?? lead.budget ?? 0;
-    const parsedBudget = typeof rawBudget === 'number' 
-      ? (isNaN(rawBudget) ? 0 : rawBudget) 
+    const parsedBudget = typeof rawBudget === 'number'
+      ? (isNaN(rawBudget) ? 0 : rawBudget)
       : (parseFloat(String(rawBudget).replace(/[^0-9.]/g, '')) || 0);
 
     const rawStack = lead.techStack || lead.tech_stack || lead.modules || [];
-    const parsedStack = Array.isArray(rawStack) 
-      ? rawStack 
+    const parsedStack = Array.isArray(rawStack)
+      ? rawStack
       : (typeof rawStack === 'string' && rawStack.trim() ? rawStack.split(',').map(s => s.trim()).filter(Boolean) : []);
 
     const { data, error } = await supabase.from('inquiries').insert([

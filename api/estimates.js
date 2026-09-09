@@ -2,7 +2,7 @@ import { sanitizeInput } from './utils/security.js';
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://srqvyizakffjuaskzooq.supabase.co';
-const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoYWRvd2Fycm93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MjAxNTAwMDAwMH0.placeholder-key-for-shadow-arrow';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNycXZ5aXpha2ZmanVhc2t6b29xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MDYyMTEsImV4cCI6MjEwNDM4MjIxMX0.ydlKWOBNIyJXLjTUu7t4TH1YDWOAfd6mMtM8yTP2pyM';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -25,10 +25,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { 
-      clientName, clientEmail, clientPhone, company, businessType, serviceName, 
+    const {
+      clientName, clientEmail, clientPhone, company, businessType, serviceName,
       techStack, estimatedBudget, timeline, details, type,
-      name, email, phone, service, message, budget, modules 
+      name, email, phone, service, message, budget, modules
     } = req.body || {};
 
     const cleanName = sanitizeInput(clientName || name || 'Anonymous Client');
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
 
     // Parse numeric budget safely
     const rawBudget = estimatedBudget ?? budget ?? 0;
-    const parsedBudget = typeof rawBudget === 'number' 
+    const parsedBudget = typeof rawBudget === 'number'
       ? (isNaN(rawBudget) ? 0 : rawBudget)
       : (parseFloat(String(rawBudget).replace(/[^0-9.]/g, '')) || 0);
 
@@ -47,9 +47,9 @@ export default async function handler(req, res) {
     const rawStack = techStack || modules || [];
     const parsedStack = Array.isArray(rawStack)
       ? rawStack.map(s => sanitizeInput(String(s)))
-      : (typeof rawStack === 'string' && rawStack.trim() 
-          ? rawStack.split(',').map(s => sanitizeInput(s.trim())).filter(Boolean)
-          : []);
+      : (typeof rawStack === 'string' && rawStack.trim()
+        ? rawStack.split(',').map(s => sanitizeInput(s.trim())).filter(Boolean)
+        : []);
 
     const leadId = `EST-${Math.floor(100000 + Math.random() * 900000)}`;
 
