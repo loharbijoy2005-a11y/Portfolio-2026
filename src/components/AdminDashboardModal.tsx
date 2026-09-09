@@ -9,7 +9,6 @@ import {
   Search,
   CheckCircle,
   Clock,
-  Trash2,
   Eye,
   IndianRupee,
   Briefcase,
@@ -18,6 +17,10 @@ import {
   UserCheck,
   Building2,
   Phone,
+  PhoneCall,
+  Calculator,
+  Download,
+  Copy,
   Zap
 } from 'lucide-react';
 import { AntiInspectShield } from './AntiInspectShield';
@@ -187,22 +190,41 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     }
   };
 
-  const handleDeleteLead = async (leadId: string) => {
-    if (!window.confirm(`Are you sure you want to delete lead ${leadId}?`)) return;
+  const [typeFilter, setTypeFilter] = useState<'all' | 'calls' | 'estimates'>('all');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-    setLeads(prev => prev.filter(l => l.id !== leadId));
-    if (selectedLead?.id === leadId) setSelectedLead(null);
+  const handleCopyContact = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
-    if (token && !token.startsWith('demo_')) {
-      try {
-        await fetch(`/api/admin/inquiries/${leadId}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` }
-        });
-      } catch (err) {
-        console.warn('Delete sync error:', err);
-      }
-    }
+  const exportToCSV = () => {
+    if (leads.length === 0) return;
+    const headers = ['ID', 'Type', 'Client Name', 'Email', 'Phone', 'Company', 'Business Type', 'Service', 'Budget (INR)', 'Timeline', 'Status', 'Date'];
+    const rows = leads.map(l => [
+      l.id,
+      l.type || 'Cost Estimate',
+      `"${l.clientName}"`,
+      `"${l.clientEmail}"`,
+      `"${l.clientPhone || ''}"`,
+      `"${l.company || ''}"`,
+      `"${l.businessType || ''}"`,
+      `"${l.serviceName}"`,
+      l.estimatedBudget || 0,
+      `"${l.timeline}"`,
+      l.status,
+      `"${new Date(l.createdAt).toLocaleString()}"`
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `ShadowArrow_Inquiries_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleSecurityAlert = (reason: string) => {
@@ -219,15 +241,22 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
       lead.clientEmail.toLowerCase().includes(query) ||
       (lead.clientPhone && lead.clientPhone.toLowerCase().includes(query)) ||
       lead.id.toLowerCase().includes(query) ||
+      (lead.type && lead.type.toLowerCase().includes(query)) ||
       lead.serviceName.toLowerCase().includes(query);
 
     const matchesStatus = statusFilter === 'all' || lead.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesType =
+      typeFilter === 'all' ||
+      (typeFilter === 'calls' && (lead.type === 'Discovery Call' || lead.type === 'Call Request')) ||
+      (typeFilter === 'estimates' && lead.type === 'Cost Estimate');
+
+    return matchesSearch && matchesStatus && matchesType;
   });
 
   const totalValue = leads.reduce((acc, l) => acc + (l.estimatedBudget || 0), 0);
   const pendingCount = leads.filter(l => l.status === 'pending').length;
   const convertedCount = leads.filter(l => l.status === 'converted').length;
+  const callsCount = leads.filter(l => l.type === 'Discovery Call' || l.type === 'Call Request').length;
 
   return (
     <AntiInspectShield isActive={isOpen && !!token} onSecurityAlert={handleSecurityAlert}>
@@ -409,31 +438,68 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 {/* Filter and Search Toolbar */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 border border-[#E8DFD1] rounded-2xl shadow-sm">
                   
-                  <div className="relative w-full sm:w-80">
+                  <div className="relative w-full sm:w-72">
                     <Search className="w-4 h-4 text-[#998A78] absolute left-3.5 top-2.5" />
                     <input
                       type="text"
-                      placeholder="Search by name, email, phone, scope..."
+                      placeholder="Search name, email, phone, scope..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full pl-9 pr-4 py-2 bg-[#FAF8F5] border border-[#E2D6C5] rounded-xl text-xs text-[#2D261E] placeholder:text-[#A39585] focus:outline-none focus:border-[#A37B3E] focus:ring-2 focus:ring-[#A37B3E]/20 transition-all"
                     />
                   </div>
 
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                    {/* Category Type Filter */}
+                    <div className="flex items-center bg-[#FAF8F5] p-1 rounded-xl border border-[#E2D6C5]">
+                      <button
+                        onClick={() => setTypeFilter('all')}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          typeFilter === 'all' ? 'bg-[#A37B3E] text-white' : 'text-[#6E6254] hover:text-[#2D261E]'
+                        }`}
+                      >
+                        All Types
+                      </button>
+                      <button
+                        onClick={() => setTypeFilter('calls')}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                          typeFilter === 'calls' ? 'bg-blue-600 text-white' : 'text-blue-700 hover:text-blue-900'
+                        }`}
+                      >
+                        <PhoneCall className="w-3 h-3" /> Calls ({callsCount})
+                      </button>
+                      <button
+                        onClick={() => setTypeFilter('estimates')}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                          typeFilter === 'estimates' ? 'bg-amber-700 text-white' : 'text-amber-800 hover:text-amber-950'
+                        }`}
+                      >
+                        <Calculator className="w-3 h-3" /> Estimates
+                      </button>
+                    </div>
+
+                    {/* Status Filter */}
                     {(['all', 'pending', 'contacted', 'converted'] as const).map((filter) => (
                       <button
                         key={filter}
                         onClick={() => setStatusFilter(filter)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize transition-colors cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-xl text-xs font-bold capitalize transition-colors cursor-pointer ${
                           statusFilter === filter
-                            ? 'bg-[#A37B3E] text-white shadow-sm'
+                            ? 'bg-[#2D261E] text-white shadow-sm'
                             : 'bg-[#FAF8F5] text-[#6E6254] hover:text-[#2D261E] border border-[#E2D6C5]'
                         }`}
                       >
                         {filter}
                       </button>
                     ))}
+
+                    <button
+                      onClick={exportToCSV}
+                      className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                      title="Export CSV"
+                    >
+                      <Download className="w-3.5 h-3.5 text-emerald-700" /> Export CSV
+                    </button>
 
                     <button
                       onClick={() => token && fetchLeads(token)}
@@ -452,7 +518,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     <table className="w-full text-left text-xs border-collapse">
                       <thead>
                         <tr className="bg-[#F4EFE6] text-[#42392E] uppercase text-[10px] font-mono tracking-wider border-b border-[#E3D8C8]">
-                          <th className="p-3.5 font-bold">Reference ID</th>
+                          <th className="p-3.5 font-bold">Reference & Type</th>
                           <th className="p-3.5 font-bold">Client Contact</th>
                           <th className="p-3.5 font-bold">Scope / Service</th>
                           <th className="p-3.5 font-bold">Budget (INR)</th>
@@ -471,15 +537,43 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         ) : (
                           filteredLeads.map((lead) => (
                             <tr key={lead.id} className="hover:bg-[#FAF5ED] transition-colors">
-                              <td className="p-3.5 font-mono text-[#A37B3E] font-bold">
-                                {lead.id}
+                              <td className="p-3.5 space-y-1">
+                                <div className="font-mono text-[#A37B3E] font-bold">{lead.id}</div>
+                                {lead.type === 'Discovery Call' || lead.type === 'Call Request' ? (
+                                  <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-200">
+                                    <PhoneCall className="w-3 h-3 text-blue-600" /> {lead.type}
+                                  </span>
+                                ) : (
+                                  <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-200">
+                                    <Calculator className="w-3 h-3 text-amber-700" /> {lead.type || 'Cost Estimate'}
+                                  </span>
+                                )}
                               </td>
                               <td className="p-3.5">
                                 <div className="font-bold text-[#2D261E]">{lead.clientName}</div>
-                                <div className="text-[11px] text-[#6E6254]">{lead.clientEmail}</div>
+                                <div className="text-[11px] text-[#6E6254] flex items-center gap-1">
+                                  <span>{lead.clientEmail}</span>
+                                  <button
+                                    onClick={() => handleCopyContact(lead.clientEmail, lead.id + '_email')}
+                                    className="text-[10px] text-[#8C7E6E] hover:text-[#2D261E]"
+                                    title="Copy Email"
+                                  >
+                                    <Copy className="w-3 h-3" />
+                                  </button>
+                                  {copiedId === lead.id + '_email' && <span className="text-[9px] text-emerald-600 font-bold">Copied!</span>}
+                                </div>
                                 {lead.clientPhone && (
-                                  <div className="text-[11px] text-[#1B7043] font-mono flex items-center gap-1 mt-0.5 font-semibold">
-                                    <Phone className="w-3 h-3 text-[#1B7043]" /> {lead.clientPhone}
+                                  <div className="text-[11px] text-[#1B7043] font-mono flex items-center gap-1.5 mt-0.5 font-semibold">
+                                    <Phone className="w-3 h-3 text-[#1B7043]" /> 
+                                    <a href={`tel:${lead.clientPhone}`} className="hover:underline">{lead.clientPhone}</a>
+                                    <button
+                                      onClick={() => handleCopyContact(lead.clientPhone!, lead.id + '_phone')}
+                                      className="text-[10px] text-[#8C7E6E] hover:text-[#2D261E]"
+                                      title="Copy Phone"
+                                    >
+                                      <Copy className="w-3 h-3" />
+                                    </button>
+                                    {copiedId === lead.id + '_phone' && <span className="text-[9px] text-emerald-600 font-bold">Copied!</span>}
                                   </div>
                                 )}
                                 {lead.company && (
@@ -519,20 +613,14 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                                   <option value="converted">Converted</option>
                                 </select>
                               </td>
-                              <td className="p-3.5 text-right space-x-1">
+                              <td className="p-3.5 text-right">
                                 <button
                                   onClick={() => setSelectedLead(lead)}
-                                  className="p-1.5 rounded-lg bg-[#FAF6F0] hover:bg-[#F2ECE1] text-[#6E6254] hover:text-[#2D261E] border border-[#E2D6C5] transition-colors cursor-pointer"
+                                  className="px-3 py-1.5 rounded-lg bg-[#FAF6F0] hover:bg-[#F2ECE1] text-[#6E6254] hover:text-[#2D261E] border border-[#E2D6C5] transition-colors cursor-pointer text-xs font-bold inline-flex items-center gap-1"
                                   title="View Full Details"
                                 >
-                                  <Eye className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteLead(lead.id)}
-                                  className="p-1.5 rounded-lg bg-[#FDF0F0] hover:bg-[#FADADA] text-[#9E2A2A] border border-[#F5C2C2] transition-colors cursor-pointer"
-                                  title="Delete Lead"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
+                                  <Eye className="w-3.5 h-3.5 text-[#A37B3E]" />
+                                  <span>Inspect Scope</span>
                                 </button>
                               </td>
                             </tr>

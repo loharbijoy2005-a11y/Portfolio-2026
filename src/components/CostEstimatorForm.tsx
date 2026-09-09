@@ -370,7 +370,7 @@ export const CostEstimatorForm: React.FC<CostEstimatorProps> = ({
                 <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto shadow-md">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h4 className="text-lg font-bold text-emerald-950">Inquiry Saved to Backend!</h4>
+                <h4 className="text-lg font-bold text-emerald-950">Inquiry Saved</h4>
                 {submittedLeadId && (
                   <div className="inline-block bg-emerald-100 text-emerald-800 text-xs font-mono font-bold px-3 py-1 rounded-full border border-emerald-300">
                     Lead Reference: {submittedLeadId}
