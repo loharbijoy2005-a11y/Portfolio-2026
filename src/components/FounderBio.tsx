@@ -78,78 +78,86 @@ export const FounderBio: React.FC = () => {
     updateTimeAndGreeting();
     const clockInterval = setInterval(updateTimeAndGreeting, 1000);
 
-    // 3. Real-time GitHub Activity Tracker across ALL user repositories
+    // 3. Real-time GitHub Activity Tracker — scans ALL public repos of the user
     const fetchGitHubActivity = async () => {
       try {
-        const eventsRes = await fetch('https://api.github.com/users/loharbijoy2005-a11y/events/public');
+        // Fetch all public events across ALL repos of this user
+        const eventsRes = await fetch(
+          'https://api.github.com/users/loharbijoy2005-a11y/events/public?per_page=100',
+          { headers: { Accept: 'application/vnd.github+json' } }
+        );
         if (!eventsRes.ok) return;
         const events = await eventsRes.json();
+        if (!Array.isArray(events) || events.length === 0) return;
 
-        if (Array.isArray(events) && events.length > 0) {
-          const pushEvent = events.find((e: any) => e.type === 'PushEvent' || e.type === 'CreateEvent') || events[0];
+        // Find the most recent PushEvent across any public repo
+        const pushEvent = events.find((e: any) => e.type === 'PushEvent') 
+          || events.find((e: any) => e.type === 'CreateEvent')
+          || events[0];
 
-          if (pushEvent && pushEvent.repo?.name) {
-            const repoFullName = pushEvent.repo.name;
-            const repoSimpleName = repoFullName.includes('/') ? repoFullName.split('/')[1] : repoFullName;
+        if (!pushEvent) return;
 
-            const commitsRes = await fetch(`https://api.github.com/repos/${repoFullName}/commits`);
-            let commitMsg = 'Codebase Sync';
-            let rawDate = pushEvent.created_at;
+        const repoFullName: string = pushEvent.repo?.name ?? '';
+        const repoSimpleName = repoFullName.includes('/')
+          ? repoFullName.split('/')[1]
+          : repoFullName || 'Unknown Repo';
 
-            if (commitsRes.ok) {
-              const commits = await commitsRes.json();
-              if (Array.isArray(commits) && commits.length > 0) {
-                const latestCommit = commits[0];
-                rawDate = latestCommit.commit?.committer?.date || latestCommit.commit?.author?.date || pushEvent.created_at;
-                const rawMsg = latestCommit.commit?.message || 'Codebase Sync';
-                commitMsg = rawMsg.split('\n')[0];
-              }
-            }
+        // Extract commit message directly from PushEvent payload (no extra API call needed)
+        let commitMsg = 'Codebase Sync';
+        let rawDate: string = pushEvent.created_at;
 
-            const eventTime = new Date(rawDate).getTime();
-            const currentTime = Date.now();
-            const diffMs = currentTime - eventTime;
-            const diffHours = diffMs / (1000 * 60 * 60);
-            const diffMins = Math.floor(diffMs / (1000 * 60));
-
-            const isActive = true; // Always active coding
-
-            let timeAgo = '';
-            if (diffMins < 1) {
-              timeAgo = 'Just now';
-            } else if (diffMins < 60) {
-              timeAgo = `${diffMins}m ago`;
-            } else {
-              const h = Math.floor(diffHours);
-              const m = diffMins % 60;
-              timeAgo = `${h}h ${m}m ago`;
-            }
-
-            const formattedDate = new Date(rawDate).toLocaleString('en-IN', {
-              day: '2-digit',
-              month: 'short',
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: true
-            });
-
-            setGhStatus({
-              isActive,
-              statusText: `Active Coding (${timeAgo})`,
-              lastSeenText: timeAgo,
-              formattedDate,
-              commitMsg,
-              repoName: repoSimpleName
-            });
-          }
+        if (pushEvent.type === 'PushEvent' && pushEvent.payload?.commits?.length > 0) {
+          // Get the last commit in the push
+          const lastCommit = pushEvent.payload.commits[pushEvent.payload.commits.length - 1];
+          const rawMsg: string = lastCommit?.message ?? 'Codebase Sync';
+          commitMsg = rawMsg.split('\n')[0].slice(0, 60); // Trim long messages
+        } else if (pushEvent.type === 'CreateEvent') {
+          commitMsg = `Created ${pushEvent.payload?.ref_type ?? 'ref'}: ${pushEvent.payload?.ref ?? repoSimpleName}`;
         }
+
+        const eventTime = new Date(rawDate).getTime();
+        const currentTime = Date.now();
+        const diffMs = currentTime - eventTime;
+        const diffHours = diffMs / (1000 * 60 * 60);
+        const diffMins = Math.floor(diffMs / (1000 * 60));
+
+        let timeAgo = '';
+        if (diffMins < 1) {
+          timeAgo = 'Just now';
+        } else if (diffMins < 60) {
+          timeAgo = `${diffMins}m ago`;
+        } else if (diffHours < 24) {
+          const h = Math.floor(diffHours);
+          const m = diffMins % 60;
+          timeAgo = m > 0 ? `${h}h ${m}m ago` : `${h}h ago`;
+        } else {
+          const d = Math.floor(diffHours / 24);
+          timeAgo = `${d}d ago`;
+        }
+
+        const formattedDate = new Date(rawDate).toLocaleString('en-IN', {
+          day: '2-digit',
+          month: 'short',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
+
+        setGhStatus({
+          isActive: true,
+          statusText: `Active Coding (${timeAgo})`,
+          lastSeenText: timeAgo,
+          formattedDate,
+          commitMsg,
+          repoName: repoSimpleName
+        });
       } catch (err) {
         // Keep fallback state on network error
       }
     };
 
     fetchGitHubActivity();
-    const ghInterval = setInterval(fetchGitHubActivity, 15000); // Poll GitHub API every 15s
+    const ghInterval = setInterval(fetchGitHubActivity, 30000); // Poll every 30s
 
     return () => {
       clearInterval(clockInterval);

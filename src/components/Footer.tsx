@@ -57,8 +57,8 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
             <div className="space-y-2.5 text-xs text-slate-300">
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-blue-400 shrink-0" />
-                <a href="mailto:support.shadowarrow@gmail.com" className="hover:text-white transition-colors">
-                  support.shadowarrow@gmail.com
+                <a href="mailto:support@shadowarrow.in" className="hover:text-white transition-colors">
+                  support@shadowarrow.in
                 </a>
               </div>
               <div className="flex items-center gap-2">

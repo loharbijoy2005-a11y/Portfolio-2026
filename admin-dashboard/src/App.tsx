@@ -19,6 +19,7 @@ import {
   Zap
 } from 'lucide-react';
 import { AntiInspectShield } from './components/AntiInspectShield';
+import { supabase } from './lib/supabase';
 
 interface Lead {
   id: string;
@@ -113,25 +114,66 @@ export const App: React.FC = () => {
       localSubmitted = [];
     }
 
+    let supabaseLeads: Lead[] = [];
     try {
-      const res = await fetch('/api/admin/inquiries', {
-        headers: { Authorization: `Bearer ${authToken}` }
-      });
-      const data = await res.json();
-      let fetched: Lead[] = [];
+      const { data: sbData, error: sbError } = await supabase
+        .from('inquiries')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-      if (res.ok && data.success && Array.isArray(data.data) && data.data.length > 0) {
-        fetched = data.data;
-      } else {
-        fetched = DEFAULT_SEED_LEADS;
+      if (!sbError && sbData && sbData.length > 0) {
+        supabaseLeads = sbData.map((item: any) => ({
+          id: item.id,
+          type: item.type || 'Cost Estimate',
+          clientName: item.client_name || item.clientName || 'Anonymous Client',
+          clientEmail: item.client_email || item.clientEmail || 'no-email@provided.local',
+          clientPhone: item.client_phone || item.clientPhone || '',
+          company: item.company || '',
+          businessType: item.business_type || item.businessType || '',
+          serviceName: item.service_name || item.serviceName || 'Custom Project',
+          techStack: item.tech_stack || item.techStack || [],
+          estimatedBudget: Number(item.estimated_budget || item.estimatedBudget || 0),
+          timeline: item.timeline || 'Flexible',
+          details: item.details || '',
+          status: item.status || 'pending',
+          createdAt: item.created_at || item.createdAt || new Date().toISOString()
+        }));
+      }
+    } catch (sbErr) {
+      console.warn('Direct Supabase fetch warning:', sbErr);
+    }
+
+    try {
+      let apiLeads: Lead[] = [];
+      try {
+        const res = await fetch('/api/admin/inquiries', {
+          headers: { Authorization: `Bearer ${authToken}` }
+        });
+        const data = await res.json();
+        if (res.ok && data.success && Array.isArray(data.data) && data.data.length > 0 && data.source !== 'seed_fallback') {
+          apiLeads = data.data;
+        }
+      } catch (e) {}
+
+      // Combine sources: Supabase DB > API > LocalStorage > Default Seed
+      const combinedMap = new Map<string, Lead>();
+
+      // 1. Seed fallback if no real data anywhere
+      if (supabaseLeads.length === 0 && apiLeads.length === 0 && localSubmitted.length === 0) {
+        DEFAULT_SEED_LEADS.forEach(l => combinedMap.set(l.id, l));
       }
 
-      const combined = [...localSubmitted];
-      fetched.forEach(item => {
-        if (!combined.some(c => c.id === item.id)) {
-          combined.push(item);
-        }
-      });
+      // 2. Add local submitted
+      localSubmitted.forEach(l => combinedMap.set(l.id, l));
+
+      // 3. Add API leads
+      apiLeads.forEach(l => combinedMap.set(l.id, l));
+
+      // 4. Add Supabase DB leads (highest authority)
+      supabaseLeads.forEach(l => combinedMap.set(l.id, l));
+
+      const combined = Array.from(combinedMap.values());
+      combined.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
       const statusOverrides: Record<string, 'pending' | 'contacted' | 'converted'> = JSON.parse(
         localStorage.getItem('shadow_inquiry_status_overrides') || '{}'
@@ -148,27 +190,7 @@ export const App: React.FC = () => {
         });
       });
     } catch (err) {
-      const combined = [...localSubmitted];
-      DEFAULT_SEED_LEADS.forEach(item => {
-        if (!combined.some(c => c.id === item.id)) {
-          combined.push(item);
-        }
-      });
-
-      const statusOverrides: Record<string, 'pending' | 'contacted' | 'converted'> = JSON.parse(
-        localStorage.getItem('shadow_inquiry_status_overrides') || '{}'
-      );
-
-      setLeads(prevLeads => {
-        return combined.map(lead => {
-          const override = statusOverrides[lead.id];
-          const current = prevLeads.find(p => p.id === lead.id);
-          return {
-            ...lead,
-            status: override || current?.status || lead.status
-          };
-        });
-      });
+      console.warn('Fetch leads error:', err);
     } finally {
       setIsLoading(false);
       setIsSilentSyncing(false);
@@ -230,15 +252,27 @@ export const App: React.FC = () => {
       prev.map(l => (l.id === leadId ? { ...l, status: newStatus } : l))
     );
 
+    // Direct Supabase DB Status Update
+    if (leadId) {
+      try {
+        await supabase
+          .from('inquiries')
+          .update({ status: newStatus })
+          .eq('id', leadId);
+      } catch (err) {
+        console.warn('Direct Supabase status update warning:', err);
+      }
+    }
+
     if (token) {
       try {
-        await fetch(`/api/admin/inquiries/${leadId}`, {
+        await fetch(`/api/admin/inquiries`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify({ status: newStatus })
+          body: JSON.stringify({ id: leadId, status: newStatus })
         });
       } catch (err) {
         console.warn('Status update error:', err);

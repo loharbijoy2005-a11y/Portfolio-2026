@@ -177,7 +177,7 @@ npm run build
     <td>
       <b>Founder & Lead Full-Stack Engineer</b><br />
       Architecting custom web applications, SaaS platforms, and high-performance digital engines.<br /><br />
-      📧 <b>Email:</b> <a href="mailto:support.shadowarrow@gmail.com">support.shadowarrow@gmail.com</a><br />
+      📧 <b>Email:</b> <a href="mailto:support@shadowarrow.in">support@shadowarrow.in</a><br />
       🌐 <b>Website:</b> <a href="https://www.shadowarrow.in/">shadowarrow.in</a><br />
       🐙 <b>GitHub:</b> <a href="https://github.com/loharbijoy2005-a11y">@loharbijoy2005-a11y</a>
     </td>

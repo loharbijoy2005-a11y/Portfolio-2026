@@ -43,6 +43,20 @@ export interface UnifiedLead {
 const STORAGE_KEY = 'shadow_client_inquiries';
 
 /**
+ * Generate a valid v4 UUID for Supabase primary key
+ */
+function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+/**
  * Safely parse numeric budget from any input (number, formatted string like "₹50,000", or null)
  */
 function parseNumericBudget(val: any): number {
@@ -121,16 +135,6 @@ export async function saveInquiryToDatabase(input: InquiryInput): Promise<{
     console.warn('LocalStorage save error:', e);
   }
 
-function generateUUID(): string {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID();
-  }
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
 
   // 2. Direct Supabase Database Insertion
   let supabaseErrorMsg: string | undefined = undefined;
