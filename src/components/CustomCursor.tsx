@@ -7,9 +7,16 @@ interface TrailPoint {
   y: number;
 }
 
+interface Ripple {
+  id: number;
+  x: number;
+  y: number;
+}
+
 export const CustomCursor: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
   const [trail, setTrail] = useState<TrailPoint[]>([]);
+  const [ripples, setRipples] = useState<Ripple[]>([]);
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [hoverText, setHoverText] = useState<string | null>(null);
@@ -57,7 +64,12 @@ export const CustomCursor: React.FC = () => {
       }
     };
 
-    const onMouseDown = () => setIsClicked(true);
+    const onMouseDown = (e: MouseEvent) => {
+      setIsClicked(true);
+      const newRipple = { id: Date.now() + Math.random(), x: e.clientX, y: e.clientY };
+      setRipples((prev) => [...prev.slice(-3), newRipple]);
+    };
+
     const onMouseUp = () => setIsClicked(false);
     const onMouseLeave = () => setIsVisible(false);
     const onMouseEnter = () => setIsVisible(true);
@@ -79,6 +91,21 @@ export const CustomCursor: React.FC = () => {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+      {/* Click Shockwave Ripples */}
+      {ripples.map((r) => (
+        <motion.div
+          key={r.id}
+          initial={{ scale: 0.2, opacity: 0.9 }}
+          animate={{ scale: 3.5, opacity: 0 }}
+          transition={{ duration: 0.65, ease: 'easeOut' }}
+          className="fixed top-0 left-0 w-12 h-12 rounded-full border-2 border-blue-500/80 shadow-[0_0_20px_rgba(59,130,246,0.6)] pointer-events-none"
+          style={{
+            x: r.x - 24,
+            y: r.y - 24,
+          }}
+        />
+      ))}
+
       {/* Trailing Energy Sparks */}
       {trail.map((point, index) => {
         const size = Math.max(1.5, 4.5 - index * 0.8);

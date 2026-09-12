@@ -271,9 +271,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   return (
     <AntiInspectShield isActive={isOpen && !!token} onSecurityAlert={handleSecurityAlert}>
       <div className="fixed inset-0 z-50 bg-[#1A1612]/60 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-        
+
         <div className="relative w-full max-w-6xl bg-[#FAF7F2] border border-[#E2D6C5] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] text-[#2D261E]">
-          
+
           {/* Header Bar */}
           <div className="bg-[#F2ECE1] px-6 py-4 border-b border-[#E5DCD0] flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
@@ -295,7 +295,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   )}
                 </div>
                 <p className="text-[11px] text-[#6E6254]">
-                  Cream Luxury Interface • Real-time Supabase Database Inquiries
+                  Real-time Supabase Database Inquiries
                 </p>
               </div>
             </div>
@@ -321,7 +321,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
           {/* Main Body */}
           <div className="p-6 overflow-y-auto flex-1 space-y-6">
-            
+
             {!token ? (
               /* LOGIN FORM VIEW */
               <div className="max-w-md mx-auto my-8 bg-white border border-[#E8DFD1] rounded-3xl p-8 space-y-6 shadow-xl shadow-amber-950/5">
@@ -403,7 +403,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             ) : (
               /* DASHBOARD VIEW */
               <div className="space-y-6">
-                
+
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="bg-white border border-[#E8DFD1] rounded-2xl p-4 space-y-1 shadow-sm">
@@ -447,7 +447,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
                 {/* Filter and Search Toolbar */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 border border-[#E8DFD1] rounded-2xl shadow-sm">
-                  
+
                   <div className="relative w-full sm:w-72">
                     <Search className="w-4 h-4 text-[#998A78] absolute left-3.5 top-2.5" />
                     <input
@@ -464,25 +464,22 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     <div className="flex items-center bg-[#FAF8F5] p-1 rounded-xl border border-[#E2D6C5]">
                       <button
                         onClick={() => setTypeFilter('all')}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                          typeFilter === 'all' ? 'bg-[#A37B3E] text-white' : 'text-[#6E6254] hover:text-[#2D261E]'
-                        }`}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${typeFilter === 'all' ? 'bg-[#A37B3E] text-white' : 'text-[#6E6254] hover:text-[#2D261E]'
+                          }`}
                       >
                         All Types
                       </button>
                       <button
                         onClick={() => setTypeFilter('calls')}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
-                          typeFilter === 'calls' ? 'bg-blue-600 text-white' : 'text-blue-700 hover:text-blue-900'
-                        }`}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${typeFilter === 'calls' ? 'bg-blue-600 text-white' : 'text-blue-700 hover:text-blue-900'
+                          }`}
                       >
                         <PhoneCall className="w-3 h-3" /> Calls ({callsCount})
                       </button>
                       <button
                         onClick={() => setTypeFilter('estimates')}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
-                          typeFilter === 'estimates' ? 'bg-amber-700 text-white' : 'text-amber-800 hover:text-amber-950'
-                        }`}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${typeFilter === 'estimates' ? 'bg-amber-700 text-white' : 'text-amber-800 hover:text-amber-950'
+                          }`}
                       >
                         <Calculator className="w-3 h-3" /> Estimates
                       </button>
@@ -493,11 +490,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       <button
                         key={filter}
                         onClick={() => setStatusFilter(filter)}
-                        className={`px-2.5 py-1 rounded-xl text-xs font-bold capitalize transition-colors cursor-pointer ${
-                          statusFilter === filter
+                        className={`px-2.5 py-1 rounded-xl text-xs font-bold capitalize transition-colors cursor-pointer ${statusFilter === filter
                             ? 'bg-[#2D261E] text-white shadow-sm'
                             : 'bg-[#FAF8F5] text-[#6E6254] hover:text-[#2D261E] border border-[#E2D6C5]'
-                        }`}
+                          }`}
                       >
                         {filter}
                       </button>
@@ -574,7 +570,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                                 </div>
                                 {lead.clientPhone && (
                                   <div className="text-[11px] text-[#1B7043] font-mono flex items-center gap-1.5 mt-0.5 font-semibold">
-                                    <Phone className="w-3 h-3 text-[#1B7043]" /> 
+                                    <Phone className="w-3 h-3 text-[#1B7043]" />
                                     <a href={`tel:${lead.clientPhone}`} className="hover:underline">{lead.clientPhone}</a>
                                     <button
                                       onClick={() => handleCopyContact(lead.clientPhone!, lead.id + '_phone')}
@@ -610,13 +606,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                                 <select
                                   value={lead.status}
                                   onChange={(e) => handleStatusChange(lead.id, e.target.value as any)}
-                                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border focus:outline-none cursor-pointer ${
-                                    lead.status === 'pending'
+                                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border focus:outline-none cursor-pointer ${lead.status === 'pending'
                                       ? 'bg-[#FDF6E2] border-[#E8D49E] text-[#8C5E0D]'
                                       : lead.status === 'contacted'
-                                      ? 'bg-[#EAF3FD] border-[#B5D5FA] text-[#1C5AA6]'
-                                      : 'bg-[#E6F6ED] border-[#A8E4C3] text-[#13663B]'
-                                  }`}
+                                        ? 'bg-[#EAF3FD] border-[#B5D5FA] text-[#1C5AA6]'
+                                        : 'bg-[#E6F6ED] border-[#A8E4C3] text-[#13663B]'
+                                    }`}
                                 >
                                   <option value="pending">Pending</option>
                                   <option value="contacted">Contacted</option>

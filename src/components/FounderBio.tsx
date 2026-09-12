@@ -26,6 +26,7 @@ interface GitHubStatus {
   formattedDate: string;
   commitMsg: string;
   repoName: string;
+  isRealTime?: boolean;
 }
 
 export const FounderBio: React.FC = () => {
@@ -51,15 +52,16 @@ export const FounderBio: React.FC = () => {
 
   const [ghStatus, setGhStatus] = useState<GitHubStatus>({
     isActive: true,
-    statusText: 'Active Coding',
+    statusText: 'Active Coding (Just now)',
     lastSeenText: 'Just now',
     formattedDate: '',
-    commitMsg: 'Codebase Sync',
-    repoName: 'Shadow-Arrow-Website'
+    commitMsg: 'UI Motion & 3D Tilt Component Sync',
+    repoName: 'Shadow-Arrow-Website',
+    isRealTime: true
   });
 
   useEffect(() => {
-    // 1. Set experience text to 1-2+ Yrs as requested
+    // 1. Set experience text
     setExperienceText('1-2+ Yrs');
 
     // 2. Dynamic Time-based Greeting (Morning, Afternoon, Evening, Late Night)
@@ -78,86 +80,119 @@ export const FounderBio: React.FC = () => {
     updateTimeAndGreeting();
     const clockInterval = setInterval(updateTimeAndGreeting, 1000);
 
-    // 3. Real-time GitHub Activity Tracker — scans ALL public repos of the user
+    // 3. Real-time Developer Activity Telemetry & GitHub Heartbeat Sync
     const fetchGitHubActivity = async () => {
       try {
-        // Fetch all public events across ALL repos of this user
+        let hasActiveRealPush = false;
         const eventsRes = await fetch(
-          'https://api.github.com/users/loharbijoy2005-a11y/events/public?per_page=100',
+          'https://api.github.com/users/loharbijoy2005-a11y/events/public?per_page=50',
           { headers: { Accept: 'application/vnd.github+json' } }
         );
-        if (!eventsRes.ok) return;
-        const events = await eventsRes.json();
-        if (!Array.isArray(events) || events.length === 0) return;
 
-        // Find the most recent PushEvent across any public repo
-        const pushEvent = events.find((e: any) => e.type === 'PushEvent') 
-          || events.find((e: any) => e.type === 'CreateEvent')
-          || events[0];
+        if (eventsRes.ok) {
+          const events = await eventsRes.json();
+          if (Array.isArray(events) && events.length > 0) {
+            const pushEvent = events.find((e: any) => e.type === 'PushEvent') 
+              || events.find((e: any) => e.type === 'CreateEvent');
 
-        if (!pushEvent) return;
+            if (pushEvent) {
+              const repoFullName: string = pushEvent.repo?.name ?? '';
+              const repoSimpleName = repoFullName.includes('/')
+                ? repoFullName.split('/')[1]
+                : repoFullName || 'Shadow-Arrow-Website';
 
-        const repoFullName: string = pushEvent.repo?.name ?? '';
-        const repoSimpleName = repoFullName.includes('/')
-          ? repoFullName.split('/')[1]
-          : repoFullName || 'Unknown Repo';
+              let commitMsg = 'Codebase Sync & Architecture Optimization';
+              const rawDate: string = pushEvent.created_at;
 
-        // Extract commit message directly from PushEvent payload (no extra API call needed)
-        let commitMsg = 'Codebase Sync';
-        let rawDate: string = pushEvent.created_at;
+              if (pushEvent.type === 'PushEvent' && pushEvent.payload?.commits?.length > 0) {
+                const lastCommit = pushEvent.payload.commits[pushEvent.payload.commits.length - 1];
+                const rawMsg: string = lastCommit?.message ?? 'Codebase Sync';
+                commitMsg = rawMsg.split('\n')[0].slice(0, 55);
+              } else if (pushEvent.type === 'CreateEvent') {
+                commitMsg = `Created ${pushEvent.payload?.ref_type ?? 'ref'}: ${pushEvent.payload?.ref ?? repoSimpleName}`;
+              }
 
-        if (pushEvent.type === 'PushEvent' && pushEvent.payload?.commits?.length > 0) {
-          // Get the last commit in the push
-          const lastCommit = pushEvent.payload.commits[pushEvent.payload.commits.length - 1];
-          const rawMsg: string = lastCommit?.message ?? 'Codebase Sync';
-          commitMsg = rawMsg.split('\n')[0].slice(0, 60); // Trim long messages
-        } else if (pushEvent.type === 'CreateEvent') {
-          commitMsg = `Created ${pushEvent.payload?.ref_type ?? 'ref'}: ${pushEvent.payload?.ref ?? repoSimpleName}`;
+              const eventTime = new Date(rawDate).getTime();
+              const currentTime = Date.now();
+              const diffMs = currentTime - eventTime;
+              const diffHours = diffMs / (1000 * 60 * 60);
+
+              // 1. REAL GIT PUSH MODE: Active for 4.5 Hours after any actual git push
+              if (diffHours <= 4.5) {
+                hasActiveRealPush = true;
+                const diffMins = Math.floor(diffMs / (1000 * 60));
+                let timeAgo = '';
+                if (diffMins < 1) timeAgo = 'Just now';
+                else if (diffMins < 60) timeAgo = `${diffMins}m ago`;
+                else {
+                  const h = Math.floor(diffHours);
+                  const m = diffMins % 60;
+                  timeAgo = m > 0 ? `${h}h ${m}m ago` : `${h}h ago`;
+                }
+
+                const formattedDate = new Date(rawDate).toLocaleString('en-IN', {
+                  day: '2-digit',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true
+                });
+
+                setGhStatus({
+                  isActive: true,
+                  statusText: 'Active Coding',
+                  lastSeenText: timeAgo,
+                  formattedDate,
+                  commitMsg,
+                  repoName: repoSimpleName,
+                  isRealTime: true
+                });
+              }
+            }
+          }
         }
 
-        const eventTime = new Date(rawDate).getTime();
-        const currentTime = Date.now();
-        const diffMs = currentTime - eventTime;
-        const diffHours = diffMs / (1000 * 60 * 60);
-        const diffMins = Math.floor(diffMs / (1000 * 60));
+        // 2. IDLE & DYNAMIC WORK MODE: Activates when no git push in last 4.5 hours
+        if (!hasActiveRealPush) {
+          const now = new Date();
+          const currentMin = now.getMinutes();
+          const currentHr = now.getHours();
 
-        let timeAgo = '';
-        if (diffMins < 1) {
-          timeAgo = 'Just now';
-        } else if (diffMins < 60) {
-          timeAgo = `${diffMins}m ago`;
-        } else if (diffHours < 24) {
-          const h = Math.floor(diffHours);
-          const m = diffMins % 60;
-          timeAgo = m > 0 ? `${h}h ${m}m ago` : `${h}h ago`;
-        } else {
-          const d = Math.floor(diffHours / 24);
-          timeAgo = `${d}d ago`;
+          // Calculate deterministic active minutes (between 3m and 32m ago)
+          const pseudoMins = ((currentMin * 3 + currentHr * 7) % 28) + 3;
+          const timeAgo = pseudoMins < 5 ? 'Just now' : `${pseudoMins}m ago`;
+
+          // Rotating developer statuses when not actively pushing to git
+          const idleWorkStates = [
+            { title: 'Active Coding', time: timeAgo },
+            { title: 'Architecture Sync', time: 'In Progress' },
+            { title: 'Code Review & Testing', time: 'Active' },
+            { title: 'API Microservice Build', time: timeAgo },
+            { title: 'Staging Deployment', time: 'Recently Updated' },
+            { title: 'Performance Audit', time: 'Completed' },
+            { title: 'Active Coding', time: 'Just now' },
+          ];
+
+          const activeIdx = (currentHr + Math.floor(currentMin / 8)) % idleWorkStates.length;
+          const selected = idleWorkStates[activeIdx];
+
+          setGhStatus({
+            isActive: true,
+            statusText: selected.title,
+            lastSeenText: selected.time,
+            formattedDate: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }),
+            commitMsg: 'Internal Architecture Optimization',
+            repoName: 'Shadow-Arrow-Website',
+            isRealTime: false
+          });
         }
-
-        const formattedDate = new Date(rawDate).toLocaleString('en-IN', {
-          day: '2-digit',
-          month: 'short',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
-        });
-
-        setGhStatus({
-          isActive: true,
-          statusText: `Active Coding (${timeAgo})`,
-          lastSeenText: timeAgo,
-          formattedDate,
-          commitMsg,
-          repoName: repoSimpleName
-        });
       } catch (err) {
-        // Keep fallback state on network error
+        // Fallback to active state
       }
     };
 
     fetchGitHubActivity();
-    const ghInterval = setInterval(fetchGitHubActivity, 30000); // Poll every 30s
+    const ghInterval = setInterval(fetchGitHubActivity, 30000); // Poll telemetry every 30s
 
     return () => {
       clearInterval(clockInterval);
@@ -442,14 +477,15 @@ export const FounderBio: React.FC = () => {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
                       </span>
-                      <span>Active Coding</span>
+                      <span>{ghStatus.statusText}</span>
                     </div>
                     <span className="text-slate-400 text-[10px] font-medium">{ghStatus.lastSeenText}</span>
                   </div>
+
                   <div className="flex items-center justify-between text-slate-400 text-[10px] pt-1.5 border-t border-slate-900">
-                    <span className="text-slate-500">Live Time (IST)</span>
-                    <span className="text-blue-400 font-bold flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-blue-400 animate-pulse" /> {timeStr || '12:00:00 PM'}
+                    <span className="text-slate-500 font-sans">Live Time (IST)</span>
+                    <span className="text-amber-400 font-bold flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-amber-400 animate-pulse" /> {timeStr || '12:00:00 PM'}
                     </span>
                   </div>
                 </div>
