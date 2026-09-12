@@ -1,22 +1,32 @@
 import React, { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 interface MagneticButtonProps {
   children: React.ReactNode;
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   strength?: number;
+  showGravityBall?: boolean;
 }
 
 export const MagneticButton: React.FC<MagneticButtonProps> = ({
   children,
   className = '',
   onClick,
-  strength = 25
+  strength = 25,
+  showGravityBall = true,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+
+  // Gravity Ball relative coordinates inside the button
+  const rawBallX = useMotionValue(0);
+  const rawBallY = useMotionValue(0);
+
+  // Smooth gravitational spring momentum
+  const ballX = useSpring(rawBallX, { stiffness: 350, damping: 22 });
+  const ballY = useSpring(rawBallY, { stiffness: 350, damping: 22 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
@@ -28,8 +38,13 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
 
     setPosition({
       x: distanceX * strength,
-      y: distanceY * strength
+      y: distanceY * strength,
     });
+
+    // Local cursor position for gravity ball
+    rawBallX.set(e.clientX - left);
+    rawBallY.set(e.clientY - top);
+
     if (!isHovered) setIsHovered(true);
   };
 
@@ -46,18 +61,45 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
       onClick={onClick}
       animate={{ x: position.x, y: position.y }}
       transition={{ type: 'spring', stiffness: 260, damping: 18, mass: 0.1 }}
-      className={`relative inline-block cursor-pointer overflow-hidden rounded-xl ${className}`}
+      className={`relative inline-block cursor-pointer overflow-hidden rounded-xl group ${className}`}
     >
+      {/* Interactive Gravity Ball (Glowing Energy Orb following cursor) */}
+      {showGravityBall && (
+        <motion.div
+          className="pointer-events-none absolute -inset-0 z-10 overflow-hidden rounded-xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          {/* Gravitational Orb Core */}
+          <motion.div
+            style={{
+              x: ballX,
+              y: ballY,
+            }}
+            initial={{ scale: 0 }}
+            animate={{ scale: isHovered ? 1 : 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className="absolute -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full pointer-events-none mix-blend-screen opacity-70"
+          >
+            <div className="w-full h-full rounded-full bg-gradient-to-r from-blue-400 via-indigo-400 to-amber-300 blur-md shadow-[0_0_25px_rgba(59,130,246,0.8)]" />
+          </motion.div>
+        </motion.div>
+      )}
+
       {/* Shimmer Light Sweep Accent */}
       {isHovered && (
         <motion.div
           initial={{ x: '-100%' }}
           animate={{ x: '200%' }}
           transition={{ duration: 0.7, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1.5 }}
-          className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-transparent via-white/25 to-transparent transform -skew-x-12"
+          className="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12"
         />
       )}
-      {children}
+
+      {/* Button Content */}
+      <div className="relative z-30">{children}</div>
     </motion.div>
   );
 };
+
