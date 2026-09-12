@@ -5,37 +5,24 @@ interface CinematicSplashProps {
   onComplete: () => void;
 }
 
-// Apple iPhone 'Hello' multi-lingual greeting cycle
-const HELLO_WORDS = [
-  { text: 'Hello', lang: 'English' },
-  { text: 'Bonjour', lang: 'French' },
-  { text: 'Hola', lang: 'Spanish' },
-  { text: 'Ciao', lang: 'Italian' },
-  { text: 'Namaste', lang: 'Hindi' },
-  { text: 'SHADOW ARROW', lang: 'Web Engineering' },
-];
-
 export const CinematicSplash: React.FC<CinematicSplashProps> = ({ onComplete }) => {
-  const [wordIndex, setWordIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [isStrokeComplete, setIsStrokeComplete] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // Progress bar speed controller (1.8s duration)
+    // Session Storage: Allow replay on demand or refresh
     const startTime = Date.now();
-    const duration = 1800;
+    const duration = 2000;
 
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
       const pct = Math.min(100, Math.floor((elapsed / duration) * 100));
       setProgress(pct);
 
-      // Cycle word index based on progress percent
-      const step = Math.min(
-        HELLO_WORDS.length - 1,
-        Math.floor((pct / 100) * HELLO_WORDS.length)
-      );
-      setWordIndex(step);
+      if (pct > 65) {
+        setIsStrokeComplete(true);
+      }
 
       if (pct >= 100) {
         clearInterval(interval);
@@ -43,85 +30,118 @@ export const CinematicSplash: React.FC<CinematicSplashProps> = ({ onComplete }) 
           setIsVisible(false);
           setTimeout(() => {
             onComplete();
-          }, 600);
-        }, 250);
+          }, 650);
+        }, 300);
       }
     }, 16);
 
     return () => clearInterval(interval);
   }, [onComplete]);
 
-  const currentWord = HELLO_WORDS[wordIndex];
-  const isFinalWord = wordIndex === HELLO_WORDS.length - 1;
-
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          key="apple-hello-splash"
+          key="apple-shadowarrow-splash"
           initial={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.04, filter: 'blur(16px)' }}
-          transition={{ duration: 0.65, ease: [0.32, 0.72, 0, 1] }}
+          exit={{ opacity: 0, scale: 1.06, filter: 'blur(20px)' }}
+          transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
           className="fixed inset-0 z-50 bg-[#000000] text-white flex flex-col justify-between p-8 sm:p-16 select-none overflow-hidden font-sans"
         >
-          {/* Subtle Ambient Apple Glow Background */}
+          {/* Subtle Ambient Apple Glow Radial Aura */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-blue-600/15 via-indigo-600/10 to-amber-500/10 rounded-full blur-[140px] opacity-70" />
+            <motion.div
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.4, 0.7, 0.4],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-tr from-blue-600/20 via-indigo-500/15 to-amber-400/15 rounded-full blur-[150px]"
+            />
           </div>
 
-          {/* Top Apple Minimal Badge */}
+          {/* Top Apple Minimal Header */}
           <div className="relative z-10 flex items-center justify-between text-[11px] font-mono text-slate-500 uppercase tracking-widest">
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-              <span>Shadow Arrow Engine</span>
+              <span>SHADOW ARROW ENGINE</span>
             </span>
-            <span>2026 Edition</span>
+            <span>2026 EDITION</span>
           </div>
 
-          {/* Center Apple 'Hello' Style Animated Typography */}
-          <div className="relative z-10 max-w-3xl mx-auto text-center space-y-6 flex flex-col items-center justify-center my-auto">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentWord.text}
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 1.05 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="space-y-3"
+          {/* Center Apple 'Hello' Style Laser Handwriting & Shimmer Reveal */}
+          <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center justify-center my-auto space-y-8 w-full">
+            <div className="relative flex items-center justify-center w-full min-h-[140px] px-4">
+              
+              {/* Apple Hello Style SVG Laser Stroke Handwriting Outline */}
+              <svg
+                viewBox="0 0 1000 200"
+                className="w-full max-w-3xl h-auto overflow-visible select-none drop-shadow-[0_0_25px_rgba(59,130,246,0.6)]"
               >
-                <h1
-                  className={`tracking-tight font-extrabold ${
-                    isFinalWord
-                      ? 'text-4xl sm:text-7xl tracking-[0.18em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-amber-300 drop-shadow-[0_0_35px_rgba(59,130,246,0.5)] font-mono'
-                      : 'text-5xl sm:text-8xl text-white font-serif italic drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]'
-                  }`}
+                <defs>
+                  <linearGradient id="appleLaserGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#ffffff" />
+                    <stop offset="40%" stopColor="#60A5FA" />
+                    <stop offset="70%" stopColor="#818CF8" />
+                    <stop offset="100%" stopColor="#FDE047" />
+                  </linearGradient>
+
+                  <linearGradient id="appleShimmerSweep" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#ffffff" />
+                    <stop offset="50%" stopColor="#93C5FD" />
+                    <stop offset="100%" stopColor="#FACC15" />
+                  </linearGradient>
+                </defs>
+
+                {/* Laser Stroke Outline Drawing Animation */}
+                <motion.text
+                  x="50%"
+                  y="50%"
+                  dominantBaseline="central"
+                  textAnchor="middle"
+                  fill={isStrokeComplete ? 'url(#appleShimmerSweep)' : 'transparent'}
+                  stroke="url(#appleLaserGlow)"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="font-mono font-black uppercase tracking-[0.16em]"
+                  style={{ fontSize: '72px' }}
+                  initial={{ strokeDasharray: 1200, strokeDashoffset: 1200 }}
+                  animate={{ strokeDashoffset: 0 }}
+                  transition={{ duration: 1.5, ease: [0.65, 0, 0.35, 1] }}
                 >
-                  {currentWord.text}
-                </h1>
-                
-                <p className="text-xs font-mono font-medium text-slate-400 tracking-widest uppercase">
-                  {currentWord.lang}
-                </p>
-              </motion.div>
-            </AnimatePresence>
+                  SHADOW ARROW
+                </motion.text>
+              </svg>
+
+              {/* Shimmer Light Beam Sweep Overlay after stroke completion */}
+              {isStrokeComplete && (
+                <motion.div
+                  initial={{ opacity: 0, x: '-100%' }}
+                  animate={{ opacity: 1, x: '100%' }}
+                  transition={{ duration: 0.9, ease: 'easeInOut' }}
+                  className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"
+                />
+              )}
+            </div>
 
             {/* Apple Minimal Sleek Loading Bar */}
-            <div className="w-48 sm:w-64 space-y-2.5 pt-8">
-              <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden backdrop-blur-md p-0.5 border border-white/10">
+            <div className="w-56 sm:w-72 space-y-2.5 pt-4">
+              <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden backdrop-blur-md p-0.5 border border-white/15">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-amber-400 rounded-full shadow-[0_0_12px_rgba(59,130,246,0.8)]"
+                  className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-amber-400 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.9)]"
                   style={{ width: `${progress}%` }}
                 />
               </div>
 
-              <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
-                <span className="tracking-wider">System Loading</span>
+              <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span className="tracking-wider uppercase text-[10px]">Loading Architecture</span>
                 <span className="text-blue-400 font-bold">{progress}%</span>
               </div>
             </div>
           </div>
 
-          {/* Bottom Footer Credit */}
+          {/* Bottom Footer Credits */}
           <div className="relative z-10 flex items-center justify-between text-[11px] font-mono text-slate-500">
             <span>Bijoy Lohar • Founder & Lead Engineer</span>
             <span className="hidden sm:inline">Sub-Second Platform</span>
