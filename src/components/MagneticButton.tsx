@@ -63,28 +63,26 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
       transition={{ type: 'spring', stiffness: 260, damping: 18, mass: 0.1 }}
       className={`relative inline-block cursor-pointer overflow-hidden rounded-xl group ${className}`}
     >
-      {/* Interactive Gravity Ball (Glowing Energy Orb following cursor) */}
+      {/* Interactive Gravity Ball (3D Glowing Energy Sphere following cursor) */}
       {showGravityBall && (
-        <motion.div
-          className="pointer-events-none absolute -inset-0 z-10 overflow-hidden rounded-xl"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.25 }}
-        >
-          {/* Gravitational Orb Core */}
+        <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden rounded-xl">
           <motion.div
             style={{
-              x: ballX,
-              y: ballY,
+              left: ballX,
+              top: ballY,
             }}
-            initial={{ scale: 0 }}
-            animate={{ scale: isHovered ? 1 : 0 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className="absolute -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full pointer-events-none mix-blend-screen opacity-70"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: isHovered ? 1 : 0, opacity: isHovered ? 1 : 0 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 24 }}
+            className="absolute -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full pointer-events-none flex items-center justify-center"
           >
-            <div className="w-full h-full rounded-full bg-gradient-to-r from-blue-400 via-indigo-400 to-amber-300 blur-md shadow-[0_0_25px_rgba(59,130,246,0.8)]" />
+            {/* Glowing Ball Outer Energy Aura */}
+            <div className="absolute inset-0 rounded-full bg-cyan-400/50 blur-sm animate-pulse" />
+            
+            {/* Glowing Ball Sphere Core */}
+            <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-white via-cyan-200 to-amber-200 shadow-[0_0_16px_rgba(255,255,255,0.95)] border border-white/80" />
           </motion.div>
-        </motion.div>
+        </div>
       )}
 
       {/* Shimmer Light Sweep Accent */}
